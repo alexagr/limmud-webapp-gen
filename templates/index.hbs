@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+  <meta name="description" content="{{event.name}}">
+  <meta name="author" content="{{event.organizer_name}}">
+
+  <title>{{event.name}}</title>
+
+  <!-- Bootstrap core CSS -->
+  <!-- Latest compiled and minified CSS -->
+  {{> fonts}}
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/schedule.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/img/icon.png"/>
+
+  {{> analytics}}
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <a id="top"></a>
+    {{> navbar}}
+
+    <div class="poster">
+      <img class="poster-img desktop" src="assets/img/poster_desktop.jpg" style="width:100%;">
+      <img class="poster-img mobile" src="assets/img/poster_mobile.jpg" style="width:100%;">
+      <div class="poster-caption">
+        <h4>{{event.date}}</h4>
+        <h1>{{event.name}}</h1>
+        <h4><i class="fa fa-map-marker-alt"></i>
+          {{event.location_name}}</h4>
+        <p></p>
+      </div>
+    </div>
+
+    <div class ="container">
+      <div class="row">
+        <br>
+        <div class="col-md-12"><a href="schedule.html" class="pull-right btn btn-lg btn-primary" role="button">Программа</a></div>
+      </div>
+
+      <div class="row">
+        <div class="eventdes col-md-12 mobile">
+          <p>Добро пожаловать на {{event.name}}!</p>
+          <p>Для просмотра программы фестиваля, нажмите на кнопку <img src="assets/img/iconbar.png"/> в правом верхнем углу и
+            выберите опцию <b>&laquo;ПРОГРАММА&raquo;</b>.
+            Нажмите на название сессии, чтобы увидеть дополнительную информацию о ней.
+          </p>
+          <p>Если вы ищете сессию конкретного презентера, выберите опцию <b>&laquo;ПРЕЗЕНТЕРЫ&raquo;</b>.
+            Нажмите на фотографию презентера, чтобы увидеть его краткую биографию и список сессий.
+          </p>
+          <p>Используйте звездочку <i class="fa fa-star"></i> рядом с названием, чтобы отметить сессии, которые вас заинтересовали. Отметка сохранится
+            при последующих просмотрах программы с вашего телефона.
+          </p>
+          <p>Для того, чтобы увидеть расписание фестиваля в виде сетки, выберите опцию <b>&laquo;СЕТКА&raquo;</b>.
+            Нажмите на название сессии, чтобы получить дополнительную информацию о ней. 
+            Вы можете сохранить сетку в файле PDF при помощи кнопки <i class="fa fa-download" aria-hidden="true"></i> , например для печати.
+          </p>
+          <p>Программой фестиваля будет удобнее пользоваться, если создать для неё иконку на рабочем столе.</p>
+          <p>Для этого:</p>
+          <ul>
+            <li>если вы пользуетесь Android (Chrome), нажмите на кнопку <b>&laquo;Меню&raquo;</b> (Menu) <img src="assets/img/menu.png"/> в правом верхнем углу и выберите <b>&laquo;Добавить на главный экран&raquo;</b> (Add to Home Screen)</li>
+            <li>если вы пользуетесь iPhone (Safari), нажмите на кнопку <b>&laquo;Отправить&raquo;</b> (Send) <img src="assets/img/send.png"/> внизу посередине и выберите <b>&laquo;На экран Домой&raquo;</b> (Add to Home Screen)</li>
+          </ul>
+          <br>
+        </div>
+        <div class="eventdes col-md-12 desktop">
+          <p>Добро пожаловать на {{event.name}}!</p>
+          <p>Для просмотра программы фестиваля, выберите опцию <b>&laquo;ПРОГРАММА&raquo;</b> в меню наверху.
+            Нажмите на название сессии, чтобы увидеть дополнительную информацию о ней.
+          </p>
+          <p>Если вы ищете сессию конкретного презентера, выберите опцию <b>&laquo;ПРЕЗЕНТЕРЫ&raquo;</b>.
+            Нажмите на фотографию презентера, чтобы увидеть его краткую биографию и список сессий.
+          </p>
+          <p>Используйте звездочку <i class="fa fa-star"></i> рядом с названием, чтобы отметить сессии, которые вас заинтересовали. Отметка сохранится
+            при последующих просмотрах программы с вашего компьютера. 
+          </p>
+          <p>Для того, чтобы увидеть расписание фестиваля в виде сетки, выберите опцию <b>&laquo;СЕТКА&raquo;</b>.
+            Нажмите на название сессии, чтобы получить дополнительную информацию о ней. 
+            Вы можете сохранить сетку в файле PDF при помощи кнопки <i class="fa fa-download" aria-hidden="true"></i> , например для печати.
+          </p>
+          <p>Обратите внимание, что программой фестиваля можно пользоваться и с мобильного телефона.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  {{> footer}}
+  <script>
+    $(document).ready(function() {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+  <meta name="description" content="{{ event.name }}">
+  <meta name="author" content="{{ event.organizer_name }}">
+
+  <title>{{ event.name }}</title>
+
+  <!-- Bootstrap core CSS -->
+  <!-- Latest compiled and minified CSS -->
+  {{> fonts }}
+  <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./assets/css/schedule.css">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="apple-touch-icon" href="./assets/img/icon.png"/>
+
+  {{> analytics }}
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <![endif]-->
+</head>
+
+<body>
+  <a id="top"></a>
+  {{> navbar }}
+
+  <div class="main container" id="session-list">
+    <div class="row">
+      <div class="middle col-sm-12">
+        <h2 class="filter-heading track-heading text-center">
+        <span>
+          Закладки
+        </span>
+        </h2>
+      </div>
+    </div>
+
+    <div class="date-list container">
+      <div class="tabs">
+        <span class="tabs-nav">
+          {{#each timeList}}
+          <a class="tabs-nav-link" href="./favorite.html#{{slug}}"> {{date_short_ru}} </a>
+          {{/each}}
+        </span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="button-list container">
+        <button class="btn btn-default export-ics" type="button">
+          <i class="fa fa-calendar" aria-hidden="true"></i> &nbsp;Добавить в календарь
+        </button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div style="margin: 15px 0 0 5px;" class="col-md-9">
+        <div class="track-list container">
+
+          {{#each timeList}}
+            <div style="padding:0" class="col-md-12">
+              <a class="anchor" id="{{slug}}"></a>
+              <h4 class="text">{{date_ru}}</h4>
+            </div>
+            {{#each times}}
+
+            <div class="row time-filter">
+              <div class="eventtime col-xs-2 col-sm-2 col-md-2">
+                <h4>{{caption}}</h4>
+              </div>
+
+              <div class="tracks col-xs-10 col-sm-10 col-md-10">
+                {{#each sessions}}
+                {{#unless is_cancelled}}
+                <div id="track-{{session_id}}" class="track-inline">
+                  <a class="anchor" id="{{session_id}}"></a>
+                  <div style="padding-right:0px;" class="schedule-container">
+                    <div id="title-{{session_id}}" class="sizeevent event" style="background-color:{{{color}}}"
+                      data-toggle="collapse" data-target="#desc-{{session_id}}, #desc2-{{session_id}}">
+                      <h4>{{title}}</h4>
+                      <a id="bookmark-{{session_id}}" class="bookmark">
+                        <i class="fa fa-star" aria-hidden="true"></i>
+                      </a>
+                      <div id="desc2-{{session_id}}" class="collapse in">
+                        <div class="row speaker-short-info">
+                          <h5>
+                          {{#each speakers_list}}
+                            {{name}}{{#unless last}},{{/unless}}
+                          {{/each}}
+                          </h5>
+                          <h6>
+                          {{#if language}}
+                          <i class="fa fa-globe" aria-hidden="true"></i>&nbsp;{{language}}
+                          {{/if}}
+                          {{#if location}}
+                          {{#if language}}&nbsp;&nbsp;&nbsp;{{/if}}<i class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;{{location}}
+                          {{/if}}
+                          {{#if shabbat}}
+                          &nbsp;&nbsp;&nbsp;<i class="fa fa-menorah" aria-hidden="true"></i>&nbsp;шаббат
+                          {{/if}}
+                          {{#if recommend}}
+                          &nbsp;&nbsp;&nbsp;<i class="fa fa-book-reader" aria-hidden="true"></i>
+                          {{/if}}
+                          </h6>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="desc-{{session_id}}" class="collapse">
+                      <p><i style="color:{{{color}}}" class="fa fa-circle" aria-hidden="true"></i>&nbsp;{{tracktitle}}</p>
+                      {{#if language}}
+                      <p><i class="fa fa-globe" aria-hidden="true"></i>&nbsp;{{language}}</p>
+                      {{/if}}
+                      {{#if location}}
+                      {{#if location_color}}
+                      <p><i style="color:{{{location_color}}}" class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;<i>{{location}}</i></p>
+                      {{else}}
+                      <p><i class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;<i>{{location}}</i></p>
+                      {{/if}}
+                      {{/if}}
+                      {{#if shabbat}}
+                      <p><i class="fa fa-menorah" aria-hidden="true"></i>&nbsp;Шаббатний формат</p>
+                      {{/if}}
+                      {{#if recommend}}
+                      <p><i class="fa fa-book-reader" aria-hidden="true"></i>&nbsp;«Бабель» рекомендует</p>
+                      {{/if}}
+                      <p><i class="fa fa-clock" aria-hidden="true"></i>&nbsp;{{sessiondate}}, <span>{{start}} - {{end}}</span></p>
+                      <hr class="clear-both">
+                      {{#if description}}
+                      <p><span class="tip-description">{{{description}}}</span></p>
+                      <hr class="clear-both">
+                      {{/if}}
+                      <div class="session-speakers-list">
+                        {{#each speakers_list}}
+                        <a href="speakers.html#{{id}}">
+                          {{#if photo}}
+                            <p class="session-speakers"><img onError="this.onerror=null;this.src='assets/img/avatar.png';" class="card-img-top speaker-image-small" src="speakers/thumbs/{{{photo}}}"/></p>
+                          {{else}}
+                            <p class="session-speakers"><img class="card-img-top speaker-image-small" src="assets/img/avatar.png"/></p>
+                          {{/if}}
+                          <p><span class="graytext">{{name}}</span></p>
+                        </a>
+                        {{#if organisation}}
+                        <p>{{organisation}}</p>
+                        {{/if}}
+                        {{#if short_biography}}
+                        <p><i>{{short_biography}}</i></p>
+                        {{/if}}
+                        {{#if long_biography}}
+                        <p>{{long_biography}}</p>
+                        {{/if}}
+                        <hr class="clear-both">
+                        {{/each}}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {{/unless}}
+                {{/each}}
+              </div>
+            </div>
+            {{/each}}
+          {{/each}}
+
+        </div>
+      </div>
+      <div class="track-names">
+      {{#each tracks}}
+      {{#if name}}
+        <ul class="title-inline title-legend">
+          <li  style="background-color:{{{color}}}" class="titlecolor"></li>
+          <li>{{name}}</li>
+        </ul>
+      {{/if}}
+      {{/each}}
+      </div>
+    </div>
+  </div>
+
+  {{> footer}}
+  <script src="./js/FileSaver.js" type="text/javascript"></script>
+  <script src="./js/icsGen.js" type="text/javascript"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('.bookmark').click(function(e){
+        var temp = JSON.parse(localStorage["{{event.name}}"]);
+        var id = Number($(this).attr('id').substring(9));
+        var curColor = $(this).css("color");
+        if (curColor == "rgb(255, 255, 0)") {
+          $(this).css("color", "rgb(127, 127, 127)");
+          temp[id] = 0;
+        }
+        else {
+          $(this).css("color", "rgb(255, 255, 0)");
+          temp[id] = 1;
+        }
+        localStorage["{{event.name}}"] = JSON.stringify(temp);
+
+        e.stopPropagation();
+      });
+
+      function initPage() {
+        if(localStorage.hasOwnProperty("{{event.name}}") === false) {
+          localStorage["{{event.name}}"] = '{}';
+        }
+
+        var temp = JSON.parse(localStorage["{{event.name}}"]);
+
+        $('.time-filter').each(function() {
+          var timeFlag = 0;
+          $(this).find('.track-inline').each(function(){
+            var id = Number($(this).attr('id').substring(6));
+            if (temp[id] == 1) {
+              $(this).find('.bookmark').each(function(){
+                $(this).css("color", "rgb(255, 255, 0)");
+              });
+              timeFlag = 1;
+            } else {
+              $(this).hide();
+            }
+          });
+          if (!timeFlag) {
+            $(this).hide();
+          }
+        });
+      }
+      initPage();
+
+      function initICS() {
+        {{#each timeList}}
+        var date = "{{slug}}";
+        
+          {{#each times}}
+            {{#each sessions}}
+        $("#track-{{session_id}}").data("meta", {location: "{{location}}", date: date, start: "{{start}}", end: "{{end}}"});
+            {{/each}}
+            
+          {{/each}}
+        {{/each}}
+      }
+      initICS();
+
+      function exportICS() {
+        function removeDashFromDate(date) {
+          return date.replace(/-/g, '');
+        }
+        function removeColonFromTime(time) {
+          return time.replace(/:/g, '');
+        }
+        function convertHtmlToText(name) {
+          name = name.replace(/&quot;/g, '"');
+          name = name.replace(/\s+/g, ' ');
+          return name;
+        }
+        function uuidv4() {
+          return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+            (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+          )
+        }
+        var cal = ics();
+        $('.track-inline').each(function() {
+          if ($(this).is(":visible")) {
+              var sessObj = {};
+              sessObj.begin = removeDashFromDate($(this).data("meta").date) + 'T' + removeColonFromTime($(this).data("meta").start) + '00';
+              sessObj.stop = removeDashFromDate($(this).data("meta").date) + 'T' + removeColonFromTime($(this).data("meta").end) + '00';
+              $(this).find('.event').each(function(){
+                sessObj.subject = convertHtmlToText($(this).find('h4').text());
+              });
+              $(this).find('.speaker-short-info').each(function(){
+                sessObj.description = convertHtmlToText($(this).find('h5').text());
+              });
+              sessObj.location = $(this).data("meta").location;
+              sessObj.uid = uuidv4();
+              cal.addEvent(sessObj);
+          }
+        });
+        cal.download('limmud', '.ics', false);
+      }
+      $('.export-ics').click(function() {
+        exportICS();
+      });
+    });
+  </script>
+
+</body>
+</html>

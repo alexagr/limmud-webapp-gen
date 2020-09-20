@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="he">
+  <head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+  <meta name="description" content="{{event.name_he}}">
+  <meta name="author" content="{{event.organizer_name}}">
+
+  <title>{{event.name_he}}</title>
+
+  <!-- Bootstrap core CSS -->
+  <!-- Latest compiled and minified CSS -->
+  {{> fonts}}
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/schedule_he.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/img/icon.png"/>
+
+  {{> analytics}}
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <![endif]-->
+  </head>
+
+  <body dir="rtl">
+    <a id="top"></a>
+    {{> navbar_he}}
+
+    <div class="poster">
+      <img class="poster-img desktop" src="assets/img/poster_desktop.jpg" style="width:100%;">
+      <img class="poster-img mobile" src="assets/img/poster_mobile.jpg" style="width:100%;">
+      <div class="poster-caption">
+        <h4>{{event.date_he}}</h4>
+        <h1>{{event.name_he}}</h1>
+        <h4><i class="fa fa-map-marker-alt"></i>
+          {{event.location_name_he}}</h4>
+        <p></p>
+      </div>
+    </div>
+
+  <div class ="container">
+    <div class="row">
+      <br>
+      <div class="col-md-12"><a href="schedule_he.html" class="pull-left btn btn-lg btn-primary" role="button">תוכנית</a></div>
+    </div>
+
+    <div class="row">
+      <div class="eventdes col-md-12 mobile">
+        <p>ברוכים הבאים לפסטיבל {{eventurls.name_he}}!</p>
+        <p>על מנת לראות תוכנית הפסטיבל לחצו על הכפתור  <img src="assets/img/iconbar.png"/> בפינה הימנית העליונה ובחרו אופציה <b>תוכנית</b>.
+        לחצו על שם היחידה על מנת לראות מידע נוסך אודותיה. לחצו על שם המרצה על מנת לראות קורות חייו.
+        </p>
+        <p>אם אתם מחפשים הרצאה של מרצה ספציפי, בחרו אופציה <b>מרצים</b> בתפריט.
+        </p>
+        <p>ניתן לסמן הרצאות בעזרת כוכבית <i class="fa fa-star"></i> ליד שם היחידה.
+        הסימון ישאר בפעמים הבאות שתפתחו תוכנית הפסטיבל מאותו הטלפון.
+        </p>
+        <p>אם אתם רוצים לראות את לוח הזמנים של פסטיבל בצורת טפט, בחרו אופציה <b>לו"ז</b> בתפריט. לחצו על שם היחידה על מנת לראות מידע נוסף אודותיה. 
+		</p>
+        <p>על מנת לפשט שימוש בתוכנית הפסטיבל צרו קיצור דרך אליה במסך דף הבית כדלקמן:</p>
+        <ul>
+          <li>אם אתם משתמשים באנדרויד (Chrome) לחצו על הכפתור <b>תפרית</b> (Menu) <img src="assets/img/menu.png"/> בפינה הימנית העליונה ובחרו <b>הוסף למסך דף הבית</b> (Add to Home Screen)</li>
+          <li>אם אתם משתמשים באייפון (Safari) לחצו על כפתור <b>שליחה</b> (Send) <img src="assets/img/send.png"/> למטה במרכז ובחרו <b>הוסף למסך דף הבית</b> (Add to Home Screen)</li>
+        </ul>
+        <br>
+      </div>
+      <div class="eventdes col-md-12 desktop">
+        <p>ברוכים הבאים לפסטיבל {{eventurls.name_he}}!</p>
+        <p>על מנת לראות תוכנית הפסטיבל בחרו אופציה <b>תוכנית</b> בתפריט העליון.
+        לחצו על שם היחידה על מנת לראות מידע נוסך אודותיה. לחצו על שם המרצה על מנת לראות קורות חייו.
+        </p>
+        <p>אם אתם מחפשים הרצאה של מרצה ספציפי, בחרו אופציה <b>מרצים</b> בתפריט.
+        </p>
+        <p>ניתן לסמן הרצאות בעזרת כוכבית <i class="fa fa-star"></i> ליד שם היחידה.
+        הסימון ישאר בפעמים הבאות שתפתחו תוכנית הפסטיבל מאותו המחשב.
+        </p>
+        <p>אם אתם רוצים לראות את לוח הזמנים של פסטיבל בצורת טפט, בחרו אופציה <b>לו"ז</b> בתפריט. לחצו על שם היחידה על מנת לראות מידע נוסף אודותיה. 
+		</p>
+        <p>שימו לב שתוכנית הפסטיבל ניתן לראות גם בטלפונים סלולריים.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  {{> footer_he}}
+
+  <script>
+    $(document).ready(function() {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+  </script>
+</body>
+</html>
