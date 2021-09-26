@@ -900,23 +900,23 @@ function rglob($pattern, $flags = 0)
     return $files;
 }
 
-function folderHash()
+function folderHash($app_name)
 {
 	$folderHash = '';
 
-	$files = glob('*.{html,json}', GLOB_BRACE);
+	$files = glob($app_name . '/*.{html,json}', GLOB_BRACE);
 	foreach ($files as $file) {
 		$folderHash .= hash_file('sha1', $file);
 	}
 
-	$files = rglob('assets/*');
+	$files = rglob($app_name . '/assets/*');
 	foreach ($files as $file) {
 		if (is_file($file)) {
 			$folderHash .= hash_file('sha1', $file);
 		}
 	}
 
-	$files = rglob('speakers/*');
+	$files = rglob($app_name . '/speakers/*');
 	foreach ($files as $file) {
 		if (is_file($file)) {
 			$folderHash .= hash_file('sha1', $file);
@@ -987,11 +987,15 @@ function generate()
 
 	file_put_contents(__DIR__ . '/' . $event['app_name'] . '/manifest.json',  $handlebars->render('manifest_json', $model));
 
-	$model['folderHash'] = folderHash();
+	$model['folderHash'] = folderHash($event['app_name']);
 	file_put_contents(__DIR__ . '/' . $event['app_name'] . '/sw.js',  $handlebars->render('sw_js', $model));
 
 	file_put_contents(__DIR__ . '/' . $event['app_name'] . '/.htaccess',  $handlebars->render('htaccess', $model));
 }
 
-generate();
-print 'WebApp successfully generated';
+try {
+    generate();
+    print 'WebApp successfully generated';
+} catch (Exception $e) {
+    print 'ERROR: ' .  $e->getMessage();
+}

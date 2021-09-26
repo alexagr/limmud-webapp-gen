@@ -50,7 +50,7 @@
           <input type="text" id="sheet-id" size="50" value="<?php echo $config['sheet_id'] ?>"><br>
         </div>
       </div>
-      <div class="row"> 
+      <div class="row">
         <div class="col-md-3">
           <label for="app-name">App Name:</label>
         </div> 
@@ -58,8 +58,24 @@
           <input type="text" id="app-name" value="<?php echo $config['app_name'] ?>"><br>
         </div> 
       </div>
+      <div class="row">
+        <div class="col-md-3">
+          <label for="sheet-id">Google API Status:</label>
+        </div>
+        <div class="col-md-9">
+          <input type="text" id="api-status" size="20" value="<?php
+            $tokenPath = 'data/token.json';
+            if (file_exists($tokenPath)) {
+              echo 'Connected';
+            } else {
+              echo 'Not connected';
+            }
+            ?>" readonly disabled><br>
+        </div>
+      </div>
       <br>
-      <button name="config" class="btn btn-primary btn-action" onClick="updateConfig();">Update</button>
+      <button name="config" class="btn btn-primary btn-action" onClick="updateConfig();">Update</button>&nbsp;&nbsp;&nbsp;
+      <button name="show-webapp" class="btn btn-primary btn-action" onClick="openInNewTab('get_token.php');">Connect to Google API</button>
       <br>
       </div>
 
@@ -68,7 +84,8 @@
       <div id="generate-status"></div>
       <div class="row">
       <button name="generate" class="btn btn-primary btn-action" onClick="generate();">Generate</button>&nbsp;&nbsp;&nbsp;
-      <button name="copy-assets" class="btn btn-primary btn-action" onClick="copyAssets();">Copy Assets</button>
+      <button name="copy-assets" class="btn btn-primary btn-action" onClick="copyAssets();">Copy Assets</button>&nbsp;&nbsp;&nbsp;
+      <button name="show-webapp" class="btn btn-primary btn-action" onClick="openInNewTab('<?php echo $config['app_name'] ?>');">Open Web App</button>
       </div>
       </div>
       
@@ -79,7 +96,8 @@
       <input type="file" id="upload-files" name="uploadFiles[]" multiple >
       </div>
       <br>
-      <button name="upload-photos" class="btn btn-primary btn-action" onClick="uploadPhotos();">Upload</button>      
+      <button name="upload-photos" class="btn btn-primary btn-action" onClick="uploadPhotos();">Upload</button>&nbsp;&nbsp;&nbsp;
+      <button name="show-photos" class="btn btn-primary btn-action" onClick="openInNewTab('show_photos.php')">Show</button>
       </div>
   </div>
 
@@ -199,7 +217,11 @@
             uploadPhoto(0);
           }
         }
-                 
+
+        function openInNewTab(url) {
+          window.open(url, '_blank').focus();
+        }
+
     </script>
   </footer>
 </body>
