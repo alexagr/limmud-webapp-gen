@@ -21,7 +21,7 @@
   AddOutputFilterByType DEFLATE font/otf
   AddOutputFilterByType DEFLATE font/opentype
 
-# For Olders Browsers Which Can't Handle Compression
+# For older browsers which can't handle compression
   BrowserMatch ^Mozilla/4 gzip-only-text/html
   BrowserMatch ^Mozilla/4\.0[678] no-gzip
   BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
@@ -30,3 +30,6 @@
 <filesMatch ".(html|css)$">
 Header set Cache-Control "max-age=3600, public"
 </filesMatch>
+
+# prevent site from being indexed
+Header set X-Robots-Tag "noindex, nofollow"

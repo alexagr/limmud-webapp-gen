@@ -58,6 +58,7 @@
           <input type="text" id="app-name" value="<?php echo $config['app_name'] ?>"><br>
         </div> 
       </div>
+      <!--
       <div class="row">
         <div class="col-md-3">
           <label for="sheet-id">Google API Status:</label>
@@ -73,9 +74,12 @@
             ?>" readonly disabled><br>
         </div>
       </div>
+      -->
       <br>
       <button name="config" class="btn btn-primary btn-action" onClick="updateConfig();">Update</button>&nbsp;&nbsp;&nbsp;
+      <!--
       <button name="show-webapp" class="btn btn-primary btn-action" onClick="openInNewTab('get_token.php');">Connect to Google API</button>
+      -->
       <br>
       </div>
 

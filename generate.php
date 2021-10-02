@@ -7,45 +7,45 @@ use Handlebars\Loader\FilesystemLoader;
 
 function get_client()
 {
-    $client = new Google_Client();
-    $client->setApplicationName('Limmud WebApp Generator');
-    $client->setScopes(Google_Service_Sheets::SPREADSHEETS_READONLY);
-    $client->setAuthConfig('data/credentials.json');
-    $client->setAccessType('offline');
-    $client->setPrompt('select_account consent');
+	$client = new Google_Client();
+	$client->setApplicationName('Limmud WebApp Generator');
+	$client->setScopes(Google_Service_Sheets::SPREADSHEETS_READONLY);
+	$client->setAuthConfig('data/credentials.json');
+	$client->setAccessType('offline');
+	$client->setPrompt('select_account consent');
 
-    $tokenPath = 'data/token.json';
-    if (file_exists($tokenPath)) {
-        $accessToken = json_decode(file_get_contents($tokenPath), true);
-        $client->setAccessToken($accessToken);
-    } else {
-        throw new Exception("Can't find token.json");
-    }
-    
-    if ($client->isAccessTokenExpired()) {
+	$tokenPath = 'data/token.json';
+	if (file_exists($tokenPath)) {
+		$accessToken = json_decode(file_get_contents($tokenPath), true);
+		$client->setAccessToken($accessToken);
+	} else {
+		throw new Exception("Can't find token.json");
+	}
+
+	if ($client->isAccessTokenExpired()) {
 		$refresh_token = $client->getRefreshToken();
-        if ($refresh_token) {
+		if ($refresh_token) {
 			$accessToken = $client->fetchAccessTokenWithRefreshToken($refresh_token);
 			if (!array_key_exists('refresh_token', $accessToken)) {
 				$accessToken['refresh_token'] = $refresh_token;
 			}
 			$client->setAccessToken($accessToken); 
 		} else {
-            throw new Exception("Can't get refresh token");
-        }
-        file_put_contents($tokenPath, json_encode($client->getAccessToken()));
-    }
+			throw new Exception("Can't get refresh token");
+		}
+		file_put_contents($tokenPath, json_encode($client->getAccessToken()));
+	}
 	
 	return $client;
 }
 
 function parse_sheets()
 {
-    $client = get_client();
-    $service = new Google_Service_Sheets($client);
+	$client = get_client();
+	$service = new Google_Service_Sheets($client);
 
 	$config = json_decode(file_get_contents('data/config.json'), true);
-    $spreadsheetId = $config['sheet_id'];
+	$spreadsheetId = $config['sheet_id'];
 
 	# parse event
 	$event = array(
@@ -59,9 +59,9 @@ function parse_sheets()
 			array('id' => 4, 'link' => 'https://t.me/limmudfsuil', 'icon' => 'telegram', 'name' => 'Telegram')
 		)
 	);	
-    $range = 'Event!A2:I';
-    $response = $service->spreadsheets_values->get($spreadsheetId, $range);
-    foreach ($response->getValues() as $row) {
+	$range = 'Event!A2:I';
+	$response = $service->spreadsheets_values->get($spreadsheetId, $range);
+	foreach ($response->getValues() as $row) {
 		if (!empty($row[0])) {
 			$event['title'] = $row[0];
 		}
@@ -88,9 +88,9 @@ function parse_sheets()
 	# parse locations
 	$locations = array();
 	$locations_map = array();
-    $range = 'Locations!A2:E';
-    $response = $service->spreadsheets_values->get($spreadsheetId, $range);
-    foreach ($response->getValues() as $row) {
+	$range = 'Locations!A2:E';
+	$response = $service->spreadsheets_values->get($spreadsheetId, $range);
+	foreach ($response->getValues() as $row) {
 		if (!empty($row[0])) {
 			$hotel = $row[0];
 		} else {
@@ -126,14 +126,14 @@ function parse_sheets()
 		$id = count($locations);
 		$locations[$id] = array('id' => $id, 'name' => $location, 'name_he' => $location_he, 'color' => $color);
 		$locations_map[$location] = $id;
-    }
+	}
 
 	# parse track
 	$tracks = array();
 	$tracks_map = array();
-    $range = 'Tracks!A2:C';
-    $response = $service->spreadsheets_values->get($spreadsheetId, $range);
-    foreach ($response->getValues() as $row) {
+	$range = 'Tracks!A2:C';
+	$response = $service->spreadsheets_values->get($spreadsheetId, $range);
+	foreach ($response->getValues() as $row) {
 		if (!empty($row[0])) {
 			$track = mb_convert_case($row[0], MB_CASE_TITLE, 'UTF-8');
 		} else {
@@ -157,9 +157,9 @@ function parse_sheets()
 	# parse presentors
 	$speakers = array();
 	$speakers_map = array();
-    $range = 'Speakers!A2:G';
-    $response = $service->spreadsheets_values->get($spreadsheetId, $range);
-    foreach ($response->getValues() as $row) {
+	$range = 'Speakers!A2:G';
+	$response = $service->spreadsheets_values->get($spreadsheetId, $range);
+	foreach ($response->getValues() as $row) {
 		if (!empty($row[0])) {
 			$name = $row[0];
 		} else {
@@ -195,6 +195,12 @@ function parse_sheets()
 		} else {
 			$bio_he = $bio;
 		}
+		
+		if (($descr == '') && ($bio == '')) { 
+			$bio = $bio_he;
+			$descr = $descr_he; 
+		}
+		
 		$id = count($speakers);
 		$speakers[$id] = array('id' => $id, 'name' => $name, 'name_he' => $name_he, 'photo' => $photo, 'short_biography' => $descr, 'short_biography_he' => $descr_he, 'long_biography' => $bio, 'long_biography_he' => $bio_he, 'sessions' => array());
 		$speakers_map[$name] = $id;
@@ -203,16 +209,22 @@ function parse_sheets()
 	# parse schedule
 	$sessions = array();
 	$sessions_map = array();
-    #if (file_exists('json/sessions_map.json')) {
-    #    $sessions_map = json_decode(file_get_contents('json/sessions_map.json'), true);
-	#}
-    $range = 'Schedule!A2:S';
-    $response = $service->spreadsheets_values->get($spreadsheetId, $range);
-    foreach ($response->getValues() as $row) {
+	$range = 'Schedule!A2:S';
+	$response = $service->spreadsheets_values->get($spreadsheetId, $range);
+	foreach ($response->getValues() as $row) {
 		if (!empty($row[0])) {
-			$date = $row[0];
+			if (empty($row[1] && empty(row[2]))) {
+				$current_date = $row[0];
+				continue;
+			} else {
+				$date = $row[0];
+			}
 		} else {
-			if (empty($date)) { continue; }
+			if (empty($current_date)) {
+				continue;
+			} else {
+				$date = $current_date;
+			}
 		}
 		if (!empty($row[1])) {
 			$start = $row[1];
@@ -860,44 +872,44 @@ function foldBySpeakers_he($sessions, $speakers, $tracks)
 }
 
 function deleteDir($dirPath) {
-    if (! is_dir($dirPath)) {
-        return;
-    }
-    if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
-        $dirPath .= '/';
-    }
-    $files = glob($dirPath . '*', GLOB_MARK);
-    foreach ($files as $file) {
-        if (is_dir($file)) {
-            deleteDir($file);
-        } else {
-            unlink($file);
-        }
-    }
-    rmdir($dirPath);
+	if (! is_dir($dirPath)) {
+		return;
+	}
+	if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+		$dirPath .= '/';
+	}
+	$files = glob($dirPath . '*', GLOB_MARK);
+	foreach ($files as $file) {
+		if (is_dir($file)) {
+			deleteDir($file);
+		} else {
+			unlink($file);
+		}
+	}
+	rmdir($dirPath);
 }
 
 function generateThumbnails() 
 {
-    deleteDir('speakers/thumbs');
+	deleteDir('speakers/thumbs');
 
-    mkdir('speakers/thumbs');
-    foreach ($files as $file) {
-        list($width, $height) = getimagesize($file);
-        $source = imagecreatefromjpeg($file);
-        $thumb = imagecreatetruecolor(100, 100);
-        imagecopyresampled($thumb, $source, 0, 0, 0, 0, 100, 100, $width, $height);
-        imagejpeg($thumb, 'speakers/thumbs/' . basename($file));
-    }
+	mkdir('speakers/thumbs');
+	foreach ($files as $file) {
+		list($width, $height) = getimagesize($file);
+		$source = imagecreatefromjpeg($file);
+		$thumb = imagecreatetruecolor(100, 100);
+		imagecopyresampled($thumb, $source, 0, 0, 0, 0, 100, 100, $width, $height);
+		imagejpeg($thumb, 'speakers/thumbs/' . basename($file));
+	}
 }
 
 function rglob($pattern, $flags = 0)
 {
-    $files = glob($pattern, $flags); 
-    foreach (glob(dirname($pattern) . '/*', GLOB_ONLYDIR|GLOB_NOSORT) as $dir) {
-        $files = array_merge($files, rglob($dir . '/' . basename($pattern), $flags));
-    }
-    return $files;
+	$files = glob($pattern, $flags); 
+	foreach (glob(dirname($pattern) . '/*', GLOB_ONLYDIR|GLOB_NOSORT) as $dir) {
+		$files = array_merge($files, rglob($dir . '/' . basename($pattern), $flags));
+	}
+	return $files;
 }
 
 function folderHash($app_name)
@@ -979,9 +991,8 @@ function generate()
 	$pages = array('index', 'schedule', /*'favorite',*/ 'calendar', 'speakers');
 	foreach ($pages as $page) {
 		$model['otherpage'] = $page . '_he';
+		$model['otherpage_he'] = $page;
 		file_put_contents(__DIR__ . '/' . $event['app_name'] . '/' . $page . '.html',  $handlebars->render($page, $model));
-
-		$model['otherpage'] = $page;
 		file_put_contents(__DIR__ . '/' . $event['app_name'] . '/' . $page . '_he.html',  $handlebars->render($page . '_he', $model));
 	}
 
@@ -994,8 +1005,8 @@ function generate()
 }
 
 try {
-    generate();
-    print 'WebApp successfully generated';
+	generate();
+	print 'WebApp successfully generated';
 } catch (Exception $e) {
-    print 'ERROR: ' .  $e->getMessage();
+	print 'ERROR: ' .  $e->getMessage();
 }
