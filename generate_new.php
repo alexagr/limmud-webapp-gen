@@ -85,6 +85,18 @@ function parse_sheets()
         }
     }
 
+    # parse translations
+    $translate = array();
+    $ranges = array("Translate!A1:B", "Translate!E1:F");
+    foreach ($ranges as $range) {
+        $response = $service->spreadsheets_values->get($spreadsheetId, $range);
+        foreach ($response->getValues() as $row) {
+            if (!empty($row[0]) && !empty($row[1])) {
+                $translate[$row[0]] = $row[1];
+            }
+        }
+    }
+
     # parse locations
     $locations = array();
     $locations_map = array();
@@ -128,14 +140,15 @@ function parse_sheets()
         $locations_map[$location] = $id;
     }
 
-    # parse track
+    # parse tracks
     $tracks = array();
     $tracks_map = array();
     $range = 'Tracks!A2:C';
     $response = $service->spreadsheets_values->get($spreadsheetId, $range);
     foreach ($response->getValues() as $row) {
         if (!empty($row[0])) {
-            $track = mb_convert_case($row[0], MB_CASE_TITLE, 'UTF-8');
+            # $track = mb_convert_case($row[0], MB_CASE_TITLE, 'UTF-8');
+            $track = $row[0];
         } else {
             continue;
         }
@@ -147,17 +160,17 @@ function parse_sheets()
         if (!empty($row[2])) {
             $track_he = $row[2];
         } else {
-            $track_he = $category;
+            $track_he = $track;
         }
         $id = count($tracks);
-        $tracks[$id] = array('id' => $id, 'name' => $track, 'name_he' => $track_he, 'color' => $color);
+        $tracks[$id] = array('id' => $id, 'name' => $track, 'name_he' => $track_he, 'color' => $color, 'in_use' => false);
         $tracks_map[$track] = $id;
     }
 
     # parse presentors
     $speakers = array();
     $speakers_map = array();
-    $range = 'Speakers!A2:G';
+    $range = 'Presentors!B2:F';
     $response = $service->spreadsheets_values->get($spreadsheetId, $range);
     foreach ($response->getValues() as $row) {
         if (!empty($row[0])) {
@@ -166,112 +179,62 @@ function parse_sheets()
             continue;
         }
         if (!empty($row[1])) {
-            $descr = $row[1];
-        } else {
-            $descr = '';
-        }
-        if (!empty($row[2])) {
-            $bio = $row[2];
-        } else {
-            $bio = '';
-        }
-        if (!empty($row[3])) {
-            $photo = $row[3];
-        } else {
-            $photo = 'avatar.png';
-        }
-        if (!empty($row[4])) {
-            $name_he = $row[4];
+            $name_he = $row[1];
         } else {
             $name_he = $name;
         }
-        if (!empty($row[5])) {
-            $descr_he = $row[5];
+        if (!empty($row[2])) {
+            $photo = $row[2];
         } else {
-            $descr_he = $descr;
+            $photo = 'avatar.png';
         }
-        if (!empty($row[6])) {
-            $bio_he = $row[6];
+        if (!empty($row[3])) {
+            $bio = $row[3];
         } else {
+            $bio = '';
+        }
+        if (!empty($row[4])) {
+            $bio_he = $row[4];
+        } else {
+            $bio_he = '';
+        }
+        if (empty($bio)) {
+            $bio = $bio_he;
+        }
+        if (empty($bio_he)) {
             $bio_he = $bio;
         }
 
-        if (($descr == '') && ($bio == '')) {
-            $bio = $bio_he;
-            $descr = $descr_he;
-        }
-
-        $id = count($speakers);
-        $speakers[$id] = array('id' => $id, 'name' => $name, 'name_he' => $name_he, 'photo' => $photo, 'short_biography' => $descr, 'short_biography_he' => $descr_he, 'long_biography' => $bio, 'long_biography_he' => $bio_he, 'sessions' => array());
-        $speakers_map[$name] = $id;
-    }
-
-    # parse imported presentors (as a backup)
-    $presentors_import_exists = false;
-    $response = $service->spreadsheets->get($spreadsheetId);
-    $sheets = array_column($response['sheets'], 'properties');
-    foreach ($sheets as $sheet) {
-        if ($sheet->title == 'Presentors_IMPORT') {
-            $presentors_import_exists = true;
-        }
-    }
-
-    $imported_sessions = array();
-    if ($presentors_import_exists) {
-        $range = 'Presentors_IMPORT!A2:I';
-        $response = $service->spreadsheets_values->get($spreadsheetId, $range);
-        foreach ($response->getValues() as $row) {
-            if (empty($row[1]) || empty($row[2])) {
-                continue;
+        if (array_key_exists($name, $speakers_map)) {
+            $id = $speakers_map[$name];
+            if (!empty($bio)) {
+                $speakers[$id]['long_biography'] = $bio;
             }
-            if (!empty($row[3])) {
-                $name = $row[3];
-                if (array_key_exists($name, $speakers_map)) {
-                    continue;
-                }
-            } else {
-                continue;
+            if (!empty($bio_he)) {
+                $speakers[$id]['long_biography_he'] = $bio_he;
             }
-
-            if (!empty($row[6])) {
-                $name_he = $row[6];
-            } else {
-                $name_he = $name;
-            }
-            if (!empty($row[7])) {
-                $bio = $row[7];
-            } else {
-                $bio = '';
-            }
-            $photo = 'avatar.png';
-            if (!empty($row[8])) {
-                $bio_he = $row[8];
-            } else {
-                $bio_he = $bio;
-            }
-
-            if (($descr == '') && ($bio == '')) {
-                $bio = $bio_he;
-                $descr = $descr_he;
-            }
-
+        } else {
             $id = count($speakers);
-            $speakers[$id] = array('id' => $id, 'name' => $name, 'name_he' => $name_he, 'photo' => 'avatar.png', 'short_biography' => '', 'short_biography_he' => '', 'long_biography' => $bio, 'long_biography_he' => $bio_he, 'sessions' => array());
+            $speakers[$id] = array('id' => $id, 'name' => $name, 'name_he' => $name_he, 'photo' => $photo, 'short_biography' => '', 'short_biography_he' => '', 'long_biography' => $bio, 'long_biography_he' => $bio_he, 'sessions' => array());
             $speakers_map[$name] = $id;
         }
+    }
 
-        $range = 'Presentors_IMPORT!J2:Q';
+    # parse sessions data
+    $session_data = array();
+    $ranges = array('Presentors!G2:M', 'Presentors!N2:T');
+    foreach ($ranges as $range) {
         $response = $service->spreadsheets_values->get($spreadsheetId, $range);
         foreach ($response->getValues() as $row) {
-            if (empty($row[0])) {
-                continue;
-            } else {
+            if (!empty($row[0])) {
                 $name = $row[0];
+            } else {
+                continue;
             }
             if (!empty($row[1])) {
                 $name_he = $row[1];
             } else {
-                $name_he = '';
+                $name_he = $name;
             }
             if (!empty($row[2])) {
                 $description = $row[2];
@@ -283,40 +246,40 @@ function parse_sheets()
             } else {
                 $description_he = '';
             }
-            $imported_sessions[$name] = array('name_he' => $name_he, 'description' => $description, 'description_he' => $description_he);
-
-            if (empty($row[4])) {
-                continue;
+            if (!empty($row[4])) {
+                $track = $row[4];
             } else {
-                $name = $row[4];
+                $track = 'лекция';
+            }
+            if (array_key_exists($track, $translate)) {
+                $track_he = $translate[$track];
+            } else {
+                $track = 'лекция';
+                $track_he = 'הרצאה';
             }
             if (!empty($row[5])) {
-                $name_he = $row[5];
+                $language = str_replace(' ', '', $row[5]);
             } else {
-                $name_he = '';
+                $language = '';
             }
-            if (!empty($row[6])) {
-                $description = $row[6];
+            if (array_key_exists($language, $translate)) {
+                $language_he = $translate[$language];
             } else {
-                $description = '';
+                $language = '';
+                $language_he = '';
             }
-            if (!empty($row[7])) {
-                $description_he = $row[7];
-            } else {
-                $description_he = '';
-            }
-            $imported_sessions[$name] = array('name_he' => $name_he, 'description' => $description, 'description_he' => $description_he);
+            $session_data[$name] = array('name_he' => $name_he, 'description' => $description, 'description_he' => $description_he, 'language' => $language, 'language_he' => $language_he);
         }
     }
 
     # parse schedule
     $sessions = array();
     $sessions_map = array();
-    $range = 'Schedule!A2:S';
+    $range = 'Schedule!A2:I';
     $response = $service->spreadsheets_values->get($spreadsheetId, $range);
     foreach ($response->getValues() as $row) {
         if (!empty($row[0])) {
-            if (empty($row[1] && empty(row[2]))) {
+            if (empty($row[1]) && empty($row[2])) {
                 $current_date = $row[0];
                 continue;
             } else {
@@ -340,16 +303,37 @@ function parse_sheets()
         }
         if (!empty($row[3])) {
             $hotel = $row[3];
+            if (array_key_exists($hotel, $translate)) {
+                $hotel_he = $translate[$hotel];
+            } else {
+                $hotel_he = $hotel;
+            }
         }
         if (!empty($row[4])) {
             $room = $row[4];
+            if (array_key_exists($room, $locations_map)) {
+                $id = $locations_map[$room];
+                $room_he = $locations[$id]['name_he'];
+            } else {
+                $room_he = $room;
+            }
         } else {
             continue;
         }
         if (!empty($row[5])) {
             $people = explode(',', str_replace(', ', ',', $row[5]));
+            $people_he = array();
+            foreach ($people as $speaker) {
+                if (array_key_exists($speaker, $speakers_map)) {
+                    $id = $speakers_map[$speaker];
+                    $people_he[] = $speakers[$id]['name_he'];
+                } else {
+                    $people_he[] = $speaker;
+                }
+            }
         } else {
             $people = array();
+            $people_he = array();
         }
         if (!empty($row[6])) {
             $name = $row[6];
@@ -357,86 +341,48 @@ function parse_sheets()
             continue;
         }
         if (!empty($row[7])) {
-            $languages = explode(',', $row[7]);
-            sort($languages);
-            $language = implode(', ', $languages);
+            $language = $row[7];
+            if (array_key_exists($language, $translate)) {
+                $language_he = $translate[$language];
+            } else {
+                $language = '';
+                $language_he = '';
+            }
         } else {
             $language = '';
+            $language_he = '';
         }
         if (!empty($row[8])) {
-            $track = mb_convert_case($row[8], MB_CASE_TITLE, 'UTF-8');
+            # $track = mb_convert_case($row[8], MB_CASE_TITLE, 'UTF-8');
+            $track = $row[8];
+            if (array_key_exists($track, $tracks_map)) {
+                $id = $tracks_map[$track];
+                $track_he = $tracks[$id]['name_he'];
+                $tracks[$id]['in_use'] = true;
+            } else {
+                $track = 'Лекция';
+                $track_he = 'הרצאה';
+            }
         } else {
-            continue;
+            $track = 'Лекция';
+            $track_he = 'הרצאה';
         }
         if (!empty($row[9])) {
-            $description = $row[9];
-        } else {
-            if (array_key_exists($name, $imported_sessions)) {
-                $description = $imported_sessions[$name]['description'];
-            } else {
-                $description = '';
-            }
-        }
-        if (!empty($row[10])) {
-            $hotel_he = $row[10];
-        } else {
-            $hotel_he = $hotel;
-        }
-        if (!empty($row[11])) {
-            $room_he = $row[11];
-        } else {
-            $room_he = $room;
-        }
-        if (!empty($row[12])) {
-            $people_he = explode(',', str_replace(', ', ',', $row[12]));
-        } else {
-            $people_he = array();
-        }
-        if (!empty($row[13])) {
-            $name_he = $row[13];
-        } else {
-            if (array_key_exists($name, $imported_sessions)) {
-                $name_he = $imported_sessions[$name]['name_he'];
-            } else {
-                $name_he = '';
-            }
-            if (empty($name_he)) {
-                $name_he = $name;
-            }
-        }
-        if (!empty($row[14])) {
-            $languages_he = explode(',', $row[14]);
-            sort($languages_he);
-            $language_he = implode(',', $languages_he);
-        } else {
-            $language_he = $language;
-        }
-        if (!empty($row[15])) {
-            $track_he = $row[15];
-        } else {
-            $track_he = $track;
-        }
-        if (!empty($row[16])) {
-            $description_he = $row[16];
-        } else {
-            if (array_key_exists($name, $imported_sessions)) {
-                $description_he = $imported_sessions[$name]['description_he'];
-            } else {
-                $description_he = '';
-            }
-            if (empty($description_he)) {
-                $description_he = $description;
-            }
-        }
-        if (!empty($row[17])) {
             $shabbat = true;
         } else {
             $shabbat = false;
         }
-        if (!empty($row[18])) {
-            $recommend = true;
+
+        $recommend = false;
+
+        if (array_key_exists($name, $session_data)) {
+            $name_he = $session_data[$name]['name_he'];
+            $description = $session_data[$name]['description'];
+            $description_he = $session_data[$name]['description_he'];
         } else {
-            $recommend = false;
+            $name_he = '';
+            $description = '';
+            $description_he = '';
         }
 
         # update locations
@@ -480,17 +426,11 @@ function parse_sheets()
             $track_id = $tracks_map[$track];
         } else {
             $track_id = count($tracks);
-            $tracks[$track_id] = array('id' => $id, 'name' => $track, 'name_he' => $track_he, 'color' => $colors[$id]);
+            $tracks[$track_id] = array('id' => $id, 'name' => $track, 'name_he' => $track_he, 'color' => '#EEE', 'in_use' => true);
             $tracks_map[$track] = $track_id;
         }
 
         # update sessions
-        #if (($track != 'Еда') && (array_key_exists($name, $sessions_map))) {
-        #   $id = $sessions_map[$name];
-        #} else {
-        #   $id = count($sessions_map) + 1;
-        #   $sessions_map[$name] = $id;
-        #}
         $id = count($sessions) + 1;
         $session = array(
             'id' => $id, 'title' => $name, 'title_he' => $name_he,
@@ -514,14 +454,22 @@ function parse_sheets()
     if (!file_exists($event['app_name'] . '/json')) {
         mkdir($event['app_name'] . '/json', 0777, true);
     }
+
+    $tracks_used = array();
+    foreach ($tracks as $key => $track) {
+        if ($track['in_use']) {
+            $tracks_used[$key] = $track;
+        }
+    }
+
     file_put_contents($event['app_name'] . '/json/event.json', json_encode($event,  JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE ));
     file_put_contents($event['app_name'] . '/json/sessions.json', json_encode($sessions,  JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE ));
     #file_put_contents($event['app_name'] . '/json/sessions_map.json', json_encode($sessions_map, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE ));
     file_put_contents($event['app_name'] . '/json/speakers.json', json_encode($speakers, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE ));
     file_put_contents($event['app_name'] . '/json/locations.json', json_encode($locations, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE ));
-    file_put_contents($event['app_name'] . '/json/tracks.json', json_encode($tracks, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE ));
+    file_put_contents($event['app_name'] . '/json/tracks.json', json_encode($tracks_used, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE ));
 
-    return array($event, $sessions, $speakers, $locations, $tracks);
+    return array($event, $sessions, $speakers, $locations, $tracks_used);
 }
 
 $days_ru = array(
@@ -869,12 +817,6 @@ function foldByRooms($sessions, $speakers, $tracks) {
 
     foreach($dates as $date => $value) {
         ksort($dates[$date]['sessions']);
-
-        # echo "after: \n";
-        # foreach($dates[$date]['sessions'] as $key => $session) {
-        #   echo $key . ' ';
-        # }
-        # echo "\n";
 
         $dates[$date]['rooms'] = array();
 

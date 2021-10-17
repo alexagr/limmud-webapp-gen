@@ -27,8 +27,8 @@
   BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
 </IfModule>
 
-<filesMatch ".(html|css)$">
-Header set Cache-Control "max-age=3600, public"
+<filesMatch ".(html|css|sw.js)$">
+Header set Cache-Control "no-cache"
 </filesMatch>
 
 # prevent site from being indexed
