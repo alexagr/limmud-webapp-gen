@@ -101,10 +101,12 @@
                             {{title_he}}
                           </a>
                           <span class="session-desc">
+                        {{#if speakers_list}}
                             <br><br>
-                        {{#each speakers_list}}
+                          {{#each speakers_list}}
                             {{name_he}}{{#unless last}},{{/unless}}
-                        {{/each}}
+                          {{/each}}
+                        {{/if}}
                             <br><br>
                             {{start}} - {{end}}
                         {{#if language}}

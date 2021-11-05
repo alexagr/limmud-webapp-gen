@@ -114,27 +114,29 @@
                       </div>
                     </div>
                     <div id="desc-{{session_id}}" class="collapse">
-                      <p><i style="color:{{{color}}}" class="fa fa-circle" aria-hidden="true"></i>&nbsp;{{tracktitle_he}}</p>
+                      <p class="compact"><i style="color:{{{color}}}" class="fa fa-circle" aria-hidden="true"></i>&nbsp;{{tracktitle_he}}</p>
                       {{#if language_he}}
-                      <p><i class="fa fa-globe" aria-hidden="true"></i>&nbsp;{{language_he}}</p>
+                      <p class="compact"><i class="fa fa-globe" aria-hidden="true"></i>&nbsp;{{language_he}}</p>
                       {{/if}}
                       {{#if location_he}}
                       {{#if location_color}}
-                      <p><i style="color:{{{location_color}}}" class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;<i>{{location_he}}</i></p>
+                      <p class="compact"><i style="color:{{{location_color}}}" class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;<i>{{location_he}}</i></p>
                       {{else}}
-                      <p><i class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;<i>{{location_he}}</i></p>
+                      <p class="compact"><i class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;<i>{{location_he}}</i></p>
                       {{/if}}
                       {{/if}}
                       {{#if shabbat}}
-                      <p><i class="fa fa-menorah" aria-hidden="true"></i>&nbsp;שומר שבת</p>
+                      <p class="compact"><i class="fa fa-menorah" aria-hidden="true"></i>&nbsp;שומר שבת</p>
                       {{/if}}
                       {{#if recommend}}
-                      <p><i class="fa fa-book-reader" aria-hidden="true"></i>&nbsp;&quot;בבל&quot; ממליץ</p>
+                      <p class="compact"><i class="fa fa-book-reader" aria-hidden="true"></i>&nbsp;&quot;בבל&quot; ממליץ</p>
                       {{/if}}
                       <p><i class="fa fa-clock" aria-hidden="true"></i>&nbsp;{{sessiondate_he}}, <span>{{start}} - {{end}}</span></p>
                       <hr class="clear-both">
                       {{#if description_he}}
-                      <p><span class="tip-description">{{{description_he}}}</span></p>
+                        {{#each description_he}}
+                      <p class="compact">{{{this}}}</p>
+                        {{/each}}
                       <hr class="clear-both">
                       {{/if}}
                       <div class="session-speakers-list">
@@ -154,7 +156,9 @@
                         <p><i>{{{short_biography_he}}}</i></p>
                         {{/if}}
                         {{#if long_biography_he}}
-                        <p>{{{long_biography_he}}}</p>
+                          {{#each long_biography_he}}
+                        <p class="compact">{{{this}}}</p>
+                          {{/each}}
                         {{/if}}
                         <hr class="clear-both">
                         {{/each}}

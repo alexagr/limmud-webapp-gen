@@ -49,9 +49,9 @@ function parse_sheets()
 
     # parse event
     $event = array(
-        'app_name' => $config['app_name'], 'title' => 'Limmud FSU Israel', 'name' => 'Limmud FSU Israel', 'name_he' => 'Limmud FSU Israel', 'date' => '12-14 December 2019', 'date_he' => '12-14 December 2019', 'location_name' => 'Jopa Mira', 'location_name_he' => 'Jopa Mira',
-        'copyright' => array('holder' => 'Limmud FSU Israel', 'holder_url' => 'http://limmudfsu.org.il', 'licence' => 'Creative Commons Attribution License', 'licence_url' => 'http://creativecommons.org/licenses/by/4.0/', 'logo' => 'https://i.creativecommons.org/l/by/4.0/80x15.png', 'year' => 2018),
-        'creator' => array('email' => 'alex.agranov@gmail.com'), 'organizer_name' => 'Limmud FSU Israel', 'email' => 'reg@limmudfsu.org.il',
+        'app_name' => $config['app_name'], 'title' => 'Limmud FSU Israel', 'name' => 'Limmud FSU Israel', 'name_he' => 'Limmud FSU Israel', 'date' => '12-14 December 2019', 'date_he' => '12-14 December 2019', 'location_name' => '', 'location_name_he' => '',
+        'copyright' => array('holder' => 'Limmud FSU Israel', 'holder_url' => 'http://limmudfsu.org.il', 'licence' => 'Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License', 'licence_url' => 'http://creativecommons.org/licenses/by-nc-sa/4.0/', 'logo' => 'https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png', 'year' => 2021),
+        'organizer_name' => 'Limmud FSU Israel', 'email' => 'reg@limmudfsu.org.il',
         'social_links' => array(
             array('id' => 1, 'link' => 'http://limmudfsu.org.il', 'icon' => 'chrome', 'name' => 'Site'),
             array('id' => 2, 'link' => 'https://www.facebook.com/Limmud/', 'icon' => 'facebook', 'name' => 'Facebook'),
@@ -189,14 +189,14 @@ function parse_sheets()
             $photo = 'avatar.png';
         }
         if (!empty($row[3])) {
-            $bio = $row[3];
+            $bio = explode("\n\n", $row[3]);
         } else {
-            $bio = '';
+            $bio = [];
         }
         if (!empty($row[4])) {
-            $bio_he = $row[4];
+            $bio_he = explode("\n\n", $row[4]);
         } else {
-            $bio_he = '';
+            $bio_he = [];
         }
         if (empty($bio)) {
             $bio = $bio_he;
@@ -237,14 +237,14 @@ function parse_sheets()
                 $name_he = $name;
             }
             if (!empty($row[2])) {
-                $description = $row[2];
+                $description = explode("\n\n", $row[2]);
             } else {
-                $description = '';
+                $description = [];
             }
             if (!empty($row[3])) {
-                $description_he = $row[3];
+                $description_he = explode("\n\n", $row[3]);
             } else {
-                $description_he = '';
+                $description_he = [];
             }
             if (!empty($row[4])) {
                 $track = $row[4];
@@ -295,9 +295,13 @@ function parse_sheets()
         if (!empty($row[1])) {
             $start = $row[1];
             $end = '';
+            $next_end = '';
         }
         if (!empty($row[2])) {
             $end = $row[2];
+            if (!empty($row[1])) {
+                $next_end = $end;
+            }
         } else {
             if (empty($end)) { continue; }
         }
@@ -446,6 +450,10 @@ function parse_sheets()
         }
 
         $sessions[$id] = $session;
+
+        if (!empty($next_end)) {
+            $end = $next_end;
+        }
     }
 
     if (!file_exists($event['app_name'])) {

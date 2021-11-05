@@ -115,27 +115,29 @@
                       </div>
                     </div>
                     <div id="desc-{{session_id}}" class="collapse">
-                      <p><i style="color:{{{color}}}" class="fa fa-circle" aria-hidden="true"></i>&nbsp;{{tracktitle}}</p>
+                      <p class="compact"><i style="color:{{{color}}}" class="fa fa-circle" aria-hidden="true"></i>&nbsp;{{tracktitle}}</p>
                       {{#if language}}
-                      <p><i class="fa fa-globe" aria-hidden="true"></i>&nbsp;{{language}}</p>
+                      <p class="compact"><i class="fa fa-globe" aria-hidden="true"></i>&nbsp;{{language}}</p>
                       {{/if}}
                       {{#if location}}
                       {{#if location_color}}
-                      <p><i style="color:{{{location_color}}}" class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;<i>{{location}}</i></p>
+                      <p class="compact"><i style="color:{{{location_color}}}" class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;<i>{{location}}</i></p>
                       {{else}}
-                      <p><i class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;<i>{{location}}</i></p>
+                      <p class="compact"><i class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;<i>{{location}}</i></p>
                       {{/if}}
                       {{/if}}
                       {{#if shabbat}}
-                      <p><i class="fa fa-menorah" aria-hidden="true"></i>&nbsp;Шаббатний формат</p>
+                      <p class="compact"><i class="fa fa-menorah" aria-hidden="true"></i>&nbsp;Шаббатний формат</p>
                       {{/if}}
                       {{#if recommend}}
-                      <p><i class="fa fa-book-reader" aria-hidden="true"></i>&nbsp;«Бабель» рекомендует</p>
+                      <p class="compact"><i class="fa fa-book-reader" aria-hidden="true"></i>&nbsp;«Бабель» рекомендует</p>
                       {{/if}}
                       <p><i class="fa fa-clock" aria-hidden="true"></i>&nbsp;{{sessiondate}}, <span>{{start}} - {{end}}</span></p>
                       <hr class="clear-both">
                       {{#if description}}
-                      <p><span class="tip-description">{{{description}}}</span></p>
+                        {{#each description}}
+                      <p class="compact">{{{this}}}</p>
+                        {{/each}}
                       <hr class="clear-both">
                       {{/if}}
                       <div class="session-speakers-list">
@@ -155,7 +157,9 @@
                         <p><i>{{short_biography}}</i></p>
                         {{/if}}
                         {{#if long_biography}}
-                        <p>{{long_biography}}</p>
+                          {{#each long_biography}}
+                        <p class="compact">{{{this}}}</p>
+                          {{/each}}
                         {{/if}}
                         <hr class="clear-both">
                         {{/each}}

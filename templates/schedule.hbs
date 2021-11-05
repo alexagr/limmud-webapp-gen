@@ -59,9 +59,24 @@
           <label><i class="fa fa-search" aria-hidden="true"></i></label>
           <input class="search-filter-input" type="text" placeholder="Поиск">
         </span>
-        <span class = "filter show-button-filter">
-          <button class = "btn btn-default" id = "starred" ><i class="fa fa-star" aria-hidden="true"></i></button>
+        <span class="filter show-button-filter">
+          <button class="btn btn-default" id="starred"><i class="fa fa-star" aria-hidden="true"></i></button>
         </span>      
+      </div>
+
+      <div class="track-legend">
+        <div class="track-legend-toggle" data-toggle="collapse" href="#collapseTracks">
+          <a>Что означают цвета?&nbsp;&nbsp;<i class="fa fa-chevron-down"></i></a>
+        </div>
+        <div class="track-legend-list collapse" id="collapseTracks">
+        {{#each tracks}}
+        {{#if name}}
+          <span class="track-legend-item">
+            <i style="background-color:{{{color}}}" class="track-legend-color"></i>&nbsp;{{name}}
+          </span>
+        {{/if}}
+        {{/each}}
+        </div>
       </div>
     </div>
 
@@ -106,7 +121,7 @@
                           <i class="fa fa-globe" aria-hidden="true"></i>&nbsp;{{language}}
                           {{/if}}
                           {{#if location}}
-                          {{#if language}}&nbsp;&nbsp;&nbsp;{{/if}}<i class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;{{location}}
+                          {{#if language}}&nbsp;&nbsp;&nbsp;{{/if}}<i class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;<i>{{location}}</i>
                           {{/if}}
                           {{#if shabbat}}
                           &nbsp;&nbsp;&nbsp;<i class="fa fa-menorah" aria-hidden="true"></i>&nbsp;шаббат
@@ -119,27 +134,29 @@
                       </div>
                     </div>
                     <div id="desc-{{session_id}}" class="collapse">
-                      <p><i style="color:{{{color}}}" class="fa fa-circle" aria-hidden="true"></i>&nbsp;{{tracktitle}}</p>
+                      <p class="compact"><i style="color:{{{color}}}" class="fa fa-circle" aria-hidden="true"></i>&nbsp;{{tracktitle}}</p>
                       {{#if language}}
-                      <p><i class="fa fa-globe" aria-hidden="true"></i>&nbsp;{{language}}</p>
+                      <p class="compact"><i class="fa fa-globe" aria-hidden="true"></i>&nbsp;{{language}}</p>
                       {{/if}}
                       {{#if location}}
                       {{#if location_color}}
-                      <p><i style="color:{{{location_color}}}" class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;<i>{{location}}</i></p>
+                      <p class="compact"><i style="color:{{{location_color}}}" class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;<i>{{location}}</i></p>
                       {{else}}
-                      <p><i class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;<i>{{location}}</i></p>
+                      <p class="compact"><i class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;<i>{{location}}</i></p>
                       {{/if}}
                       {{/if}}
                       {{#if shabbat}}
-                      <p><i class="fa fa-menorah" aria-hidden="true"></i>&nbsp;Шаббатний формат</p>
+                      <p class="compact"><i class="fa fa-menorah" aria-hidden="true"></i>&nbsp;Шаббатний формат</p>
                       {{/if}}
                       {{#if recommend}}
-                      <p><i class="fa fa-book-reader" aria-hidden="true"></i>&nbsp;«Бабель» рекомендует</p>
+                      <p class="compact"><i class="fa fa-book-reader" aria-hidden="true"></i>&nbsp;«Бабель» рекомендует</p>
                       {{/if}}
                       <p><i class="fa fa-clock" aria-hidden="true"></i>&nbsp;{{sessiondate}}, <span>{{start}} - {{end}}</span></p>
                       <hr class="clear-both">
                       {{#if description}}
-                      <p><span class="tip-description">{{{description}}}</span></p>
+                        {{#each description}}
+                      <p class="compact">{{{this}}}</p>
+                        {{/each}}
                       <hr class="clear-both">
                       {{/if}}
                       <div class="session-speakers-list">
@@ -159,7 +176,9 @@
                         <p><i>{{{short_biography}}}</i></p>
                         {{/if}}
                         {{#if long_biography}}
-                        <p>{{{long_biography}}}</p>
+                          {{#each long_biography}}
+                        <p class="compact">{{{this}}}</p>
+                          {{/each}}
                         {{/if}}
                         <hr class="clear-both">
                         {{/each}}
@@ -284,7 +303,7 @@
         $('.track-names').show();
         if ($('.track-inline:visible').length == 0) {
           const message = (filterVal) ? 'Ничего не найдено' : 'Нет закладок';
-          $('.date-list').after("<p style = 'padding-left: 15px; margin-top: 15px; font-weight: bold; color: red' id='no-results'>"+message+"</p>");
+          $('.date-list').after("<p style = 'padding-left: 15px; margin-top: 15px; font-weight: bold; color: red; text-align: center;' id='no-results'>"+message+"</p>");
           $('.track-names').hide();
         }
       }
@@ -326,6 +345,10 @@
         display();
       }).keyup(function() {
         $(this).change();
+      });
+
+      $('.track-legend-toggle').click(function() {
+        $(".track-legend-toggle .fa-chevron-down").toggleClass("rotate180");
       });
     });
   </script>

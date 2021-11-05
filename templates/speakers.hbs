@@ -43,6 +43,15 @@
     </div>
   </div>
 
+  <div class="search-row container">
+    <div class="search">
+      <span class="filter search-filter search-filter-speakers">
+        <label><i class="fa fa-search" aria-hidden="true"></i></label>
+        <input class="search-filter-input" type="text" placeholder="Поиск">
+      </span>
+    </div>
+  </div>
+
   <div class="row">
   {{#each speakersList}}
     <div class="speaker-inline col-xs-12 col-sm-6 col-md-4">
@@ -63,9 +72,9 @@
           </p>
           {{/if}}
           {{#if long_biography}}
-          <p class="speaker-bio">
-            {{{long_biography}}}
-          </p>
+              {{#each long_biography}}
+            <p class="speaker-bio">{{{this}}}</p>
+              {{/each}}
           {{/if}}
           <hr class="speaker-hr">
           <div class="speaker-container">
@@ -107,6 +116,37 @@
       if (hash) {
           $("#desc-" + hash).collapse('toggle');
       }
+
+      function display() {
+        let filterVal = '';
+        $('.search-filter-input').each(function() {
+          if($(this).is(':visible')) {
+            filterVal = $(this).val();
+          }
+        });
+        $('.speaker-inline').each(function() {
+            let showSpeaker = false;
+            let speakerName = $(this).find('.speaker-name');
+
+            if (speakerName.text().toUpperCase().indexOf(filterVal.toUpperCase()) >= 0) {
+              showSpeaker = true;
+            };
+            $(this).toggleClass('hide', !showSpeaker);
+        });
+
+        $('#no-results').remove();
+        if ($('.speaker-inline:visible').length == 0) {
+          const message = (filterVal) ? 'Ничего не найдено' : 'Нет закладок';
+          $('.search-row').after("<p style = 'padding-left: 15px; margin-top: 15px; font-weight: bold; color: red; text-align: center;' id='no-results'>"+message+"</p>");
+        }
+      }
+
+      $('.search-filter-input').change(function() {
+        display();
+      }).keyup(function() {
+        $(this).change();
+      });
+
     });
   </script>
 

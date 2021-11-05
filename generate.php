@@ -49,9 +49,9 @@ function parse_sheets()
 
     # parse event
     $event = array(
-        'app_name' => $config['app_name'], 'title' => 'Limmud FSU Israel', 'name' => 'Limmud FSU Israel', 'name_he' => 'Limmud FSU Israel', 'date' => '12-14 December 2019', 'date_he' => '12-14 December 2019', 'location_name' => 'Jopa Mira', 'location_name_he' => 'Jopa Mira',
-        'copyright' => array('holder' => 'Limmud FSU Israel', 'holder_url' => 'http://limmudfsu.org.il', 'licence' => 'Creative Commons Attribution License', 'licence_url' => 'http://creativecommons.org/licenses/by/4.0/', 'logo' => 'https://i.creativecommons.org/l/by/4.0/80x15.png', 'year' => 2018),
-        'creator' => array('email' => 'alex.agranov@gmail.com'), 'organizer_name' => 'Limmud FSU Israel', 'email' => 'reg@limmudfsu.org.il',
+        'app_name' => $config['app_name'], 'title' => 'Limmud FSU Israel', 'name' => 'Limmud FSU Israel', 'name_he' => 'Limmud FSU Israel', 'date' => '12-14 December 2019', 'date_he' => '12-14 December 2019', 'location_name' => '', 'location_name_he' => '',
+        'copyright' => array('holder' => 'Limmud FSU Israel', 'holder_url' => 'http://limmudfsu.org.il', 'licence' => 'Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License', 'licence_url' => 'http://creativecommons.org/licenses/by-nc-sa/4.0/', 'logo' => 'https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png', 'year' => 2021),
+        'organizer_name' => 'Limmud FSU Israel', 'email' => 'reg@limmudfsu.org.il',
         'social_links' => array(
             array('id' => 1, 'link' => 'http://limmudfsu.org.il', 'icon' => 'chrome', 'name' => 'Site'),
             array('id' => 2, 'link' => 'https://www.facebook.com/Limmud/', 'icon' => 'facebook', 'name' => 'Facebook'),
@@ -171,9 +171,9 @@ function parse_sheets()
             $descr = '';
         }
         if (!empty($row[2])) {
-            $bio = $row[2];
+            $bio = explode("\n\n", $row[2]);
         } else {
-            $bio = '';
+            $bio = [];
         }
         if (!empty($row[3])) {
             $photo = $row[3];
@@ -191,7 +191,7 @@ function parse_sheets()
             $descr_he = $descr;
         }
         if (!empty($row[6])) {
-            $bio_he = $row[6];
+            $bio_he = explode("\n\n", $row[6]);
         } else {
             $bio_he = $bio;
         }
@@ -239,13 +239,13 @@ function parse_sheets()
                 $name_he = $name;
             }
             if (!empty($row[7])) {
-                $bio = $row[7];
+                $bio = explode("\n\n", $row[7]);
             } else {
-                $bio = '';
+                $bio = [];
             }
             $photo = 'avatar.png';
             if (!empty($row[8])) {
-                $bio_he = $row[8];
+                $bio_he = explode("\n\n", $row[8]);
             } else {
                 $bio_he = $bio;
             }
@@ -274,14 +274,14 @@ function parse_sheets()
                 $name_he = '';
             }
             if (!empty($row[2])) {
-                $description = $row[2];
+                $description = explode("\n\n", $row[2]);
             } else {
-                $description = '';
+                $description = [];
             }
             if (!empty($row[3])) {
-                $description_he = $row[3];
+                $description_he = explode("\n\n", $row[3]);
             } else {
-                $description_he = '';
+                $description_he = [];
             }
             $imported_sessions[$name] = array('name_he' => $name_he, 'description' => $description, 'description_he' => $description_he);
 
@@ -296,14 +296,14 @@ function parse_sheets()
                 $name_he = '';
             }
             if (!empty($row[6])) {
-                $description = $row[6];
+                $description = explode("\n\n", $row[6]);
             } else {
-                $description = '';
+                $description = [];
             }
             if (!empty($row[7])) {
-                $description_he = $row[7];
+                $description_he = explode("\n\n", $row[7]);
             } else {
-                $description_he = '';
+                $description_he = [];
             }
             $imported_sessions[$name] = array('name_he' => $name_he, 'description' => $description, 'description_he' => $description_he);
         }
@@ -369,12 +369,12 @@ function parse_sheets()
             continue;
         }
         if (!empty($row[9])) {
-            $description = $row[9];
+            $description = explode("\n\n", $row[9]);
         } else {
             if (array_key_exists($name, $imported_sessions)) {
                 $description = $imported_sessions[$name]['description'];
             } else {
-                $description = '';
+                $description = [];
             }
         }
         if (!empty($row[10])) {
@@ -417,12 +417,12 @@ function parse_sheets()
             $track_he = $track;
         }
         if (!empty($row[16])) {
-            $description_he = $row[16];
+            $description = explode("\n\n", $row[16]);
         } else {
             if (array_key_exists($name, $imported_sessions)) {
                 $description_he = $imported_sessions[$name]['description_he'];
             } else {
-                $description_he = '';
+                $description_he = [];
             }
             if (empty($description_he)) {
                 $description_he = $description;

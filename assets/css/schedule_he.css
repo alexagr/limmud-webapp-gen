@@ -1,8 +1,12 @@
 /* Offsets for fixed navbar */
 body {
   color: #777;
-  font-family: Roboto,Heebo,'Helvetica Neue',Helvetica,Arial,sans-serif; 
+  font-family: 'Rubik', sans-serif;
   font-size: 14px; }
+
+p.compact {
+  margin: 0 0 6px;
+}
 
 .anchor {
   display: block;
@@ -11,9 +15,9 @@ body {
   visibility: hidden; }
 
 .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
-  font-family: Roboto,Heebo,'Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-family: 'Rubik', sans-serif;
   color: #333333;
-  font-weight: 400; }
+  font-weight: normal; }
 
 .speaker-short-info .h6, h6 {
   color: #555; }
@@ -293,7 +297,7 @@ a {
   cursor: pointer;
   padding: 10px 20px;
   width: auto;
-  font-weight: 400;
+  font-weight: 300;
   font-style: normal; }
   .sizeevent span {
     font-weight: 700; }
@@ -367,7 +371,8 @@ a {
       height: 43px; }
 
 .track-heading {
-  margin-top: 40px; }
+  margin-top: 40px;
+  font-weight: 500; }
 
 .active {
   color: #000 !important;
@@ -428,6 +433,7 @@ a {
     float: left;
     width: 40%; }
   .track-names {
+    display: none;
     margin-right: 0;
     margin-top: 0; } }
 
@@ -770,7 +776,7 @@ a {
     .footer-container .classic span .lead {
       display: inline-block;
       margin-bottom: 12px;
-      font-weight: 400; }
+      font-weight: 300; }
     .footer-container .classic .social-profiles {
       display: inline-block; }
       .footer-container .classic .social-profiles li {
@@ -781,7 +787,8 @@ a {
         color: #000; }
   .footer-container .contact-details {
     margin-bottom: 14px;
-    left: 40px; }
+    left: 40px;
+    right: 40px; }
     .footer-container .contact-details .contact-methods {
       list-style: none;
       margin: 0;
@@ -798,17 +805,20 @@ a {
         font-size: 14px;
         position: relative;
         left: 8px;
+        right: 8px;
         width: 188px; }
         .footer-container .contact-details .contact-methods span a {
           padding-bottom: 4px;
           position: relative;
           bottom: 10px;
-          left: 8px; }
+          left: 8px;
+          right: 8px; }
       .footer-container .contact-details .contact-methods .address span {
         vertical-align: top; }
   @media (max-width: 892px) {
     .footer-container .contact-details {
-      left: 0; } }
+      left: 0;
+      right: 0; } }
 
 .room-container .tip-description {
   color: #777;
@@ -835,7 +845,7 @@ a {
   padding-right: 10px; }
 
 .speaker-bio {
-  margin-bottom: 20px;
+  margin-bottom: 6px;
   padding-right: 10px; }
 
 .speaker-location {
@@ -854,7 +864,7 @@ a {
   border-top: 1px solid transparent;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
   cursor: pointer;
-  font-weight: 400;
+  font-weight: 300;
   padding: 20px;
   position: relative;
   text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.15);
@@ -906,7 +916,8 @@ a {
 
 /* Date selection tabs */
 .date-list {
-  line-height: 40px; }
+  line-height: 40px;
+  font-weight: 300; }
 
 .tabs {
   margin-top: 10px;
@@ -1066,7 +1077,7 @@ a {
 .session {
   border: 1px solid rgba(0, 0, 0, 0.15);
   color: #333333;
-  font-weight: 400;
+  font-weight: 300;
   line-height: 120%;
   padding: 5px;
   position: absolute;
@@ -1166,4 +1177,115 @@ a {
   .date-list {
     max-width: 50%; 
   }
+}
+
+/* fonts */
+@font-face {
+    font-family: 'Rubik';
+    src: url('ttf/Rubik-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Rubik';
+    src: url('ttf/Rubik-LightItalic.ttf') format('truetype');
+    font-weight: 300;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Rubik';
+    src: url('ttf/Rubik-BoldItalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Rubik';
+    src: url('ttf/Rubik-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Rubik';
+    src: url('ttf/Rubik-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Rubik';
+    src: url('ttf/Rubik-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* track legend */
+.track-legend {
+  display: none;
+}
+
+@media (max-width: 990px) {
+  .track-legend {
+    display: block;
+  }
+}
+
+.track-legend-toggle {
+  font-size: 12px;
+  font-weight: 300;
+  text-align: left;
+  color: gray;
+}
+
+.track-legend-toggle a {
+   color:inherit;
+   cursor: pointer;
+}
+
+.track-legend-toggle .fa-chevron-down {
+  transition: all 0.5s ease;
+}
+
+.rotate180 {
+  transform: rotate(180deg);
+}
+
+.track-legend-color {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%; }
+
+.track-legend-list {
+  line-height: 20px;
+  text-align: center;
+}
+
+.track-legend-item {
+  font-size: 12px;
+  font-weight: 300;
+  padding-right: 6px;
+  white-space: nowrap;
+}
+
+/* search on speakers page */
+.search-row {
+  line-heignt: 40px;
+  padding-right: 40px;
+  padding-bottom: 30px;
+}
+
+@media (min-width: 720px) {
+  .search-row {
+    max-width: 50%;
+  }
+}
+
+.search-filter-speakers {
+  flex-grow: 2;
+  font-size: small;
+  border-radius: 5px;
 }

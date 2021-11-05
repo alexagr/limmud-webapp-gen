@@ -109,12 +109,14 @@
     <br>
     <div class="row">
     <p>
-       <a href="http://creativecommons.org/licenses/by/4.0/"> <img src="https://i.creativecommons.org/l/by/4.0/80x15.png"> </a>
-       &copy; 2020
+       <a href="http://creativecommons.org/licenses/by/4.0/"> <img src="https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png"></a>
+       &nbsp;&copy; 2021
        <a href="http://limmudfsu.org.il">Limmud FSU Israel</a>
+       <!--
        <br>
        The website and it's contents are licensed under
        <a href="http://creativecommons.org/licenses/by/4.0/"> Creative Commons Attribution License </a>
+       -->
     </p>
     </div>
     
