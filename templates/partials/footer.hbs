@@ -61,19 +61,14 @@
   if ('serviceWorker' in navigator) {
     
     _updateReady = function(worker) {
-      /*
       Snackbar.show({
-        text: 'Найдена новая версия.',
+        text: 'Найдена новая версия программы',
         pos: 'bottom-center',
-        actionText: 'ОБНОВИТЬ',
-        duration: 0,
-        onActionClick: function(element) {
-          $(element).css('opacity', 0);
-          worker.postMessage({action: 'skipWaiting'});
-        }
+        showAction: false,
+        duration: 10000
       });
-      */
-      worker.postMessage({action: 'skipWaiting'});
+      setTimeout(function(){ worker.postMessage({action: 'skipWaiting'}); }, 3000);
+      // worker.postMessage({action: 'skipWaiting'});
     }
     
     _trackInstalling = function(worker) {
