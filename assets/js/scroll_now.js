@@ -4,7 +4,6 @@ $(function() {
   $('.day-filter').each(function() {
     if ($(this).hasClass(nowDate)) {
       $('#now-button').show();
-      dateFound = true;
     }
   });
 
@@ -15,7 +14,7 @@ $(function() {
     let elem;
 
     $('.day-filter').each(function() {
-      if ($(this).hasClass(nowDate)) {
+      if ($(this).hasClass(nowDate) && !$(this).hasClass('hide')) {
         $(this).find('.time-filter').each(function() {
           let eventTime = $(this).find('.eventtime').eq(0).find('h4').eq(0).text();
           if (eventTime < nowTime) {
