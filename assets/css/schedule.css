@@ -1062,7 +1062,7 @@ a {
 
 .session {
   border: 1px solid rgba(0, 0, 0, 0.15);
-  color: #333333;
+  color: #222;
   font-weight: 300;
   line-height: 120%;
   padding: 5px;
@@ -1075,7 +1075,7 @@ a {
   overflow: hidden;
   position: relative; }
   .session-name a {
-    color: #333333; }
+    color: #222; }
 
 .session-name:after {
   content: '';

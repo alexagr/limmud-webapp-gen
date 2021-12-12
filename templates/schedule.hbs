@@ -161,14 +161,18 @@
                       {{/if}}
                       <div class="session-speakers-list">
                         {{#each speakers_list}}
+                          {{#if has_data}}
                         <a href="speakers.html#{{id}}">
+                          {{/if}}
                           {{#if photo}}
                             <p class="session-speakers"><img onError="this.onerror=null;this.src='assets/img/avatar.png';" class="card-img-top speaker-image-small" src="speakers/thumbs/{{{photo}}}"/></p>
                           {{else}}
                             <p class="session-speakers"><img class="card-img-top speaker-image-small" src="assets/img/avatar.png"/></p>
                           {{/if}}
                           <p><span class="graytext">{{name}}</span></p>
+                          {{#if has_data}}
                         </a>
+                          {{/if}}
                         {{#if organisation}}
                         <p>{{organisation}}</p>
                         {{/if}}

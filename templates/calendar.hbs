@@ -180,9 +180,8 @@
           const showThing = date === 'all' || $(this).hasClass(date);
           $(this).toggleClass('hide', !showThing);
         });
-        display();
       });
-    
+
       $(".export-pdf").click(function() {
         $('#pdfModal').modal('show');
         let pdf = new jsPDF('l', 'pt', 'a4');
@@ -240,6 +239,48 @@
           });
         });
       });
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const elems = document.getElementsByClassName('rooms');
+        var elemsData = [];
+
+        for (var i = 0; i < elems.length; i++) {
+            elems[i].style.cursor = 'grab';
+
+            const mouseDownHandler = function (i, e) {
+                if (e.srcElement && e.srcElement.nodeName == 'A') {
+                    return;
+                }
+
+                elemsData[i].left = elems[i].scrollLeft;
+                elemsData[i].x = e.clientX;
+
+                document.addEventListener('mousemove', elemsData[i].move);
+                document.addEventListener('mouseup', elemsData[i].up);
+
+                elems[i].style.cursor = 'grabbing';
+                elems[i].style.userSelect = 'none';
+            };
+
+            const mouseMoveHandler = function (i, e) {
+                const dx = e.clientX - elemsData[i].x;
+                elems[i].scrollLeft = elemsData[i].left - dx;
+            };
+
+            const mouseUpHandler = function (i) {
+                document.removeEventListener('mousemove', elemsData[i].move);
+                document.removeEventListener('mouseup', elemsData[i].up);
+
+                elems[i].style.cursor = 'grab';
+                elems[i].style.removeProperty('user-select');
+            };
+
+            elemsData.push({ left: 0, x: 0, down: mouseDownHandler.bind(null, i), move: mouseMoveHandler.bind(null, i), up: mouseUpHandler.bind(null, i)});
+            elems[i].addEventListener('mousedown', elemsData[i].down);
+        }
     });
   </script>
 

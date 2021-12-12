@@ -215,17 +215,26 @@ function parse_sheets()
             }
         } else {
             $id = count($speakers);
-            $speakers[$id] = array('id' => $id, 'name' => $name, 'name_he' => $name_he, 'photo' => $photo, 'short_biography' => '', 'short_biography_he' => '', 'long_biography' => $bio, 'long_biography_he' => $bio_he, 'sessions' => array());
+            $speakers[$id] = array('id' => $id, 'name' => $name, 'name_he' => $name_he, 'photo' => $photo, 'short_biography' => '', 'short_biography_he' => '', 'long_biography' => $bio, 'long_biography_he' => $bio_he, 'sessions' => array(), 'has_data' => true);
             $speakers_map[$name] = $id;
+        }
+    }
+
+    foreach ($speakers as $key => $speaker) {
+        if (($speaker['photo'] == 'avatar.png') && (empty($speaker['long_biography']))) {
+            $speakers[$key]['has_data'] = false;
         }
     }
 
     # parse sessions data
     $session_data = array();
     $ranges = array('Presentors!G2:M', 'Presentors!N2:T');
+    $offset = 0;
     foreach ($ranges as $range) {
         $response = $service->spreadsheets_values->get($spreadsheetId, $range);
+        $idx = 1;
         foreach ($response->getValues() as $row) {
+            $idx++;
             if (!empty($row[0])) {
                 $name = $row[0];
             } else {
@@ -268,14 +277,15 @@ function parse_sheets()
                 $language = '';
                 $language_he = '';
             }
-            $session_data[$name] = array('name_he' => $name_he, 'description' => $description, 'description_he' => $description_he, 'language' => $language, 'language_he' => $language_he);
+            $session_data[$name] = array('name_he' => $name_he, 'description' => $description, 'description_he' => $description_he, 'language' => $language, 'language_he' => $language_he, 'id' => ($idx * count($ranges) + $offset));
         }
+        $offset++;
     }
 
     # parse schedule
     $sessions = array();
     $sessions_map = array();
-    $range = 'Schedule!A2:I';
+    $range = 'Schedule!A2:J';
     $response = $service->spreadsheets_values->get($spreadsheetId, $range);
     foreach ($response->getValues() as $row) {
         if (!empty($row[0])) {
@@ -316,12 +326,15 @@ function parse_sheets()
         if (!empty($row[4])) {
             $room = $row[4];
             if (array_key_exists($room, $locations_map)) {
-                $id = $locations_map[$room];
-                $room_he = $locations[$id]['name_he'];
+                $location_id = $locations_map[$room];
+                $room_he = $locations[$location_id]['name_he'];
             } else {
                 $room_he = $room;
             }
         } else {
+            if (!empty($next_end)) {
+                $end = $next_end;
+            }
             continue;
         }
         if (!empty($row[5])) {
@@ -329,8 +342,8 @@ function parse_sheets()
             $people_he = array();
             foreach ($people as $speaker) {
                 if (array_key_exists($speaker, $speakers_map)) {
-                    $id = $speakers_map[$speaker];
-                    $people_he[] = $speakers[$id]['name_he'];
+                    $speaker_id = $speakers_map[$speaker];
+                    $people_he[] = $speakers[$speaker_id]['name_he'];
                 } else {
                     $people_he[] = $speaker;
                 }
@@ -342,6 +355,9 @@ function parse_sheets()
         if (!empty($row[6])) {
             $name = $row[6];
         } else {
+            if (!empty($next_end)) {
+                $end = $next_end;
+            }
             continue;
         }
         if (!empty($row[7])) {
@@ -360,15 +376,15 @@ function parse_sheets()
             # $track = mb_convert_case($row[8], MB_CASE_TITLE, 'UTF-8');
             $track = $row[8];
             if (array_key_exists($track, $tracks_map)) {
-                $id = $tracks_map[$track];
-                $track_he = $tracks[$id]['name_he'];
-                $tracks[$id]['in_use'] = true;
+                $track_id = $tracks_map[$track];
+                $track_he = $tracks[$track_id]['name_he'];
+                $tracks[$track_id]['in_use'] = true;
             } else {
-                $track = 'Лекция';
+                $track = 'лекция';
                 $track_he = 'הרצאה';
             }
         } else {
-            $track = 'Лекция';
+            $track = 'лекция';
             $track_he = 'הרצאה';
         }
         if (!empty($row[9])) {
@@ -383,10 +399,12 @@ function parse_sheets()
             $name_he = $session_data[$name]['name_he'];
             $description = $session_data[$name]['description'];
             $description_he = $session_data[$name]['description_he'];
+            $id = $session_data[$name]['id'];
         } else {
             $name_he = '';
             $description = '';
             $description_he = '';
+            $id = 0;
         }
 
         # update locations
@@ -430,12 +448,11 @@ function parse_sheets()
             $track_id = $tracks_map[$track];
         } else {
             $track_id = count($tracks);
-            $tracks[$track_id] = array('id' => $id, 'name' => $track, 'name_he' => $track_he, 'color' => '#EEE', 'in_use' => true);
+            $tracks[$track_id] = array('id' => $track_id, 'name' => $track, 'name_he' => $track_he, 'color' => '#EEE', 'in_use' => true);
             $tracks_map[$track] = $track_id;
         }
 
         # update sessions
-        $id = count($sessions) + 1;
         $session = array(
             'id' => $id, 'title' => $name, 'title_he' => $name_he,
             'start_time' => $start_time, 'end_time' => $end_time,
@@ -650,7 +667,7 @@ function foldByTime($sessions, $speakers, $tracks) {
 }
 
 $timeToPixel = 50; // 15 mins = 50 pixels
-$columnWidth = 160;
+$columnWidth = 185;
 $calendarWidth = 1060;
 
 function timeDiff($startTime, $endTime)
@@ -1065,7 +1082,7 @@ function generate()
         "partials_loader" => $partialsLoader
     ]);
 
-    $pages = array('index', 'schedule', /*'favorite',*/ 'calendar', 'speakers');
+    $pages = array('index', 'schedule', /*'favorite',*/ 'calendar', 'speakers', 'map');
     foreach ($pages as $page) {
         $model['otherpage'] = $page . '_he';
         $model['otherpage_he'] = $page;

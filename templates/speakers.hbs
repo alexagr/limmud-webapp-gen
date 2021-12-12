@@ -54,6 +54,7 @@
 
   <div class="row">
   {{#each speakersList}}
+    {{#if has_data}}
     <div class="speaker-inline col-xs-12 col-sm-6 col-md-4">
       <a class="anchor" id="{{id}}"></a>
       <div class="speaker-container">
@@ -103,6 +104,7 @@
         </div>
       </div>
     </div>
+    {{/if}}
     {{/each}}
   </div>
   </div>
