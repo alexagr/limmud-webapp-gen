@@ -1,6 +1,6 @@
 /* Offsets for fixed navbar */
 body {
-  color: #777;
+  color: #666;
   font-family: 'Rubik', sans-serif;
   font-size: 14px; }
 
@@ -16,14 +16,14 @@ p.compact {
 
 .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
   font-family: 'Rubik', sans-serif;
-  color: #333333;
+  color: #333;
   font-weight: normal; }
 
 .speaker-short-info .h6, h6 {
   color: #555; }
 
 a {
-  color: #777;
+  color: #666;
   /* Social media icons for speakers */ }
   a:hover {
     color: #e12b00;
@@ -76,10 +76,10 @@ a {
 
 /* General styling of session list */
 .sessions .session-description {
-  color: #777; }
+  color: #666; }
 
 .sessions .session-type {
-  color: #777; }
+  color: #666; }
 
 .sessions .session-speakers {
   float: left; }
@@ -105,7 +105,7 @@ a {
     font-size: 12px; }
 
 .sessions .session-location {
-  color: #777;
+  color: #666;
   text-align: left; }
 
 .sessions ul {
@@ -381,7 +381,7 @@ a {
 
 .eventtime {
   text-align: center;
-  color: #777;
+  color: #666;
   vertical-align: middle;
   height: 46px;
   transform: translateY(30%);
@@ -488,7 +488,7 @@ a {
     padding-top: 10px; }
 
 .eventdes {
-  color: #777;
+  color: #666;
   padding-top: 30px;
   text-align: justify; }
 
