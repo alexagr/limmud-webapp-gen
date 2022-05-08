@@ -165,7 +165,7 @@
         function generate() {
           $("#generate-status").html('<p class="info">Generating WebApp</p>');
           jQuery.ajax({
-            url: 'generate_new.php',
+            url: 'generate.php',
             data: '',
             type: 'POST',
             success: function(data){
@@ -176,7 +176,7 @@
               }
 		    },
 		    error:function(){
-              $("#generate-status").html('<p class="error">ERROR: Cannot execute generate_new.php</p>');
+              $("#generate-status").html('<p class="error">ERROR: Cannot execute generate.php</p>');
             }
 		  });
 	    }

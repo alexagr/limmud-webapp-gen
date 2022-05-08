@@ -35,8 +35,9 @@
         require_once(__DIR__ . '/lib/vendor/autoload.php');
         $client = new Google_Client();
         $client->setApplicationName('Limmud WebApp Generator');
+        $client->setAuthConfig('data/client_secret.json');
         $client->setScopes(Google_Service_Sheets::SPREADSHEETS_READONLY);
-        $client->setAuthConfig('data/credentials.json');
+        $client->setRedirectUri('https://' . $_SERVER['HTTP_HOST'] . '/webapp/redirect.php');
         $client->setAccessType('offline');
         $client->setPrompt('select_account consent');
       ?>
@@ -47,17 +48,6 @@
       <p>A new tab will be opened and you will be asked to choose an account. Choose Google account where the sheet is available.</p>
       <p>Then you will get a warning screen saying that the app is not verified. This is fine because we're using private application ID. So click &quot;Advanced&quot; and then &quot;Go to Limmud Webapp Generator&quot;.</p>
       <p>At the next screen make sure to check &quot;See all your Google Sheets spreadsheets&quot; checkbox and click &quot;Continue&quot;.</p>
-      <p>Finally you will get the authorization code. Copy it to the clipboard, insert it in the input element below and click &quot;Create Token&quot;.</p>
-      </div>
-      <div class="row">
-        <div class="col-md-9">
-          <input type="text" id="sheet-id" size="70" value=""><br>
-        </div>
-      </div>
-      <div class="row">
-      <br>
-      <button name="config" class="btn btn-primary btn-action" onClick="updateConfig();">Create Token</button>&nbsp;&nbsp;&nbsp;
-      <br>
       </div>
   </div>
 
@@ -76,32 +66,7 @@
     
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
-    
-    <script>
-        function updateConfig() {
-          $("#config-status").html('');
-          jQuery.ajax({
-            url: 'create_token.php',
-            data: 'code='+$("#sheet-id").val()+'&app_name='+$("#app-name").val(),
-            type: 'POST',
-		    success: function(data){
-              if (data.includes('ERROR')) {
-                $("#config-status").html('<p class="error">' + data + '</p>');
-              } else {
-                $("#config-status").html('<p class="success">' + data + '</p>');
-              }
-		    },
-		    error:function(){
-              $("#config-status").html('<p class="error">ERROR: Cannot execute create_token.php</p>');
-            }
-		  });
-	    }         
 
-        function openInNewTab(url) {
-          window.open(url, '_blank').focus();
-        }
-
-    </script>
   </footer>
 </body>
 
