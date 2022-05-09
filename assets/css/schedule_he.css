@@ -374,7 +374,7 @@ a {
   font-weight: 500; }
 
 .active {
-  background-color: #f1d204;
+  background-color: #f1d204 !important;
   font-weight: bold; }
 
 .eventtime {
