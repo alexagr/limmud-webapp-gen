@@ -929,9 +929,14 @@ a {
     margin-right: 0; }
   .tabs-nav-link:hover {
     color: #e6e6e6; }
+  .tabs-nav-link:focus {
+    outline: none;
+    box-shadow: none; 
+    text-decoration: none;}
   .tabs-nav-link.is-active {
-    background-color: #e7e7e7;
-    color: rgba(22, 22, 22, 0.99); }
+    background-color: #f1d204;
+    color: #333; 
+    font-weight: bold; }
   .tabs-nav-link i,
   .tabs-nav-link span {
     line-height: 1;
@@ -951,6 +956,17 @@ a {
     display: block; }
   .date-list {
     max-width: 50%; } }
+
+.bookmark-toggle {
+  color: #777;
+  }
+  .bookmark-toggle.is-active {
+    background-color: #f1d204;
+    color: #333; }
+  .bookmark-toggle:focus {
+    outline: none;
+    box-shadow: none; 
+    text-decoration: none;}
 
 .bookmark {
   cursor: pointer;

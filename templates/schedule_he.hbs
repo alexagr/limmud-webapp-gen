@@ -60,7 +60,7 @@
           <input class="search-filter-input" type="text" placeholder="חיפוש">
         </span>
         <span class="filter show-button-filter">
-          <button class="btn btn-default" id="starred"><i class="fa fa-star" aria-hidden="true"></i></button>
+          <button class="btn btn-default bookmark-toggle" id="starred"><i class="fa fa-star" aria-hidden="true"></i></button>
         </span>      
       </div>
 
@@ -344,12 +344,10 @@
       $('#starred').click(function(event){
         favorite = !favorite;
         if (!favorite) {
-          $(this).css("color", "black");
-          $('#starred').css("background-color","#fff");
+          $(this).removeClass('is-active');
         }
         else {
-          $(this).css("color", "white");
-          $('#starred').css("background-color","#838282");
+          $(this).addClass('is-active');
         }
         display();
       });
