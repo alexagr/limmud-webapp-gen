@@ -62,13 +62,14 @@ a {
       border-bottom: 3px solid #777; }
 
 .navbar-toggle {
-  padding: 6px 10px;
-  color: #777;
+  border: none;
+  padding: 6px 8px;
+  color: #555;
   margin-left: 2em;
   margin-top: 1em; }
 
 .navbar-default .navbar-toggle .icon-bar {
-  background-color: #777; }
+  background-color: #555; }
 
 .navbar-brand {
   padding: 5px 5px; }
