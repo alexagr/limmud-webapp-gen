@@ -43,8 +43,14 @@ $(function() {
     });
 
     if (elem) {
+      let snackText;
+      if ($('title').text().startsWith('לימוד')) {
+        snackText = 'הרצאה הקרובה מתחילה ב- ' + $(elem).find('.eventtime').first().find('h4').first().text()
+      } else {
+        snackText = 'Ближайшая сессия начинается в ' + $(elem).find('.eventtime').first().find('h4').first().text() /*+ ' (' + $(day).find('h4').first().text() + ')'*/;
+      }
       Snackbar.show({
-        text: 'Ближайшая сессия - в ' + $(elem).find('.eventtime').first().find('h4').first().text() /*+ ' (' + $(day).find('h4').first().text() + ')'*/,
+        text: snackText,
         pos: 'bottom-center',
         showAction: false,
         duration: 2000
