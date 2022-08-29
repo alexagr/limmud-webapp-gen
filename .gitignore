@@ -5,3 +5,4 @@ token.json
 composer.phar
 lib/vendor
 limmud-test
+*.1

@@ -1171,7 +1171,7 @@ a {
   font-size: 32px;
   position: fixed;
   right: 11px;
-  bottom: 6px;
+  bottom: 8px;
   z-index: 1010;
   text-decoration: none;
 }
@@ -1181,8 +1181,8 @@ a {
   display: none;
   font-size: 32px;
   position: fixed;
-  right: 8px;
-  bottom: 40px;
+  right: 9px;
+  bottom: 42px;
   z-index: 1010;
   text-decoration: none;
 }
