@@ -227,6 +227,7 @@
 
   <script type="text/javascript">
     var favorite = false;
+    var lastClicked = null;
     $(document).ready(function() {
       $('.bookmark').click(function(e){
         var temp = JSON.parse(localStorage["{{event.name}}"]);
@@ -261,6 +262,7 @@
         if (hash) {
           $("#desc2-" + hash).collapse('toggle');
           $("#desc-" + hash).collapse('toggle');
+          lastClicked = $("#title-" + hash)[0];
         }
       }
       initPage();
@@ -362,6 +364,32 @@
       $('.track-legend-toggle').click(function() {
         $(".track-legend-toggle .fa-chevron-down").toggleClass("rotate180");
       });
+      
+      // keep only one session expanded
+      $('.event').click(function() {
+        let offset = $(this).offset().top - window.scrollY;
+
+        if (lastClicked && (lastClicked != this)) {
+          let elems = $(lastClicked).attr('data-target').replace(' ', '').split(',');
+          if (elems && $(elems[0]).hasClass('in')) {
+            elems.forEach(e => {
+              if ($(e).hasClass('in')) {
+                $(e).removeClass('in');
+                $(e).attr('aria-expanded', 'false');
+                $(e).attr('style', 'height: 0px;')
+              } else {
+                $(e).addClass('in');
+                $(e).attr('aria-expanded', 'true');
+                $(e).attr('style', '')
+              }
+            });
+          }
+        }
+
+        lastClicked = this;
+        window.scrollTo(0, $(this).offset().top - offset);
+      });
+      
     });
   </script>
 
