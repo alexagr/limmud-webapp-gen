@@ -379,9 +379,9 @@
       });
 
       $(".session-desc").on('shown.bs.collapse', function(e) {
-        if (lastClicked && ($(lastClicked).offset().top - window.scrollY < 80)) {
+        if (lastClicked && ($(lastClicked).offset().top - window.scrollY < 60)) {
           $([document.documentElement, document.body]).animate({
-            scrollTop: $(lastClicked).offset().top - 80
+            scrollTop: $(lastClicked).offset().top - 60
             }, 500);
         }
       });
