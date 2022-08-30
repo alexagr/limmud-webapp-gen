@@ -66,7 +66,7 @@
         {{/if}}
         </p>
         <p class="speaker-name">{{{name_he}}}</p>
-        <div id="desc-{{id}}" class="collapse speaker-desc">
+        <div id="desc-{{id}}" class="collapse speaker-desc" aria-hidden="true">
           {{#if short_biography_he}}
           <p class="speaker-bio">
             <i>{{{short_biography_he}}}</i>
@@ -84,18 +84,15 @@
               <div class="col-xs-12 col-md-12">
                 {{#each sessions}}
                 {{#unless is_cancelled}}
-                <h5>
-                  <strong>
-                  {{date_he}}
-                  </strong>
-                </h5>
-                <p class="speaker-location"><i style="color:{{{location_color}}}" class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;<i>{{location_he}}</i></p>
                 <a href="schedule_he.html#{{session_id}}">
-                  <h4 style="background-color:{{{color}}}"  class="speaker-event">
-                    <span class="time-track">{{start}} - {{end}}&nbsp;&bull;&nbsp;</span><br />
-                    {{{title_he}}}
-                  </h4>
+                  <div style="background-color:{{{color}}}"  class="speaker-event">
+                    <h4>{{{title_he}}}</h4>
+                    <br>
+                    <h5><i style="color:{{{location_color}}}" class="fa fa-map-marker-alt"></i>&nbsp;<i>{{location_he}}</i></h5>
+                    <h5><i class="fa fa-clock"></i>&nbsp;{{start}} - {{end}}, {{date_he}}</h5>
+                  </div>
                 </a>
+                <br>
                 {{/unless}}
                 {{/each}}
               </div>

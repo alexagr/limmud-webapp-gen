@@ -872,7 +872,7 @@ a {
 
 @media (max-width: 660px) {
   .speaker-event {
-    max-width: 270px; } }
+    max-width: 95%; } }
 
 @media (min-width: 600px) {
   .mobile {
