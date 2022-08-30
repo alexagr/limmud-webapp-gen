@@ -66,7 +66,7 @@
         {{/if}}
         </p>
         <p class="speaker-name">{{{name_he}}}</p>
-        <div id="desc-{{id}}" class="collapse">
+        <div id="desc-{{id}}" class="collapse speaker-desc">
           {{#if short_biography_he}}
           <p class="speaker-bio">
             <i>{{{short_biography_he}}}</i>
@@ -159,27 +159,23 @@
 
       // keep only one speaker expanded
       $('.speaker-image').click(function() {
-        let offset = $(this).offset().top - window.scrollY;
-
         if (lastClicked && (lastClicked != this)) {
           let elems = $(lastClicked).attr('data-target').replace(' ', '').split(',');
           if (elems && $(elems[0]).hasClass('in')) {
             elems.forEach(e => {
-              if ($(e).hasClass('in')) {
-                $(e).removeClass('in');
-                $(e).attr('aria-expanded', 'false');
-                $(e).attr('style', 'height: 0px;')
-              } else {
-                $(e).addClass('in');
-                $(e).attr('aria-expanded', 'true');
-                $(e).attr('style', '')
-              }
+              $(e).collapse('toggle');
             });
           }
         }
-
         lastClicked = this;
-        window.scrollTo(0, $(this).offset().top - offset);
+      });
+
+      $(".speaker-desc").on('shown.bs.collapse', function(e) {
+        if (lastClicked && ($(lastClicked).offset().top - window.scrollY < 80)) {
+          $([document.documentElement, document.body]).animate({
+            scrollTop: $(lastClicked).offset().top - 80
+            }, 500);
+        }
       });
 
     });

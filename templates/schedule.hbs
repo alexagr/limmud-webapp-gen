@@ -133,7 +133,7 @@
                         </div>
                       </div>
                     </div>
-                    <div id="desc-{{session_id}}" class="collapse">
+                    <div id="desc-{{session_id}}" class="collapse session-desc">
                       <p class="compact"><i style="color:{{{color}}}" class="fa fa-circle" aria-hidden="true"></i>&nbsp;{{tracktitle}}</p>
                       {{#if language}}
                       <p class="compact"><i class="fa fa-globe" aria-hidden="true"></i>&nbsp;{{language}}</p>
@@ -367,27 +367,23 @@
       
       // keep only one session expanded
       $('.event').click(function() {
-        let offset = $(this).offset().top - window.scrollY;
-
         if (lastClicked && (lastClicked != this)) {
           let elems = $(lastClicked).attr('data-target').replace(' ', '').split(',');
           if (elems && $(elems[0]).hasClass('in')) {
             elems.forEach(e => {
-              if ($(e).hasClass('in')) {
-                $(e).removeClass('in');
-                $(e).attr('aria-expanded', 'false');
-                $(e).attr('style', 'height: 0px;')
-              } else {
-                $(e).addClass('in');
-                $(e).attr('aria-expanded', 'true');
-                $(e).attr('style', '')
-              }
+              $(e).collapse('toggle');
             });
           }
         }
-
         lastClicked = this;
-        window.scrollTo(0, $(this).offset().top - offset);
+      });
+
+      $(".session-desc").on('shown.bs.collapse', function(e) {
+        if (lastClicked && ($(lastClicked).offset().top - window.scrollY < 80)) {
+          $([document.documentElement, document.body]).animate({
+            scrollTop: $(lastClicked).offset().top - 80
+            }, 500);
+        }
       });
       
     });
