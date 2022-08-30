@@ -151,7 +151,7 @@
                       {{#if recommend}}
                       <p class="compact"><i class="fa fa-book-reader" aria-hidden="true"></i>&nbsp;«Бабель» рекомендует</p>
                       {{/if}}
-                      <p><i class="fa fa-clock" aria-hidden="true"></i>&nbsp;{{sessiondate}}, <span>{{start}} - {{end}}</span></p>
+                      <p><i class="fa fa-clock" aria-hidden="true"></i>&nbsp;{{start}} - {{end}}, {{sessiondate}}</p>
                       <hr class="clear-both">
                       {{#if description}}
                         {{#each description}}
@@ -169,7 +169,7 @@
                           {{else}}
                             <p class="session-speakers"><img class="card-img-top speaker-image-small" src="assets/img/avatar.png"/></p>
                           {{/if}}
-                          <p><span class="graytext">{{name}}</span></p>
+                          <p><span class="session-speaker-name">{{name}}</span></p>
                           {{#if has_data}}
                         </a>
                           {{/if}}

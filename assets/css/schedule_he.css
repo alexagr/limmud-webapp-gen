@@ -907,6 +907,10 @@ a {
 .session-speakers {
   margin-left: 20px; }
 
+.session-speaker-name {
+  color: #444;
+}
+
 .paddingzero {
   padding: 0; }
 
@@ -1113,6 +1117,9 @@ a {
   right: 0; }
 
 .session-desc {
+  font-size: 14px; }
+
+.session-details {
   font-size: 12px; }
 
 .time {
