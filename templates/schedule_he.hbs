@@ -366,15 +366,17 @@
 
       // keep only one session expanded
       $('.event').click(function() {
-        if (lastClicked && (lastClicked != this)) {
-          let elems = $(lastClicked).attr('data-target').replace(' ', '').split(',');
-          if (elems && $(elems[0]).hasClass('in')) {
-            elems.forEach(e => {
-              $(e).collapse('toggle');
-            });
-          }
-        }
         lastClicked = this;
+        $('.event').each(function() {
+          if (lastClicked != this) {
+            let elems = $(this).attr('data-target').replace(' ', '').split(',');
+            if (elems && $(elems[0]).hasClass('in')) {
+              elems.forEach(e => {
+                $(e).collapse('toggle');
+              });
+            }
+          }
+        });
       });
 
       $(".session-desc").on('shown.bs.collapse', function(e) {
