@@ -849,6 +849,7 @@ function foldByRooms($sessions, $speakers, $tracks) {
         $dates[$date]['timeline'] = $timeline['timeline'];
         $dates[$date]['height'] = $timeline['height'];
         $dates[$date]['timeToPixel'] = $timeline['timeToPixel'];
+        $dates[$date]['timeToPixelOffset'] = $timeline['timeToPixel'] / 2 + 1;
 
         $prevLocation = '';
         $room = array('sessions' => array(), 'valid' => false);

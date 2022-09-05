@@ -35,19 +35,41 @@ $(function() {
     }
 
     var elem;
+    var elemTime;
     $(day).find('.time-filter').each(function() {
       let eventTime = $(this).find('.eventtime').eq(0).find('h4').eq(0).text();
+      if (eventTime.startsWith('0')) {
+        let hour = parseInt(eventTime.substr(0, 2));
+        hour += 24;
+        eventTime = hour.toString() + eventTime.substr(2);
+      }
       if (!elem || (eventTime < nowTime)) {
         elem = this;
+        elemTime = eventTime;
       }
     });
+    
+    if (!elem) {
+      $(day).find('.time').each(function() {
+        let eventTime = $(this).text().replaceAll(/\s/g, '');
+        if (eventTime.startsWith('0')) {
+          let hour = parseInt(eventTime.substr(0, 2));
+          hour += 24;
+          eventTime = hour.toString() + eventTime.substr(2);
+        }
+        if ((eventTime.length >= 4) && (!elem || (eventTime < nowTime))) {
+          elem = this;
+          elemTime = eventTime;
+        }
+      });
+    }
 
     if (elem) {
       let snackText;
       if ($('title').text().startsWith('לימוד')) {
-        snackText = 'הרצאה הקרובה מתחילה ב- ' + $(elem).find('.eventtime').first().find('h4').first().text()
+        snackText = 'הרצאה הקרובה מתחילה ב- ' + elemTime
       } else {
-        snackText = 'Ближайшая сессия начинается в ' + $(elem).find('.eventtime').first().find('h4').first().text() /*+ ' (' + $(day).find('h4').first().text() + ')'*/;
+        snackText = 'Ближайшая сессия начинается в ' + elemTime;
       }
       Snackbar.show({
         text: snackText,
