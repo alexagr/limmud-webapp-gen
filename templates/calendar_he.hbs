@@ -55,7 +55,6 @@
       </div>
     </div>
 
-    <!--
     <div class="row">
       <div class="button-list container pull-left">
         <button class="btn btn-default export-png" type="button">
@@ -63,7 +62,6 @@
         </button>
       </div>
     </div>
-    -->
 
     <div class="row">
       <div class="col-md-12 calendar-view">
@@ -167,7 +165,7 @@
 
   <script src="assets/js/async.min.js" type="text/javascript"></script>
   <script src="assets/js/FileSaver.js" type="text/javascript"></script>
-  <script src="assets/js/html2canvas.js" type="text/javascript"></script>
+  <script src="assets/js/html2canvas.min.js" type="text/javascript"></script>
   <script type="text/javascript">
     $(document).ready(function() {
       function getCurrentDate() {
@@ -194,11 +192,12 @@
         let maxWidth = 0;
         let initialWidth = [];
         let count = 0;
+        let widthOfChild = 0;
         $('.calendar').each(function() {
           let $timeline = $(this);
           initialWidth[count] = $timeline.width();
           let numberOfChildElements = $timeline.find('.rooms')[0].childElementCount - 1;
-          let widthOfChild = $timeline.find('.room').width() + 3;
+          widthOfChild = $timeline.find('.room').width() + 3;
           let canvasWidth = numberOfChildElements * widthOfChild + 50;
           $timeline.width(canvasWidth);
           if(canvasWidth > maxWidth){
@@ -207,8 +206,9 @@
           count++;
         });
 
-        $timeline = $('.calendar').parent();
-        html2canvas($timeline,{width: maxWidth}).then(function(canvas) {
+        $timeline = $('.calendar').parent()[0];
+        // html2canvas creates some weird offset for RTL text block - try to compensate for it
+        html2canvas($timeline,{width: maxWidth, windowWidth: maxWidth, x: -widthOfChild * 2 - 100}).then(function(canvas) {
           canvas.id = "generated-canvas";
           canvas.toBlob(function(blob) {
             $('#saveModal').modal('hide');

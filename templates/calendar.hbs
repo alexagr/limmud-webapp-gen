@@ -165,7 +165,7 @@
 
   <script src="assets/js/async.min.js" type="text/javascript"></script>
   <script src="assets/js/FileSaver.js" type="text/javascript"></script>
-  <script src="assets/js/html2canvas.js" type="text/javascript"></script>
+  <script src="assets/js/html2canvas.min.js" type="text/javascript"></script>
   <script type="text/javascript">
     $(document).ready(function() {
       function getCurrentDate() {
@@ -205,7 +205,7 @@
           count++;
         });
 
-        $timeline = $('.calendar').parent();
+        $timeline = $('.calendar').parent()[0];
         html2canvas($timeline,{width: maxWidth}).then(function(canvas) {
           canvas.id = "generated-canvas";
           canvas.toBlob(function(blob) {
