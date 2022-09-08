@@ -116,18 +116,18 @@
                           {{/each}}
                           </h5>
                           <h6>
-                          <span style="white-space: nowrap"><i class="fa fa-clock" aria-hidden="true"></i>&nbsp;{{start}} - {{end}} &nbsp;&nbsp; </span>
+                          <span style="white-space: nowrap">{{start}} - {{end}}</span>
                           {{#if location_he}}
-                          <span style="white-space: nowrap"><i class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;{{location_he}} &nbsp;&nbsp; </span>
+                          &nbsp; | &nbsp; <span style="white-space: nowrap">{{location_he}}</span>
                           {{/if}}
                           {{#if language_he}}
-                          <span style="white-space: nowrap"><i class="fa fa-globe" aria-hidden="true"></i>&nbsp;{{language_he}} &nbsp;&nbsp; </span>
+                          &nbsp; | &nbsp; <span style="white-space: nowrap">{{language_he}}</span>
                           {{/if}}
                           {{#if shabbat}}
-                          <span style="white-space: nowrap"><i class="fa fa-menorah" aria-hidden="true"></i>&nbsp;שומר שבת &nbsp;&nbsp; </span>
+                          &nbsp; | &nbsp; <i class="fa fa-menorah" aria-hidden="true"></i>
                           {{/if}}
                           {{#if recommend}}
-                          <i class="fa fa-book-reader" aria-hidden="true"></i>
+                          &nbsp; | &nbsp; <i class="fa fa-book-reader" aria-hidden="true"></i>
                           {{/if}}
                           </h6>
                         </div>
