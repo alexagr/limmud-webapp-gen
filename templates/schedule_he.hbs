@@ -116,17 +116,18 @@
                           {{/each}}
                           </h5>
                           <h6>
-                          {{#if language_he}}
-                          <i class="fa fa-globe" aria-hidden="true"></i>&nbsp;{{language_he}}
-                          {{/if}}
+                          <span style="white-space: nowrap"><i class="fa fa-clock" aria-hidden="true"></i>&nbsp;{{start}} - {{end}} &nbsp;&nbsp; </span>
                           {{#if location_he}}
-                          {{#if language_he}}&nbsp;&nbsp;&nbsp;{{/if}}<i class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;<i>{{location_he}}</i>
+                          <span style="white-space: nowrap"><i class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;{{location_he}} &nbsp;&nbsp; </span>
+                          {{/if}}
+                          {{#if language_he}}
+                          <span style="white-space: nowrap"><i class="fa fa-globe" aria-hidden="true"></i>&nbsp;{{language_he}} &nbsp;&nbsp; </span>
                           {{/if}}
                           {{#if shabbat}}
-                          &nbsp;&nbsp;&nbsp;<i class="fa fa-menorah" aria-hidden="true"></i>&nbsp;שומר שבת
+                          <span style="white-space: nowrap"><i class="fa fa-menorah" aria-hidden="true"></i>&nbsp;שומר שבת &nbsp;&nbsp; </span>
                           {{/if}}
                           {{#if recommend}}
-                          &nbsp;&nbsp;&nbsp;<i class="fa fa-book-reader" aria-hidden="true"></i>
+                          <i class="fa fa-book-reader" aria-hidden="true"></i>
                           {{/if}}
                           </h6>
                         </div>
@@ -134,9 +135,7 @@
                     </div>
                     <div id="desc-{{session_id}}" class="collapse session-desc">
                       <p class="compact"><i style="color:{{{color}}}" class="fa fa-circle" aria-hidden="true"></i>&nbsp;{{tracktitle_he}}</p>
-                      {{#if language_he}}
-                      <p class="compact"><i class="fa fa-globe" aria-hidden="true"></i>&nbsp;{{language_he}}</p>
-                      {{/if}}
+                      <p class="compact"><i class="fa fa-clock" aria-hidden="true"></i>&nbsp;{{start}} - {{end}}, {{sessiondate_he}}</p>
                       {{#if location_he}}
                       {{#if location_color}}
                       <p class="compact"><i style="color:{{{location_color}}}" class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;<i>{{location_he}}</i></p>
@@ -144,13 +143,15 @@
                       <p class="compact"><i class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;<i>{{location_he}}</i></p>
                       {{/if}}
                       {{/if}}
+                      {{#if language_he}}
+                      <p class="compact"><i class="fa fa-globe" aria-hidden="true"></i>&nbsp;{{language_he}}</p>
+                      {{/if}}
                       {{#if shabbat}}
                       <p class="compact"><i class="fa fa-menorah" aria-hidden="true"></i>&nbsp;שומר שבת</p>
                       {{/if}}
                       {{#if recommend}}
                       <p class="compact"><i class="fa fa-book-reader" aria-hidden="true"></i>&nbsp;&quot;בבל&quot; ממליץ</p>
                       {{/if}}
-                      <p><i class="fa fa-clock" aria-hidden="true"></i>&nbsp;{{start}} - {{end}}, {{sessiondate_he}}</p>
                       <hr class="clear-both">
                       {{#if description_he}}
                         {{#each description_he}}
