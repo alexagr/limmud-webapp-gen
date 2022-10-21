@@ -106,9 +106,12 @@
                           {{/each}}
                         {{/if}}
                             <br><br>
-                            {{start}} - {{end}}
-                        {{#if language}}
-                            <br>{{language}}
+                            {{start}}
+                        {{#if location}}
+                            &nbsp; | &nbsp; <span style="white-space: nowrap">{{location}}</span>
+                        {{/if}}
+                        {{#if language_short}}
+                            &nbsp; | &nbsp; <span style="white-space: nowrap">{{language_short}}</span>
                         {{/if}}
                           </span>
                         </div>

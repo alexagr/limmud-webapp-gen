@@ -97,6 +97,14 @@ function parse_sheets($client)
         }
     }
 
+    $language_short_translate = array();
+    $response = $service->spreadsheets_values->get($spreadsheetId, "Translate!E1:G");
+    foreach ($response->getValues() as $row) {
+        if (!empty($row[0]) && !empty($row[2])) {
+            $language_short_translate[$row[0]] = $row[2];
+        }
+    }
+
     # parse locations
     $locations = array();
     $locations_map = array();
@@ -277,7 +285,12 @@ function parse_sheets($client)
                 $language = '';
                 $language_he = '';
             }
-            $session_data[$name] = array('name_he' => $name_he, 'description' => $description, 'description_he' => $description_he, 'language' => $language, 'language_he' => $language_he, 'id' => ($idx * count($ranges) + $offset));
+            if (array_key_exists($language, $language_short_translate)) {
+                $language_short = $language_short_translate[$language];
+            } else {
+                $language_short = '';
+            }
+            $session_data[$name] = array('name_he' => $name_he, 'description' => $description, 'description_he' => $description_he, 'language' => $language, 'language_he' => $language_he, 'language_short' => $language_short, 'id' => ($idx * count($ranges) + $offset));
         }
         $offset++;
     }
@@ -372,6 +385,11 @@ function parse_sheets($client)
             $language = '';
             $language_he = '';
         }
+        if (array_key_exists($language, $language_short_translate)) {
+            $language_short = $language_short_translate[$language];
+        } else {
+            $language_short = '';
+        }
         if (!empty($row[8])) {
             # $track = mb_convert_case($row[8], MB_CASE_TITLE, 'UTF-8');
             $track = $row[8];
@@ -459,7 +477,7 @@ function parse_sheets($client)
             'location' => array('id' => $location_id, 'name' => $location, 'name_he' => $location_he, 'color' => $location_color),
             'track' => array('id' => $track_id, 'name' => $track, 'name_he' => $track_he), 'speakers' => array(),
             'long_abstract' => $description, 'long_abstract_he' => $description_he,
-            'language' => $language, 'language_he' => $language_he,
+            'language' => $language, 'language_he' => $language_he, 'language_short' => $language_short,
             'shabbat' => $shabbat, 'recommend' => $recommend
         );
         foreach($people as $key => $speaker) {
@@ -637,6 +655,7 @@ function foldByTime($sessions, $speakers, $tracks) {
             'recommend' => $session['recommend'],
             'language' => $session['language'],
             'language_he' => $session['language_he'],
+            'language_short' => $session['language_short'],
             'session_id' => $session['id'],
             'sessiondate' => $days_ru[date('N', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_short_ru[date('n', $timestamp)],
             'sessiondate_he' => $days_he[date('N', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_short_he[date('n', $timestamp)],
@@ -830,6 +849,7 @@ function foldByRooms($sessions, $speakers, $tracks) {
             'recommend' => $session['recommend'],
             'language' => $session['language'],
             'language_he' => $session['language_he'],
+            'language_short' => $session['language_short'],
             'session_id' => $session['id'],
             'sessiondate' => $days_ru[date('N', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_short_ru[date('n', $timestamp)],
             'sessiondate_he' => $days_he[date('N', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_short_he[date('n', $timestamp)],
@@ -926,6 +946,7 @@ function getSpeakerSessions($speakerid, $sessions, $tracks)
             'recommend' => $session['recommend'],
             'language' => $session['language'],
             'language_he' => $session['language_he'],
+            'language_short' => $session['language_short'],
             'session_id' => $session['id'],
             'date' => $days_ru[date('N', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_short_ru[date('n', $timestamp)],
             'date_he' => $days_he[date('N', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_short_he[date('n', $timestamp)],
