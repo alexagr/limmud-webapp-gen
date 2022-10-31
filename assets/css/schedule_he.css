@@ -1307,7 +1307,7 @@ a {
 
 /* search on speakers page */
 .search-row {
-  line-heignt: 40px;
+  line-height: 40px;
   padding-right: 40px;
   padding-bottom: 30px;
 }
@@ -1322,4 +1322,15 @@ a {
   flex-grow: 2;
   font-size: small;
   border-radius: 5px;
+}
+
+/* lazyload images */
+img:not([src]) {
+  visibility: hidden;
+}
+
+@-moz-document url-prefix() {
+  img:-moz-loading {
+      visibility: hidden;
+  }
 }

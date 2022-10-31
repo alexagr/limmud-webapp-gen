@@ -13,6 +13,7 @@ $size = min($width, $height);
 if (($width != 300) || ($height != 300)) {
     $img = imagecreatetruecolor(300, 300);
     imagecopyresampled($img, $source, 0, 0, 0, 0, 300, 300, $size, $size);
+    imageinterlace($img, true);
     imagejpeg($img, $file);
 }
 
@@ -20,4 +21,5 @@ if (($width != 300) || ($height != 300)) {
 $source = imagecreatefromjpeg($file);
 $thumb = imagecreatetruecolor(100, 100);
 imagecopyresampled($thumb, $source, 0, 0, 0, 0, 100, 100, $size, $size);
+imageinterlace($thumb, true);
 imagejpeg($thumb, $config['app_name'] . '/speakers/thumbs/' . basename($file));
