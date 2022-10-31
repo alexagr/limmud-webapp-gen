@@ -666,7 +666,7 @@ function foldByTime($sessions, $speakers, $tracks) {
 
     ksort($dates);
 
-    foreach ($dates as $date => $value) {
+    foreach($dates as $date => $value) {
         ksort($dates[$date]['times']);
     }
 
@@ -970,12 +970,6 @@ function foldBySpeakers($sessions, $speakers, $tracks)
     }
     ksort($speakersList);
 
-    $i = 0;
-    foreach ($speakersList as $name => $speaker) {
-        $speakersList[$name]['lazy'] = $i >= 9;
-        $i++;
-    }
-
     return $speakersList;
 }
 
@@ -990,13 +984,6 @@ function foldBySpeakers_he($sessions, $speakers, $tracks)
         }
     }
     ksort($speakersList);
-
-    $i = 0;
-    foreach ($speakersList as $name => $speaker) {
-        $speakersList[$name]['lazy'] = $i >= 9;
-        $i++;
-    }
-
     return $speakersList;
 }
 

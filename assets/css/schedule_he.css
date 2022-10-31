@@ -1323,14 +1323,3 @@ a {
   font-size: small;
   border-radius: 5px;
 }
-
-/* lazyload images */
-img:not([src]) {
-  visibility: hidden;
-}
-
-@-moz-document url-prefix() {
-  img:-moz-loading {
-      visibility: hidden;
-  }
-}

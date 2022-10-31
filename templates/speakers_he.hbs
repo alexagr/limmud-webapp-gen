@@ -60,11 +60,7 @@
       <div class="speaker-container">
         <p id="speaker-{{id}}" class="speaker-image" data-toggle="collapse" data-target="#desc-{{id}}">
         {{#if photo}}
-          {{#if lazy}}
-        <img onError="this.onerror=null;this.src='assets/img/avatar.png';"  class="speaker-photo lazy" alt="{{{name_he}}}" data-src="speakers/{{{photo}}}"/>
-          {{else}}
         <img onError="this.onerror=null;this.src='assets/img/avatar.png';"  class="speaker-photo" alt="{{{name_he}}}" src="speakers/{{{photo}}}"/>
-          {{/if}}
         {{else}}
         <img class="background-image" alt="{{{name_he}}}" src="assets/img/avatar.png"/>
         {{/if}}
@@ -182,20 +178,6 @@
       });
 
     });
-  </script>
-
-  <script src="assets/js/lazyload.min.js" type="text/javascript"></script>
-  <script type="text/javascript">
-    (function () {
-      var callback_error = function (element) {
-        element.src = "assets/img/avatar.png";
-      }
-      var ll = new LazyLoad({
-        callback_error: callback_error,
-        show_while_loading: true,
-        threshold: 2000
-      });
-    })();
   </script>
 
 </body>
