@@ -685,7 +685,7 @@ function foldByTime($sessions, $speakers, $tracks) {
     return $dates;
 }
 
-$timeToPixel = 50; // 15 mins = 50 pixels
+$timeToPixel = 35; // 15 mins = 35 pixels
 $columnWidth = 185;
 $calendarWidth = 1060;
 
@@ -896,6 +896,28 @@ function foldByRooms($sessions, $speakers, $tracks) {
             $dates[$date]['rooms'][] = $room;
         }
         $dates[$date]['width'] = checkWidth(count($dates[$date]['rooms']));
+    }
+
+    // extend session to cover 15 min break after them
+    global $timeToPixel;
+    foreach ($dates as $date => $data) {
+        foreach ($dates[$date]['rooms'] as $room => $value) {
+            $tops = array();
+            foreach ($dates[$date]['rooms'][$room]['sessions'] as $key => $session) {
+                $tops[] = $dates[$date]['rooms'][$room]['sessions'][$key]['top'];
+            }
+            foreach ($dates[$date]['rooms'][$room]['sessions'] as $key => $session) {
+                if ($session['location'] == 'Столовая')
+                    continue;
+                $adjust = $timeToPixel;
+                foreach ($tops as $top) {
+                    if (($session['bottom'] + $adjust> $top) && ($session['bottom'] + $adjust - $top < $timeToPixel)) {
+                        $adjust = $top - $session['bottom'];
+                    }
+                }
+                $dates[$date]['rooms'][$room]['sessions'][$key]['height'] += $adjust - 6;
+            }
+        }
     }
 
     return $dates;
