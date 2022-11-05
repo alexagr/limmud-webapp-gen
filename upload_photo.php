@@ -15,6 +15,7 @@ if (($width != 300) || ($height != 300)) {
     imagecopyresampled($img, $source, 0, 0, 0, 0, 300, 300, $size, $size);
     imageinterlace($img, true);
     imagejpeg($img, $file);
+    $size = 300;
 }
 
 @mkdir($config['app_name'] . '/speakers/thumbs');
