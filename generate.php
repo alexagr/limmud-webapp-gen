@@ -50,7 +50,7 @@ function parse_sheets($client)
     # parse event
     $event = array(
         'app_name' => $config['app_name'], 'title' => 'Limmud FSU Israel', 'name' => 'Limmud FSU Israel', 'name_he' => 'Limmud FSU Israel', 'date' => '12-14 December 2019', 'date_he' => '12-14 December 2019', 'location_name' => '', 'location_name_he' => '',
-        'copyright' => array('holder' => 'Limmud FSU Israel', 'holder_url' => 'http://limmudfsu.org.il', 'licence' => 'Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License', 'licence_url' => 'http://creativecommons.org/licenses/by-nc-sa/4.0/', 'logo' => 'https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png', 'year' => 2021),
+        'copyright' => array('holder' => 'Limmud FSU Israel', 'holder_url' => 'http://limmudfsu.org.il', 'licence' => 'Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License', 'licence_url' => 'http://creativecommons.org/licenses/by-nc-sa/4.0/', 'logo' => 'https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png', 'year' => date("Y")),
         'organizer_name' => 'Limmud FSU Israel', 'email' => 'reg@limmudfsu.org.il',
         'social_links' => array(
             array('id' => 1, 'link' => 'http://limmudfsu.org.il', 'icon' => 'chrome', 'name' => 'Site'),
@@ -298,7 +298,7 @@ function parse_sheets($client)
     # parse schedule
     $sessions = array();
     $sessions_map = array();
-    $range = 'Schedule!A2:J';
+    $range = 'Schedule!A2:M';
     $response = $service->spreadsheets_values->get($spreadsheetId, $range);
     foreach ($response->getValues() as $row) {
         if (!empty($row[0])) {
@@ -391,7 +391,6 @@ function parse_sheets($client)
             $language_short = '';
         }
         if (!empty($row[8])) {
-            # $track = mb_convert_case($row[8], MB_CASE_TITLE, 'UTF-8');
             $track = $row[8];
             if (array_key_exists($track, $tracks_map)) {
                 $track_id = $tracks_map[$track];
@@ -409,6 +408,30 @@ function parse_sheets($client)
             $shabbat = true;
         } else {
             $shabbat = false;
+        }
+        if (!empty($row[10])) {
+            $speaker = $row[10];
+            $people[] = $speaker;
+            if (array_key_exists($speaker, $speakers_map)) {
+                $speaker_id = $speakers_map[$speaker];
+                $people_he[] = $speakers[$speaker_id]['name_he'];
+            }
+        }
+        if (!empty($row[11])) {
+            $speaker = $row[11];
+            $people[] = $speaker;
+            if (array_key_exists($speaker, $speakers_map)) {
+                $speaker_id = $speakers_map[$speaker];
+                $people_he[] = $speakers[$speaker_id]['name_he'];
+            }
+        }
+        if (!empty($row[12])) {
+            $speaker = $row[12];
+            $people[] = $speaker;
+            if (array_key_exists($speaker, $speakers_map)) {
+                $speaker_id = $speakers_map[$speaker];
+                $people_he[] = $speakers[$speaker_id]['name_he'];
+            }
         }
 
         $recommend = false;
