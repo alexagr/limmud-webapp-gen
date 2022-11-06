@@ -927,14 +927,14 @@ function foldByRooms($sessions, $speakers, $tracks) {
         foreach ($dates[$date]['rooms'] as $room => $value) {
             $tops = array();
             foreach ($dates[$date]['rooms'][$room]['sessions'] as $key => $session) {
-                $tops[] = $dates[$date]['rooms'][$room]['sessions'][$key]['top'];
+                $tops[] = $session['top'];
             }
             foreach ($dates[$date]['rooms'][$room]['sessions'] as $key => $session) {
                 if ($session['location'] == 'Столовая')
                     continue;
                 $adjust = $timeToPixel;
                 foreach ($tops as $top) {
-                    if (($session['bottom'] + $adjust> $top) && ($session['bottom'] + $adjust - $top < $timeToPixel)) {
+                    if (($session['bottom'] + $adjust > $top) && ($session['bottom'] + $adjust - $top <= $timeToPixel)) {
                         $adjust = $top - $session['bottom'];
                     }
                 }
