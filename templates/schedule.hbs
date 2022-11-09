@@ -264,6 +264,7 @@
           $("#desc2-" + hash).collapse('toggle');
           $("#desc-" + hash).collapse('toggle');
           lastClicked = $("#title-" + hash)[0];
+          setTimeout(function() { window.history.pushState({}, document.title, window.location.pathname + window.location.search); }, 10000);
         }
       }
       initPage();

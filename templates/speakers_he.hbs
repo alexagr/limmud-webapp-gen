@@ -122,6 +122,7 @@
       if (hash) {
           $("#desc-" + hash).collapse('toggle');
           lastClicked = $("#speaker-" + hash)[0];
+          setTimeout(function() { window.history.pushState({}, document.title, window.location.pathname + window.location.search); }, 10000);
       }
 
       function display() {
