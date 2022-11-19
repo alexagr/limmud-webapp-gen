@@ -1089,6 +1089,10 @@ a {
   width: 100%;
   word-wrap: break-word; }
 
+.session .fa {
+ color: #555;
+}
+
 .session-name {
   height: inherit;
   overflow: hidden;
