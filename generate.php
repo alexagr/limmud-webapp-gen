@@ -390,6 +390,11 @@ function parse_sheets($client)
         } else {
             $language_short = '';
         }
+        $language_translate = (strpos($language, 'РУССКИЙ') !== false);
+        if ($language_translate) {
+            $language = str_replace('РУССКИЙ', 'синхронный перевод на русский язык', $language);
+            $language_he = str_replace('רוסית', 'תירגום סימולטני לרוסית', $language_he);
+        }
         if (!empty($row[8])) {
             $track = $row[8];
             if (array_key_exists($track, $tracks_map)) {
@@ -501,7 +506,7 @@ function parse_sheets($client)
             'track' => array('id' => $track_id, 'name' => $track, 'name_he' => $track_he), 'speakers' => array(),
             'long_abstract' => $description, 'long_abstract_he' => $description_he,
             'language' => $language, 'language_he' => $language_he, 'language_short' => $language_short,
-            'shabbat' => $shabbat, 'recommend' => $recommend
+            'shabbat' => $shabbat, 'language_translate' => $language_translate, 'recommend' => $recommend
         );
         foreach($people as $key => $speaker) {
             $session['speakers'][] = array('id' => $speakers_map[$speaker], 'name' => $speaker, 'name_he' => $people_he[$key]);
@@ -675,6 +680,7 @@ function foldByTime($sessions, $speakers, $tracks) {
             'description' => $session['long_abstract'],
             'description_he' => $session['long_abstract_he'],
             'shabbat' => $session['shabbat'],
+            'language_translate' => $session['language_translate'],
             'recommend' => $session['recommend'],
             'language' => $session['language'],
             'language_he' => $session['language_he'],
@@ -869,6 +875,7 @@ function foldByRooms($sessions, $speakers, $tracks) {
             'description' => $session['long_abstract'],
             'description_he' => $session['long_abstract_he'],
             'shabbat' => $session['shabbat'],
+            'language_translate' => $session['language_translate'],
             'recommend' => $session['recommend'],
             'language' => $session['language'],
             'language_he' => $session['language_he'],
@@ -988,6 +995,7 @@ function getSpeakerSessions($speakerid, $sessions, $tracks)
             'description' => $session['long_abstract'],
             'description_he' => $session['long_abstract_he'],
             'shabbat' => $session['shabbat'],
+            'language_translate' => $session['language_translate'],
             'recommend' => $session['recommend'],
             'language' => $session['language'],
             'language_he' => $session['language_he'],
@@ -1015,6 +1023,12 @@ function foldBySpeakers($sessions, $speakers, $tracks)
     }
     ksort($speakersList);
 
+    $i = 0;
+    foreach ($speakersList as $name => $speaker) {
+        $speakersList[$name]['row_start'] = ($i % 3 == 0);
+        $speakersList[$name]['row_end'] = ($i % 3 == 2);
+        $i += 1;
+    }
     return $speakersList;
 }
 
@@ -1029,6 +1043,13 @@ function foldBySpeakers_he($sessions, $speakers, $tracks)
         }
     }
     ksort($speakersList);
+
+    $i = 0;
+    foreach ($speakersList as $name => $speaker) {
+        $speakersList[$name]['row_start'] = ($i % 3 == 0);
+        $speakersList[$name]['row_end'] = ($i % 3 == 2);
+        $i += 1;
+    }
     return $speakersList;
 }
 

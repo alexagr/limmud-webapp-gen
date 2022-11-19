@@ -112,6 +112,12 @@
                         {{/if}}
                         {{#if language_short}}
                             &nbsp; | &nbsp; <span style="white-space: nowrap">{{language_short}}</span>
+                            {{#if language_translate}}
+                            <i class="fas fa-headphones-alt"></i>
+                            {{/if}}
+                        {{/if}}
+                        {{#if shabbat}}
+                            &nbsp; <i class="fa fa-menorah" aria-hidden="true"></i>
                         {{/if}}
                           </span>
                         </div>
