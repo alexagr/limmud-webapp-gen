@@ -52,8 +52,10 @@
     </div>
   </div>
 
-  <div class="row">
   {{#each speakersList}}
+    {{#if row_start}}
+  <div class="row">
+    {{/if}}
     {{#if has_data}}
     <div class="speaker-inline col-xs-12 col-sm-6 col-md-4">
       <a class="anchor" id="{{id}}"></a>
@@ -80,31 +82,30 @@
           <hr class="speaker-hr">
           <div class="speaker-container">
             <h4 class="speaker-title" class="text"><strong>Сессии</strong></h4>
-            <div class="row">
-              <div class="col-xs-12 col-md-12">
-                {{#each sessions}}
-                {{#unless is_cancelled}}
-                <a href="schedule.html#{{session_id}}">
-                  <div style="background-color:{{{color}}}"  class="speaker-event">
-                    <h4>{{{title}}}</h4>
-                    <br>
-                    <h5><i class="fa fa-clock"></i>&nbsp;{{start}} - {{end}}, {{date}}</h5>
-                    <h5><i style="color:{{{location_color}}}" class="fa fa-map-marker-alt"></i>&nbsp;<i>{{location}}</i></h5>
-                  </div>
-                </a>
-                <br>
-                {{/unless}}
-                {{/each}}
-              </div>
+            <div class="col-xs-12 col-md-12">
+              {{#each sessions}}
+              {{#unless is_cancelled}}
+              <a href="schedule.html#{{session_id}}">
+                <div style="background-color:{{{color}}}"  class="speaker-event">
+                  <h4>{{{title}}}</h4>
+                  <br>
+                  <h5><i class="fa fa-clock"></i>&nbsp;{{start}} - {{end}}, {{date}}</h5>
+                  <h5><i style="color:{{{location_color}}}" class="fa fa-map-marker-alt"></i>&nbsp;<i>{{location}}</i></h5>
+                </div>
+              </a>
+              <br>
+              {{/unless}}
+              {{/each}}
             </div>
           </div>
         </div>
       </div>
     </div>
     {{/if}}
+    {{#if row_end}}
+  </div>
+    {{/if}}
     {{/each}}
-  </div>
-  </div>
 </div>
 
   {{> footer}}
