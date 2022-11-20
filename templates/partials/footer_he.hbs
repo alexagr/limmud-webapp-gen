@@ -93,6 +93,7 @@
         reg.addEventListener('updatefound', function() {
           _trackInstalling(reg.installing);
         });        
+        setInterval(function() { reg.update() }, 60 * 60 * 1000);
       }, function(err) {
         console.log('serviceWorker registration failed: ', err);
       });
