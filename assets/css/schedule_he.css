@@ -1272,6 +1272,8 @@ a.findbutton:visited
   background-color: transparent;
   display: none;
   text-decoration: none;
+  padding: 4px;
+  margin: -4px;
 }
 
 

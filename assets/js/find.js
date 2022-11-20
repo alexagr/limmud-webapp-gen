@@ -17,6 +17,7 @@ $(function() {
                 done: function() {
                     m.mark(val, {
                         caseSensitive: false,
+                        separateWordSearch: false,
                         each: function(e) {
                             var s = $(e).closest('.event')[0];
                             if (!matches.includes(s)) {
