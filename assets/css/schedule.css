@@ -1129,25 +1129,26 @@ a {
 
 .search-filter-schedule {
   flex-grow: 2;
-  font-size: small;
   border-radius: 5px;
   margin-right: 10px;
 }
 
 .search-filter-input {
-  height: 34px;
+  line-height: 30px;
+  margin-top: 3px;
   width: 95%;
-  padding-left: 30px;
-  font-size: small;
+  padding-left: 36px;
+  font-size: 16px;
   border-radius: 5px;
+  background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' class='bi bi-search' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'%3E%3C/path%3E%3C/svg%3E") no-repeat 10px center;
   background-color: #fff;
   color: #000;
   border: 1px solid #ccc;
 }
 
 .search-filter label .fa {
-  margin: -6px;
-  padding-left: 18px;
+  margin: -7px;
+  padding-left: 20px;
   padding-right: 3px;
   position: absolute;
 }
@@ -1225,12 +1226,12 @@ a.findbutton:visited
   bottom: 46px;
   left: 60px;
   height: 40px;
-  width: 280px;
+  width: 260px;
   padding-left: 25px;
   padding-right: 40px;
   border-style: solid;
   border-color: #60b0ff;
-  font-size: 14px;
+  font-size: 16px;
   color: black;
   border-radius: 30px;
   border-width: 2px;
@@ -1251,7 +1252,7 @@ a.findbutton:visited
   color: #60b0ff;
   font-size: 20px;
   position: fixed;
-  left: 304px;
+  left: 284px;
   bottom: 51px;
   z-index: 1010;
   background-color: transparent;
@@ -1388,6 +1389,5 @@ a.findbutton:visited
 
 .search-filter-speakers {
   flex-grow: 2;
-  font-size: small;
   border-radius: 5px;
 }
