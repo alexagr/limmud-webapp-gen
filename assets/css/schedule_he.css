@@ -1194,10 +1194,86 @@ a {
   font-size: 32px;
   position: fixed;
   right: 9px;
-  bottom: 42px;
+  bottom: 90px;
   z-index: 1010;
   text-decoration: none;
 }
+
+#find-button-div {
+  background: #999; 
+  display: none;
+  width: 32px;
+  height: 32px;
+  position: fixed;
+  right: 9px;
+  bottom: 50px;
+  border-radius: 50%;
+  margin: auto;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  z-index: 1010;
+}
+
+#find-button {
+  cursor: pointer;
+  color: white;
+  font-size: 14px;
+  vertical-align: middle;
+  background-color: transparent;
+  position: absolute;
+  top: 52%;
+  transform: translateY(-50%) translateX(50%);
+}
+
+a.findbutton:hover {
+  color: white; 
+}
+
+a.findbutton:visited
+{
+  color: white;
+}
+
+#find-field {
+  position: fixed;
+  bottom: 46px;
+  right: 60px;
+  height: 40px;
+  width: 280px;
+  padding-left: 25px;
+  padding-right: 40px;
+  border-style: solid;
+  border-color: #60b0ff;
+  font-size: 14px;
+  color: black;
+  border-radius: 30px;
+  border-width: 2px;
+  background-color: white;
+  box-shadow: 2px 2px 22px -6px rgba(0,0,0,0.75);
+  z-index: 1010;
+  outline: none;
+  display: none;
+}
+
+#find-field input:focus {
+  outline: none;
+  box-shadow: 0px 0px 3px #0076f9;
+}
+
+#find-next {
+  cursor: pointer;
+  color: #60b0ff;
+  font-size: 20px;
+  position: fixed;
+  right: 304px;
+  bottom: 51px;
+  z-index: 1010;
+  background-color: transparent;
+  display: none;
+  text-decoration: none;
+}
+
 
 /* increase max width */
 @media (min-width: 1500px) {
