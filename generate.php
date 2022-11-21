@@ -1148,7 +1148,8 @@ function generate()
 
     $model = array(
         'event' => $event,
-        'tracks' => $tracks
+        'tracks' => $tracks,
+        'version' => date('mdHi')
     );
 
     $model['timeList'] = foldByTime($sessions, $speakers, $tracks);

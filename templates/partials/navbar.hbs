@@ -48,7 +48,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
           {{/if}}
         {{/each}}
+        <hr />
       </div>
+      
+      <div class="navbar-version">
+        Версия: {{version}}
+        <br>
+        <div class="btn btn-reload" id="version-refresh" role="button" style="border-radius: 6px">ОБНОВИТЬ</div>
+      </div>
+      
     </div>
   </div>
 </header>
+
+<script type="text/javascript">
+  document.getElementById("version-refresh").onclick = function() {
+    location.reload();
+    return false;
+  };
+</script>
