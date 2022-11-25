@@ -39,20 +39,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </nav>
       
       <div class="navbar-track-list">
-        <hr />
+        <hr>
         {{#each tracks}}
           {{#if name}}
           <div class="navbar-track-info">
-            <span style="background-color: {{color}};" class="titlecolor"></span>
-            <span class="track-name">{{name}}</span>
+            <span style="background-color: {{color}};" class="titlecolor"></span>&nbsp;<span class="track-name">{{name}}</span>
           </div>
           {{/if}}
         {{/each}}
-        <hr />
+        <hr>
       </div>
       
       <div class="navbar-version">
-        Версия: {{version}}
+        Версия:&nbsp;{{version}}
         <br>
         <div class="btn btn-reload" id="version-refresh" role="button" style="border-radius: 6px">ОБНОВИТЬ</div>
       </div>

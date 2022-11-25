@@ -39,20 +39,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </nav>
 
       <div class="navbar-track-list">
-        <hr />
+        <hr>
         {{#each tracks}}
           {{#if name_he}}
           <div class="navbar-track-info">
-            <span style="background-color: {{color}};" class="titlecolor"></span>
-            <span class="track-name">{{name_he}}</span>
+            <span style="background-color: {{color}};" class="titlecolor"></span>&nbsp;<span class="track-name">{{name_he}}</span>
           </div>
           {{/if}}
         {{/each}}
-        <hr />
+        <hr>
       </div>
       
       <div class="navbar-version">
-        גרסה: {{version}}
+        גרסה:&nbsp;{{version}}
         <br>    
         <div class="btn btn-reload" id="version-refresh" role="button" style="border-radius: 6px">עדכן</div>
       </div>

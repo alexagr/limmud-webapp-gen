@@ -992,6 +992,10 @@ a {
   .side-collapse.in {
     width: 0; } }
 
+.navbar-track-list, .navbar-version {
+  white-space: nowrap;
+  overflow-x: visible; }
+  
 @media only screen and (min-width: 768px) {
   .navbar-track-list, .navbar-version {
     display: none; } }
