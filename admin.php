@@ -17,9 +17,9 @@
 <body>
   <style>
   body {width:610px;}
-  #config-form {border-top:#F0F0F0 2px solid;background:#FAF8F8;padding:10px;}
-  #config-form div {margin-bottom: 15px}
-  #config-form div label {margin-left: 5px}
+  .config-form {border-top:#F0F0F0 2px solid;background:#FAF8F8;padding:10px;}
+  .config-form div {margin-bottom: 15px}
+  .config-form div label {margin-left: 5px}
   .input {padding:10px; border:#F0F0F0 1px solid; border-radius:4px;}
   .error {background-color: #FF6600;border:#AA4502 1px solid;padding: 5px 10px;color: #FFFFFF;border-radius:4px;}
   .success {background-color: #12CC1A;border:#0FA015 1px solid;padding: 5px 10px;color: #FFFFFF;border-radius:4px;}
@@ -40,7 +40,7 @@
           $config = array('sheet_id' => '', 'app_name' => 'limmud-test');
         }
       ?>
-      <div id="config-form">
+      <div class="config-form">
       <div id="config-status"></div>
       <div class="row"> 
         <div class="col-md-3">
@@ -84,7 +84,7 @@
       </div>
 
       <h2>Generate</h2>
-      <div id="config-form">
+      <div class="config-form">
       <div id="generate-status"></div>
       <div class="row">
       <button name="generate" class="btn btn-primary btn-action" onClick="generate();">Generate</button>&nbsp;&nbsp;&nbsp;
@@ -94,7 +94,7 @@
       </div>
       
       <h2>Photos</h2>
-      <div id="config-form">
+      <div class="config-form">
       <div id="photos-status"></div>
       <div class="row">
       <input type="file" id="upload-files" name="uploadFiles[]" multiple >
@@ -102,6 +102,42 @@
       <br>
       <button name="upload-photos" class="btn btn-primary btn-action" onClick="uploadPhotos();">Upload</button>&nbsp;&nbsp;&nbsp;
       <button name="show-photos" class="btn btn-primary btn-action" onClick="openInNewTab('show_photos.php')">Show</button>
+      </div>
+
+      <h2>Notification</h2>
+      <div class="config-form">
+      <?php
+        $notify = array('msg' => '', 'msg_he' => '');
+        $configPath = 'data/config.json';
+        if (file_exists($configPath)) {
+          $config = json_decode(file_get_contents($configPath), true);
+          $notifyPath = $config['app_name'] . '/data/notify.json';
+          if (file_exists($notifyPath)) {
+            $notify = json_decode(file_get_contents($notifyPath), true);
+          }
+        }
+      ?>
+      <div class="config-form">
+      <div id="notify-status"></div>
+      <div class="row"> 
+        <div class="col-md-3">
+          <label for="sheet-id">Message:</label>
+        </div>
+        <div class="col-md-9">
+          <input type="text" id="notify-msg" size="70" value="<?php echo str_replace('"', '&quot;', $notify['msg']) ?>"><br>
+        </div>
+      </div>
+      <div class="row"> 
+        <div class="col-md-3">
+          <label for="sheet-id">Message (he):</label>
+        </div>
+        <div class="col-md-9">
+          <input type="text" dir="rtl" id="notify-msg-he" size="70" value="<?php echo str_replace('"', '&quot;', $notify['msg_he']) ?>"><br>
+        </div>
+      </div>
+      <br>
+      <button name="notify-update" class="btn btn-primary btn-action" onClick="updateNotify();">Update</button>&nbsp;&nbsp;&nbsp;
+      <br>
       </div>
   </div>
 
@@ -130,18 +166,18 @@
             url: 'config.php',
             data: 'sheet_id='+$("#sheet-id").val()+'&app_name='+$("#app-name").val(),
             type: 'POST',
-		    success: function(data){
+		        success: function(data){
               if (data.includes('ERROR')) {
                 $("#config-status").html('<p class="error">' + data + '</p>');
               } else {
                 $("#config-status").html('<p class="success">' + data + '</p>');
               }
-		    },
-		    error:function(){
+		        },
+		        error:function(){
               $("#config-status").html('<p class="error">ERROR: Cannot execute config.php</p>');
             }
-		  });
-	    }         
+		      });
+	      }         
 
         function copyAssets() {
           $("#generate-status").html('<p class="info">Copying assets</p>');
@@ -149,18 +185,18 @@
             url: 'copy_assets.php',
             data: '',
             type: 'POST',
-		    success: function(data){
+    		    success: function(data){
               if (data.includes('ERROR')) {
                 $("#generate-status").html('<p class="error">' + data + '</p>');
               } else {
                 $("#generate-status").html('<p class="success">' + data + '</p>');
               }
-		    },
-		    error:function(){
+		        },
+		        error:function(){
               $("#generate-status").html('<p class="error">ERROR: Cannot execute copy_assets.php</p>');
             }
-		  });
-	    }         
+    		  });
+	      }         
 
         function generate() {
           $("#generate-status").html('<p class="info">Generating WebApp</p>');
@@ -174,12 +210,12 @@
               } else {
                 $("#generate-status").html('<p class="success">' + data + '</p>');
               }
-		    },
-		    error:function(){
+		        },
+		        error:function(){
               $("#generate-status").html('<p class="error">ERROR: Cannot execute generate.php</p>');
             }
-		  });
-	    }
+		      });
+	      }
         
         function uploadPhoto(id) {
           let fileList = $('#upload-files').prop("files");
@@ -208,11 +244,11 @@
             },
             success: function(data){
               uploadPhoto(id+1);
-		    },
-		    error:function(){
+		        },
+		        error:function(){
               $("#photos-status").html('<p class="error">ERROR: Cannot execute upload_photo.php</p>');
             }
-		  });
+		      });
         }
 
         function uploadPhotos() {
@@ -227,6 +263,25 @@
         function openInNewTab(url) {
           window.open(url, '_blank').focus();
         }
+
+        function updateNotify() {
+          $("#notify-status").html('');
+          jQuery.ajax({
+            url: 'notify.php',
+            data: 'msg='+$("#notify-msg").val() +'&msg_he='+$("#notify-msg-he").val(),
+            type: 'POST',
+		        success: function(data){
+              if (data.includes('ERROR')) {
+                $("#notify-status").html('<p class="error">' + data + '</p>');
+              } else {
+                $("#notify-status").html('<p class="success">' + data + '</p>');
+              }
+		        },
+		        error:function(){
+              $("#notify-status").html('<p class="error">ERROR: Cannot execute notify.php</p>');
+            }
+		      });
+	      }         
 
     </script>
   </footer>
