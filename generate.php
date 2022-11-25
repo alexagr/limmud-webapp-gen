@@ -178,7 +178,7 @@ function parse_sheets($client)
     # parse presentors
     $speakers = array();
     $speakers_map = array();
-    $range = 'Presentors!B2:F';
+    $range = 'Presentors!B2:W';
     $response = $service->spreadsheets_values->get($spreadsheetId, $range);
     foreach ($response->getValues() as $row) {
         if (!empty($row[0])) {
@@ -212,7 +212,22 @@ function parse_sheets($client)
         if (empty($bio_he)) {
             $bio_he = $bio;
         }
-
+        if (!empty($row[20])) {
+            $name2 = $row[20];
+        } else {
+            $name_parts = explode(' ', $name);
+            $name_parts[] = $name_parts[0];
+            array_shift($name_parts);
+            $name2 = implode(' ', $name_parts);
+        }
+        if (!empty($row[21])) {
+            $name2_he = $row[21];
+        } else {
+            $name_he_parts = explode(' ', $name_he);
+            $name_he_parts[] = $name_he_parts[0];
+            array_shift($name_he_parts);
+            $name2_he = implode(' ', $name_he_parts);
+        }
         if (array_key_exists($name, $speakers_map)) {
             $id = $speakers_map[$name];
             if (!empty($bio)) {
@@ -223,7 +238,7 @@ function parse_sheets($client)
             }
         } else {
             $id = count($speakers);
-            $speakers[$id] = array('id' => $id, 'name' => $name, 'name_he' => $name_he, 'photo' => $photo, 'short_biography' => '', 'short_biography_he' => '', 'long_biography' => $bio, 'long_biography_he' => $bio_he, 'sessions' => array(), 'has_data' => true);
+            $speakers[$id] = array('id' => $id, 'name' => $name, 'name_he' => $name_he, 'name2' => $name2, 'name2_he' => $name2_he, 'photo' => $photo, 'short_biography' => '', 'short_biography_he' => '', 'long_biography' => $bio, 'long_biography_he' => $bio_he, 'sessions' => array(), 'has_data' => true);
             $speakers_map[$name] = $id;
         }
     }
@@ -350,20 +365,23 @@ function parse_sheets($client)
             }
             continue;
         }
+        $people = array();
+        $people_he = array();
+        $people2 = array();
+        $people2_he = array();
         if (!empty($row[5])) {
-            $people = explode(',', str_replace(', ', ',', $row[5]));
-            $people_he = array();
-            foreach ($people as $speaker) {
-                if (array_key_exists($speaker, $speakers_map)) {
-                    $speaker_id = $speakers_map[$speaker];
-                    $people_he[] = $speakers[$speaker_id]['name_he'];
-                } else {
-                    $people_he[] = $speaker;
-                }
+            $speaker = $row[5];
+            $people[] = $speaker;
+            if (array_key_exists($row[5], $speakers_map)) {
+                $speaker_id = $speakers_map[$speaker];
+                $people_he[] = $speakers[$speaker_id]['name_he'];
+                $people2[] = $speakers[$speaker_id]['name2'];
+                $people2_he[] = $speakers[$speaker_id]['name2_he'];
+            } else {
+                $people_he[] = $speaker;
+                $people2[] = $speaker;
+                $people2_he[] = $speaker;
             }
-        } else {
-            $people = array();
-            $people_he = array();
         }
         if (!empty($row[6])) {
             $name = $row[6];
@@ -420,6 +438,12 @@ function parse_sheets($client)
             if (array_key_exists($speaker, $speakers_map)) {
                 $speaker_id = $speakers_map[$speaker];
                 $people_he[] = $speakers[$speaker_id]['name_he'];
+                $people2[] = $speakers[$speaker_id]['name2'];
+                $people2_he[] = $speakers[$speaker_id]['name2_he'];
+            } else {
+                $people_he[] = $speaker;
+                $people2[] = $speaker;
+                $people2_he[] = $speaker;
             }
         }
         if (!empty($row[11])) {
@@ -428,6 +452,12 @@ function parse_sheets($client)
             if (array_key_exists($speaker, $speakers_map)) {
                 $speaker_id = $speakers_map[$speaker];
                 $people_he[] = $speakers[$speaker_id]['name_he'];
+                $people2[] = $speakers[$speaker_id]['name2'];
+                $people2_he[] = $speakers[$speaker_id]['name2_he'];
+            } else {
+                $people_he[] = $speaker;
+                $people2[] = $speaker;
+                $people2_he[] = $speaker;
             }
         }
         if (!empty($row[12])) {
@@ -436,6 +466,12 @@ function parse_sheets($client)
             if (array_key_exists($speaker, $speakers_map)) {
                 $speaker_id = $speakers_map[$speaker];
                 $people_he[] = $speakers[$speaker_id]['name_he'];
+                $people2[] = $speakers[$speaker_id]['name2'];
+                $people2_he[] = $speakers[$speaker_id]['name2_he'];
+            } else {
+                $people_he[] = $speaker;
+                $people2[] = $speaker;
+                $people2_he[] = $speaker;
             }
         }
 
@@ -475,7 +511,7 @@ function parse_sheets($client)
         foreach($people as $key => $speaker) {
             if (!array_key_exists($speaker, $speakers_map)) {
                 $speaker_id = count($speakers);
-                $speakers[$speaker_id] = array('id' => $speaker_id, 'name' => $speaker, 'name_he' => $people_he[$key], 'photo' => 'avatar.png', 'short_biography' => '', 'short_biography_he' => '', 'long_biography' => '', 'long_biography_he' => '', 'sessions' => array());
+                $speakers[$speaker_id] = array('id' => $speaker_id, 'name' => $speaker, 'name_he' => $people_he[$key], 'name2' => $people2[$key], 'name2_he' => $people2_he[$key], 'photo' => 'avatar.png', 'short_biography' => '', 'short_biography_he' => '', 'long_biography' => '', 'long_biography_he' => '', 'sessions' => array());
                 $speakers_map[$speaker] = $speaker_id;
             }
         }
@@ -509,7 +545,7 @@ function parse_sheets($client)
             'shabbat' => $shabbat, 'language_translate' => $language_translate, 'recommend' => $recommend
         );
         foreach($people as $key => $speaker) {
-            $session['speakers'][] = array('id' => $speakers_map[$speaker], 'name' => $speaker, 'name_he' => $people_he[$key]);
+            $session['speakers'][] = array('id' => $speakers_map[$speaker], 'name' => $speaker, 'name_he' => $people_he[$key], 'name2' => $people2[$key], 'name2_he' => $people2_he[$key]);
         }
 
         $sessions[$id] = $session;
