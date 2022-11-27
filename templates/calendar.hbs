@@ -93,19 +93,21 @@
                     </div>
                     <div>
                       {{#each sessions}}
-                      <div class="session" style="top:{{{top}}}px; height:{{{height}}}px;background-color:{{{color}}};">
+                      <div id="session-{{session_id}}" class="session find-container" style="top:{{{top}}}px; height:{{{height}}}px;background-color:{{{color}}};">
                         <div class="session-name">
-                          <a href="schedule.html#{{session_id}}">
+                          <a href="schedule.html#{{session_id}}" class="find-target">
                             {{title}}
                           </a>
-                          <span class="session-details">
+                          <div class="session-details">
                         {{#if speakers_list}}
-                            <br><br>
+                            <br>
+                            <div class="find-target">
                           {{#each speakers_list}}
                             {{name2}}{{#unless last}},{{/unless}}
                           {{/each}}
+                            </div>
                         {{/if}}
-                            <br><br>
+                            <br>
                             {{start}}
                         {{#if location}}
                             &nbsp; | &nbsp; <span style="white-space: nowrap">{{location}}</span>
@@ -119,7 +121,7 @@
                         {{#if shabbat}}
                             &nbsp; <i class="fa fa-menorah" aria-hidden="true"></i>
                         {{/if}}
-                          </span>
+                          </div>
                         </div>
                       </div>
                       {{/each}}
@@ -171,6 +173,14 @@
     <i class="fa fa-clock" aria-hidden="true"></i>
   </a>
   <script src="assets/js/scroll_now.js" type="text/javascript"></script>
+
+  <div class="findbuttondiv" id="find-button-div">
+    <a class="findbutton" href="#" id="find-button" data-scroll-direction="0"><i class="fa fa-search" aria-hidden="true"></i></a>
+  </div>
+  <input class="findfield" id="find-field" type="search" placeholder="Поиск"/>
+  <a class="findnext" href="#" id="find-next" data-scroll-direction="0"><i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+  <script src="assets/js/mark.min.js" type="text/javascript"></script>
+  <script src="assets/js/find2.js" type="text/javascript"></script>
 
   <script src="assets/js/async.min.js" type="text/javascript"></script>
   <script src="assets/js/FileSaver.js" type="text/javascript"></script>

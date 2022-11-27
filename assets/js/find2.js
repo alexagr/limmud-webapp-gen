@@ -9,7 +9,7 @@ $(function() {
         currentMatch = null;
         matches = [];
 
-        $('.event > h4, h5').each(function() {
+        $('.find-target').each(function() {
             var elem = this;
             var m = new Mark(elem);
     
@@ -19,7 +19,7 @@ $(function() {
                         caseSensitive: false,
                         separateWordSearch: false,
                         each: function(e) {
-                            var s = $(e).closest('.event')[0];
+                            var s = $(e).closest('.find-container')[0];
                             if (!matches.includes(s)) {
                                 matches.push(s);
                             }

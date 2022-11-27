@@ -102,15 +102,15 @@
                 <div class="track-inline">
                   <a class="anchor" id="{{session_id}}"></a>
                   <div style="padding-right:0px;" class="schedule-container">
-                    <div id="title-{{session_id}}" class="sizeevent event" style="background-color:{{{color}}}"
+                    <div id="title-{{session_id}}" class="sizeevent event find-container" style="background-color:{{{color}}}"
                       data-toggle="collapse" data-target="#desc-{{session_id}}, #desc2-{{session_id}}">
-                      <h4>{{title}}</h4>
+                      <h4 class="find-target">{{title}}</h4>
                       <a id="bookmark-{{session_id}}" class="bookmark">
                         <i class="fa fa-star" aria-hidden="true"></i>
                       </a>
                       <div id="desc2-{{session_id}}" class="collapse in">
                         <div class="row speaker-short-info">
-                          <h5>
+                          <h5 class="find-target">
                           {{#each speakers_list}}
                             {{name2}}{{#unless last}},{{/unless}}
                           {{/each}}
@@ -234,7 +234,7 @@
   <input class="findfield" id="find-field" type="search" placeholder="Поиск"/>
   <a class="findnext" href="#" id="find-next" data-scroll-direction="0"><i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
   <script src="assets/js/mark.min.js" type="text/javascript"></script>
-  <script src="assets/js/find.js" type="text/javascript"></script>
+  <script src="assets/js/find2.js" type="text/javascript"></script>
 
   <script type="text/javascript">
     var favorite = false;
