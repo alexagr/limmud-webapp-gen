@@ -108,7 +108,7 @@ function parse_sheets($client)
     # parse locations
     $locations = array();
     $locations_map = array();
-    $range = 'Locations!A2:E';
+    $range = 'Locations!A2:F';
     $response = $service->spreadsheets_values->get($spreadsheetId, $range);
     foreach ($response->getValues() as $row) {
         if (!empty($row[0])) {
@@ -132,7 +132,12 @@ function parse_sheets($client)
             $room_he = $room;
         }
         if (!empty($row[4])) {
-            $color = $row[4];
+            $id = intval($row[4]);
+        } else {
+            $id = 100 + count($locations);
+        }
+        if (!empty($row[5])) {
+            $color = $row[5];
         } else {
             $color = '';
         }
@@ -143,10 +148,10 @@ function parse_sheets($client)
             $location = $room;
             $location_he = $room_he;
         }
-        $id = count($locations);
         $locations[$id] = array('id' => $id, 'name' => $location, 'name_he' => $location_he, 'color' => $color);
         $locations_map[$location] = $id;
     }
+    ksort($locations);
 
     # parse tracks
     $tracks = array();
@@ -702,7 +707,7 @@ function foldByTime($sessions, $speakers, $tracks) {
             $speakersList[count($speakersList)-1]['last'] = true;
         }
 
-        $dates[$date]['times'][$sortKey]['sessions'][] = array(
+        $dates[$date]['times'][$sortKey]['sessions'][$session['location']['id']] = array(
             'start' => date('H:i', strtotime($session['start_time'])),
             'end' => date('H:i', strtotime($session['end_time'])),
             'color' => $tracks[$session['track']['id']]['color'],
@@ -733,6 +738,9 @@ function foldByTime($sessions, $speakers, $tracks) {
 
     foreach($dates as $date => $value) {
         ksort($dates[$date]['times']);
+        foreach($dates[$date]['times'] as $time => $data) {
+            ksort($dates[$date]['times'][$time]['sessions']);
+        }
     }
 
     # echo "--------\n";
