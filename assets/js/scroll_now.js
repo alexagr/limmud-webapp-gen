@@ -41,7 +41,7 @@ $(function() {
     var elemTime;
     $(day).find('.time-filter').each(function() {
       let eventTime = $(this).find('.eventtime').eq(0).find('h4').eq(0).text();
-      if (eventTime.startsWith('0')) {
+      if (eventTime.startsWith('00')) {
         let hour = parseInt(eventTime.substr(0, 2));
         hour += 24;
         eventTime = hour.toString() + eventTime.substr(2);
@@ -55,7 +55,7 @@ $(function() {
     if (!elem) {
       $(day).find('.time').each(function() {
         let eventTime = $(this).text().replaceAll(/\s/g, '');
-        if (eventTime.startsWith('0')) {
+        if (eventTime.startsWith('00')) {
           let hour = parseInt(eventTime.substr(0, 2));
           hour += 24;
           eventTime = hour.toString() + eventTime.substr(2);
