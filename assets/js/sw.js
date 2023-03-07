@@ -13,9 +13,6 @@ self.addEventListener('install', function(event) {
 });
 
 self.addEventListener('fetch', function(event) {
-  if (event.request.url.indexOf('/notify.json') !== -1) {
-    return false;
-  }
   event.respondWith(
     caches.match(event.request).then(function(response) {
       // Cache hit - return response
@@ -32,6 +29,12 @@ self.addEventListener('fetch', function(event) {
             !response ||
             response.status !== 200 ||
             response.type !== 'basic'
+          ) {
+            return response;
+          }
+
+          if ((event.request.url.indexOf('sw.js') !== -1) || 
+              (event.request.url.indexOf('notify.json') !== -1)
           ) {
             return response;
           }

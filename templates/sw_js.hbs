@@ -34,7 +34,9 @@ self.addEventListener('fetch', function(event) {
             return response;
           }
 
-          if (event.request.url.indexOf('sw.js') !== -1) {
+          if ((event.request.url.indexOf('sw.js') !== -1) || 
+              (event.request.url.indexOf('notify.json') !== -1)
+          ) {
             return response;
           }
 

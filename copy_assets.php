@@ -30,4 +30,8 @@ if (empty($config['app_name'])) {
 
 @mkdir(__DIR__ . '/' . $config['app_name']);
 recursive_copy(__DIR__ . '/assets', __DIR__ . '/' . $config['app_name'] . '/assets');
+if (!file_exists(__DIR__ . '/' . $config['app_name'] . '/data/notify.json')) {
+	@mkdir(__DIR__ . '/' . $config['app_name'] . '/data');
+	file_put_contents(__DIR__ . '/' . $config['app_name'] . '/data/notify.json', '{"timestamp": "2020-12-23 18:00:00", "msg": "", "msg_he": "", "not_before": "2022-12-23 18:00", "not_after": "2022-12-23 22:00"}');
+}
 print 'Assets sucessfuly copied';

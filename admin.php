@@ -104,11 +104,9 @@
       <button name="show-photos" class="btn btn-primary btn-action" onClick="openInNewTab('show_photos.php')">Show</button>
       </div>
 
-    <!--
       <h2>Notification</h2>
-      <div class="config-form">
       <?php
-        $notify = array('msg' => '', 'msg_he' => '');
+        $notify = array('msg' => '', 'msg_he' => '', 'timestamp' => '');
         $configPath = 'data/config.json';
         if (file_exists($configPath)) {
           $config = json_decode(file_get_contents($configPath), true);
@@ -136,11 +134,26 @@
           <input type="text" dir="rtl" id="notify-msg-he" size="70" value="<?php echo str_replace('"', '&quot;', $notify['msg_he']) ?>"><br>
         </div>
       </div>
+      <div class="row"> 
+        <div class="col-md-3">
+          <label for="sheet-id">Not before:</label>
+        </div>
+        <div class="col-md-9">
+          <input type="text" id="notify-not-before" size="40" value="<?php echo str_replace('"', '&quot;', $notify['not_before']) ?>"><br>
+        </div>
+      </div>
+      <div class="row"> 
+        <div class="col-md-3">
+          <label for="sheet-id">Not after:</label>
+        </div>
+        <div class="col-md-9">
+          <input type="text" id="notify-not-after" size="40" value="<?php echo str_replace('"', '&quot;', $notify['not_after']) ?>"><br>
+        </div>
+      </div>
       <br>
       <button name="notify-update" class="btn btn-primary btn-action" onClick="updateNotify();">Update</button>&nbsp;&nbsp;&nbsp;
       <br>
       </div>
-    -->  
   </div>
 
   <footer class="classic">
@@ -270,7 +283,7 @@
           $("#notify-status").html('');
           jQuery.ajax({
             url: 'notify.php',
-            data: 'msg='+$("#notify-msg").val() +'&msg_he='+$("#notify-msg-he").val(),
+            data: 'msg='+$("#notify-msg").val() +'&msg_he='+$("#notify-msg-he").val()+'&not_before='+$("#notify-not-before").val()+'&not_after='+$("#notify-not-after").val(),
             type: 'POST',
 		        success: function(data){
               if (data.includes('ERROR')) {

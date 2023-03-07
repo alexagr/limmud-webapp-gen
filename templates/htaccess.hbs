@@ -27,7 +27,11 @@
   BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
 </IfModule>
 
-<filesMatch ".(html|css|sw.js)$">
+<filesMatch ".(html|css)$">
+Header set Cache-Control "no-cache"
+</filesMatch>
+
+<filesMatch "(sw.js|notify.json)">
 Header set Cache-Control "no-cache"
 </filesMatch>
 

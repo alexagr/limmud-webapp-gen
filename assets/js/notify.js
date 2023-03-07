@@ -3,26 +3,32 @@ function check_notify() {
     url: 'data/notify.json',
     type: 'GET',
     success: function(data) {
+      let title = 'Сообщение';
       let msg = data['msg'];
       let buttonText = 'ЗАКРЫТЬ';
-      if ($('html')[0].lang == 'he') {
+      if (document.documentElement.lang == 'he') {
+        title = 'הודעה';
         msg = data['msg_he'];
         buttonText = 'סגור';
       }
-      if (msg && ((localStorage.hasOwnProperty('webapp_notify_timestamp') === false) ||
-                  (localStorage['webapp_notify_timestamp'] < data['timestamp']))) {
+      if (msg && 
+          (Date.now() > Date.parse(data['not_before'])) &&
+          (Date.now() < Date.parse(data['not_after'])) &&
+          ((localStorage.hasOwnProperty('webapp_notify_timestamp') === false) ||
+           (localStorage['webapp_notify_timestamp'] < data['timestamp']))) {
         localStorage['webapp_notify_timestamp'] = data['timestamp'];
-        Snackbar.show({
+        
+        Swal.fire({
+          icon: 'info',
+          /* title: title, */
           text: msg,
-          pos: 'bottom-center',
-          actionText: buttonText,
-          duration: 30000
+          confirmButtonText: buttonText
         });
       }
-      setTimeout(check_notify, 5 * 60 * 1000);
+      setTimeout(check_notify, 3 * 60 * 1000);
     },
     error: function(data) {
-      setTimeout(check_notify, 5 * 60 * 1000);
+      setTimeout(check_notify, 3 * 60 * 1000);
     }
   });
 }
