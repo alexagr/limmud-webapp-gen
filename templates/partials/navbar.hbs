@@ -1,15 +1,17 @@
 
+{{#if event.analytics}}
 <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WDR7L78"
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{event.analytics}}"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
+{{/if}}
 
 <!-- Fixed navbar -->
 <header role="banner" class="navbar-fixed-top navbar-default">
   <div class="container">
     <div class="navbar-header navbar-left pull-left">
       <a href=".">
-        <img alt="{{ event.name }}" class="logo logo-dark" src="assets/img/logo.png">
+        <img alt="{{ event.name }}" class="logo logo-dark" src="{{event.logo}}">
       </a>
     </div>
 

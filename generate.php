@@ -111,7 +111,10 @@ function get_defaults()
         'event_facebook_url_column' => 'facebook-url',
         'event_instagram_url_column' => 'instagram-url',
         'event_telegram_url_column' => 'telegram-url',
-        'event_email_column' => 'email'
+        'event_email_column' => 'email',
+        'event_logo_column' => 'logo',
+        'event_icon_column' => 'icon',
+        'event_analytics_column' => 'google-analytics-tag'
     );
     return $defaults;
 }
@@ -137,7 +140,7 @@ function parse_sheets($client, $config)
         'app_name' => $config['app_name'], 'title' => 'Limmud FSU Israel', 'name' => 'Limmud FSU Israel', 'name_he' => 'Limmud FSU Israel', 'date' => '12-14 December 2019', 'date_he' => '12-14 December 2019', 'location_name' => '', 'location_name_he' => '',
         'copyright' => array('holder' => 'Limmud FSU Israel', 'holder_url' => 'http://limmudfsu.org.il', 'licence' => 'Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License', 'licence_url' => 'http://creativecommons.org/licenses/by-nc-sa/4.0/', 'logo' => 'https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png', 'year' => date("Y")),
         'organizer_name' => 'Limmud FSU Israel', 'email' => 'reg@limmudfsu.org.il',
-        'social_links' => array(), 'second_language' => 'he'
+        'social_links' => array(), 'second_language' => 'he', 'logo' => 'assets/img/logo.png', 'icon' => 'assets/img/icon.png', 'analytics' => ''
     );
 
     $header = $service->spreadsheets_values->get($sheet_id, $config['event_sheet'] . '!A1:1')->getValues()[0];
@@ -154,6 +157,7 @@ function parse_sheets($client, $config)
         $event['map2'] = get_cell($header, $row, $config['event_map2_column'], '');
         $event['organizer_name'] = get_cell($header, $row, $config['event_organizer_name_column'], $event['organizer_name']);
         $event['email'] = get_cell($header, $row, $config['event_email_column'], $event['email']);
+        $event['analytics'] = get_cell($header, $row, $config['event_analytics_column'], '');
 
         $event['copyright']['holder'] = $event['organizer_name'];
 
@@ -186,6 +190,24 @@ function parse_sheets($client, $config)
         } else {
             $event['second_language'] = '';
             $event['second_language_text'] = '';
+        }
+
+        $value = get_cell($header, $row, $config['event_logo_column'], '');
+        if (!empty($value)) {
+            $event['logo'] = $value;
+        }
+        $value = get_cell($header, $row, $config['event_icon_column'], '');
+        if (!empty($value)) {
+            $event['icon'] = $value;
+        }
+
+        $value = get_cell($header, $row, $config['event_logo_column'], '');
+        if (!empty($value)) {
+            $event['logo'] = $value;
+        }
+        $value = get_cell($header, $row, $config['event_icon_column'], '');
+        if (!empty($value)) {
+            $event['icon'] = $value;
         }
     }
 
