@@ -69,10 +69,12 @@ $(function() {
 
     if (elem) {
       let snackText;
-      if ($('title').text().startsWith('לימוד')) {
+      if (document.documentElement.lang == 'he') {
         snackText = 'הרצאה הקרובה מתחילה ב- ' + elemTime
-      } else {
+      } else if (document.documentElement.lang == 'ru') {
         snackText = 'Ближайшая сессия начинается в ' + elemTime;
+      } else {
+        snackText = 'Next session starts at ' + elemTime;
       }
       Snackbar.show({
         text: snackText,
