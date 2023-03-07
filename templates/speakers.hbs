@@ -68,13 +68,8 @@
         </p>
         <p class="speaker-name">{{{name}}}</p>
         <div id="desc-{{id}}" class="collapse speaker-desc" aria-hidden="true">
-          {{#if short_biography}}
-          <p class="speaker-bio">
-            <i>{{{short_biography}}}</i>
-          </p>
-          {{/if}}
-          {{#if long_biography}}
-              {{#each long_biography}}
+          {{#if bio}}
+              {{#each bio}}
             <p class="speaker-bio">{{{this}}}</p>
               {{/each}}
           {{/if}}
@@ -88,8 +83,12 @@
                 <div style="background-color:{{{color}}}"  class="speaker-event">
                   <h4>{{{title}}}</h4>
                   <br>
-                  <h5><i class="fa fa-clock"></i>&nbsp;{{start}} - {{end}}, {{date}}</h5>
+                  <h5><i class="fa fa-clock"></i>&nbsp;{{start}} - {{end}}, {{date_ru}}</h5>
+                  {{#if location_color}}
                   <h5><i style="color:{{{location_color}}}" class="fa fa-map-marker-alt"></i>&nbsp;<i>{{location}}</i></h5>
+                  {{else}}
+                  <h5><i class="fa fa-map-marker-alt"></i>&nbsp;<i>{{location}}</i></h5>
+                  {{/if}}
                 </div>
               </a>
               <br>

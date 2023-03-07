@@ -1,6 +1,23 @@
 {
+    "platform": {
+        "php": "7.0.4"
+    },
     "require": {
         "google/apiclient": "^2.0",
-        "salesforce/handlebars-php": "^2.0"
+        "salesforce/handlebars-php": "^2.0",
+        "monolog/monolog": "<3.0.0",
+        "symfony/deprecation-contracts": "<3.0.0",
+        "psr/cache": "<2.0.0",
+        "psr/log": "<2.0.0"
+    },
+    "scripts": {
+        "pre-autoload-dump": "Google\\Task\\Composer::cleanup"
+    },
+    "extra": {
+        "google/apiclient-services": [
+            "Drive",
+            "Oauth2",
+            "Sheets"
+        ]
     }
 }

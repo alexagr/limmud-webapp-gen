@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+  <meta name="description" content="{{event.name2}}">
+  <meta name="author" content="{{event.organizer_name}}">
+
+  <title>{{event.name2}}</title>
+
+  <!-- Bootstrap core CSS -->
+  <!-- Latest compiled and minified CSS -->
+  {{> fonts}}
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/schedule.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/img/icon.png"/>
+
+  {{> analytics}}
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <a id="top"></a>
+    {{> navbar_en}}
+
+    <div class="poster">
+      <img class="poster-img desktop" src="{{event.poster}}" style="width:100%;">
+      <img class="poster-img mobile" src="{{event.poster_mobile}}" style="width:100%;">
+    </div>
+
+    <div class ="container">
+      <div class="row">
+        <br>
+        <div class="col-md-12"><a href="schedule.html" class="pull-right btn btn-lg btn-primary" role="button" style="border-radius: 24px;">Schedule</a></div>
+      </div>
+
+      <div class="row">
+        <div class="eventdes col-md-12 mobile">
+          <p>Welcome to {{event.name2}}!</p>
+          <p>Start by clicking the <img src="assets/img/iconbar.png"/> button in the upper rigth corner and choosing the
+            <a href="schedule_en.html"><b>&laquo;SCHEDULE&raquo;</b></a> option.
+            You will be presented with the complete conference schedule.
+            Click on the session name to view additional information about it.
+            If you are looking for a specific session, enter its name or the name of its speaker in the search bar or use the <i class="fa fa-search"></i> button in the lower left corner. 
+            Use the clock icon <i class="fa fa-clock"></i> in the lower left corner to view the sessions closest to the current time.</p>
+          <p>Use the star <i class="fa fa-star"></i> near the session name to bookmark the sessions you plan to attend. Bookmarks will remain
+            persistent for future sessions from the same device (phone/tablet). You may hide / reveal unmarked sessions by clicking the star button next to the search bar.
+          </p>
+          <p>If you want to see all speakers who participate in the conference choose the <a href="speakers_en.html"><b>&laquo;SPEAKERS&raquo;</b></a> option.
+            Click on the speaker photo to view his/hers short biography and list of sessions.
+          </p>
+          <p>If you prefer to view the schedule in calendar format choose the <a href="calendar.html"><b>&laquo;CALENDAR&raquo;</b></a> option.
+            Click on the session name to get additional information about the specific session. 
+            You can save the calendar as PNG file by clicking <i class="fa fa-download" aria-hidden="true"></i> button and, for example, print it.
+          </p>
+          <p>For your convenience, we recommend you to create a shortcut for this Web App on your phone's home screen.</p>
+          <p>In order to do this:</p>
+          <ul>
+            <li>if you are using Android (Chrome), click the <b>&laquo;Menu&raquo;</b> button <img src="assets/img/menu.png"/> in the upper right corner and choose <b>&laquo;Install app&raquo;</b></li>
+            <li>if you are using iPhone (Safari), click the <b>&laquo;Send&raquo;</b> buton <img src="assets/img/send.png"/> at the bottom of the screen and choose <b>&laquo;Add to Home Screen&raquo;</b></li>
+          </ul>
+          <br>
+        </div>
+        <div class="eventdes col-md-12 desktop">
+          <p>Welcome to {{event.name2}}!</p>
+          <p>Start by choosing the <a href="schedule_en.html"><b>&laquo;SCHEDULE&raquo;</b></a> option in the top menu. 
+            You will be presented with the complete conference schedule.
+            Click on the session name to view additional information about it.
+            If you are looking for a specific session, enter its name or the name of its speaker in the search bar or use the <i class="fa fa-search"></i> button in the lower left corner. 
+            Use the clock icon <i class="fa fa-clock"></i> in the lower left corner to view the sessions closest to the current time.</p>
+          <p>Use the star <i class="fa fa-star"></i> near the session name to bookmark the sessions you plan to attend. Bookmarks will remain
+            persistent for future sessions from the same device (PC/laptop). You may hide / reveal unmarked sessions by clicking the star button next to the search bar.
+          </p>
+          <p>If you want to see all speakers who participate in the conference choose the <a href="speakers_en.html"><b>&laquo;SPEAKERS&raquo;</b></a> option.
+            Click on the speaker photo to view his/hers short biography and list of sessions.
+          </p>
+          <p>If you prefer to view the schedule in calendar format choose the <a href="calendar.html"><b>&laquo;CALENDAR&raquo;</b></a> option.
+            Click on the session name to get additional information about the specific session. 
+            You can save the calendar as PNG file by clicking <i class="fa fa-download" aria-hidden="true"></i> button and, for example, print it.
+          </p>
+          <p>Note that this Web application can also be used from your mobile phone.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  {{> footer_en}}
+  <script>
+    $(document).ready(function() {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+  </script>
+</body>
+</html>

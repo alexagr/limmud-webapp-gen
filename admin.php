@@ -104,6 +104,7 @@
       <button name="show-photos" class="btn btn-primary btn-action" onClick="openInNewTab('show_photos.php')">Show</button>
       </div>
 
+    <!--
       <h2>Notification</h2>
       <div class="config-form">
       <?php
@@ -139,6 +140,7 @@
       <button name="notify-update" class="btn btn-primary btn-action" onClick="updateNotify();">Update</button>&nbsp;&nbsp;&nbsp;
       <br>
       </div>
+    -->  
   </div>
 
   <footer class="classic">

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 
   <meta charset="utf-8">
@@ -7,16 +7,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-  <meta name="description" content="{{event.name}}">
+  <meta name="description" content="{{event.name2}}">
   <meta name="author" content="{{event.organizer_name}}">
 
-  <title>{{event.name}}</title>
+  <title>{{event.name2}}</title>
 
   <!-- Bootstrap core CSS -->
   <!-- Latest compiled and minified CSS -->
   {{> fonts}}
   <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-  <link rel="stylesheet" href="assets/css/schedule.css">
+  <link rel="stylesheet" href="assets/css/schedule_he.css">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="assets/img/icon.png"/>
 
@@ -31,24 +31,24 @@
 
 <body>
   <a id="top"></a>
-  {{> navbar}}
+  {{> navbar_en}}
 
-  <div class="main container">
+  <div class="main container" id="session-list">
     <div class="row">
       <div class="middle col-sm-12">
         <h2 class="filter-heading track-heading text-center">
         <span>
-          Карта
+          Map
         </span>
         </h2>
       </div>
     </div>
 
-    <img class="img-responsive" style="margin: 0 auto;" alt="Карта фестиваля" src="{{event.map}}">
+    <img class="img-responsive" style="margin: 0 auto;" alt="Map of the conference" src="{{event.map2}}">
 
   </div>
 
-  {{> footer}}
+  {{> footer_en}}
 
 </body>
 </html>

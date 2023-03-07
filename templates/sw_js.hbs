@@ -34,6 +34,10 @@ self.addEventListener('fetch', function(event) {
             return response;
           }
 
+          if (event.request.url.indexOf('sw.js') !== -1) {
+            return response;
+          }
+
           var responseToCache = response.clone();
 
           caches.open(CACHE_NAME).then(function(cache) {

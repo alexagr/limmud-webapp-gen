@@ -7,10 +7,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-  <meta name="description" content="{{event.name_he}}">
+  <meta name="description" content="{{event.name2}}">
   <meta name="author" content="{{event.organizer_name}}">
 
-  <title>{{event.name_he}}</title>
+  <title>{{event.name2}}</title>
 
   <!-- Bootstrap core CSS -->
   <!-- Latest compiled and minified CSS -->
@@ -71,7 +71,7 @@
         {{#each tracks}}
         {{#if name}}
           <span class="track-legend-item">
-            <i style="background-color:{{{color}}}" class="track-legend-color"></i>&nbsp;{{name_he}}
+            <i style="background-color:{{{color}}}" class="track-legend-color"></i>&nbsp;{{name2}}
           </span>
         {{/if}}
         {{/each}}
@@ -103,7 +103,7 @@
                   <div style="padding-right:0px;" class="schedule-container">
                     <div id="title-{{session_id}}" class="sizeevent event find-container" style="background-color:{{{color}}}"
                       data-toggle="collapse" data-target="#desc-{{session_id}}, #desc2-{{session_id}}">
-                      <h4 class="find-target">{{title_he}}</h4>
+                      <h4 class="find-target">{{title2}}</h4>
                       <a id="bookmark-{{session_id}}" class="bookmark">
                         <i class="fa fa-star" aria-hidden="true"></i>
                       </a>
@@ -111,13 +111,13 @@
                         <div class="row speaker-short-info">
                           <h5 class="find-target">
                           {{#each speakers_list}}
-                            {{name2_he}}{{#unless last}},{{/unless}}
+                            {{name2_first_last}}{{#unless last}},{{/unless}}
                           {{/each}}
                           </h5>
                           <h6>
                           {{start}}
-                          {{#if location_he}}
-                          &nbsp; | &nbsp; <span style="white-space: nowrap">{{location_he}}</span>
+                          {{#if location2}}
+                          &nbsp; | &nbsp; <span style="white-space: nowrap">{{location2}}</span>
                           {{/if}}
                           {{#if language_short}}
                           &nbsp; | &nbsp; <span style="white-space: nowrap">{{language_short}}</span>
@@ -128,35 +128,29 @@
                           {{#if shabbat}}
                           &nbsp; | &nbsp; <i class="fa fa-menorah" aria-hidden="true"></i>
                           {{/if}}
-                          {{#if recommend}}
-                          &nbsp; | &nbsp; <i class="fa fa-book-reader" aria-hidden="true"></i>
-                          {{/if}}
                           </h6>
                         </div>
                       </div>
                     </div>
                     <div id="desc-{{session_id}}" class="collapse session-desc">
-                      <p class="compact"><i style="color:{{{color}}}" class="fa fa-circle" aria-hidden="true"></i>&nbsp;{{tracktitle_he}}</p>
+                      <p class="compact"><i style="color:{{{color}}}" class="fa fa-circle" aria-hidden="true"></i>&nbsp;{{tracktitle2}}</p>
                       <p class="compact"><i class="fa fa-clock" aria-hidden="true"></i>&nbsp;{{start}} - {{end}}, {{sessiondate_he}}</p>
-                      {{#if location_he}}
+                      {{#if location2}}
                       {{#if location_color}}
-                      <p class="compact"><i style="color:{{{location_color}}}" class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;<i>{{location_he}}</i></p>
+                      <p class="compact"><i style="color:{{{location_color}}}" class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;<i>{{location2}}</i></p>
                       {{else}}
-                      <p class="compact"><i class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;<i>{{location_he}}</i></p>
+                      <p class="compact"><i class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;<i>{{location2}}</i></p>
                       {{/if}}
                       {{/if}}
-                      {{#if language_he}}
-                      <p class="compact"><i class="fa fa-globe" aria-hidden="true"></i>&nbsp;{{language_he}}</p>
+                      {{#if language2}}
+                      <p class="compact"><i class="fa fa-globe" aria-hidden="true"></i>&nbsp;{{language2}}</p>
                       {{/if}}
                       {{#if shabbat}}
                       <p class="compact"><i class="fa fa-menorah" aria-hidden="true"></i>&nbsp;שומר שבת</p>
                       {{/if}}
-                      {{#if recommend}}
-                      <p class="compact"><i class="fa fa-book-reader" aria-hidden="true"></i>&nbsp;&quot;בבל&quot; ממליץ</p>
-                      {{/if}}
                       <hr class="clear-both">
-                      {{#if description_he}}
-                        {{#each description_he}}
+                      {{#if description2}}
+                        {{#each description2}}
                       <p class="compact">{{{this}}}</p>
                         {{/each}}
                       <hr class="clear-both">
@@ -171,18 +165,12 @@
                           {{else}}
                             <p class="session-speakers"><img class="card-img-top speaker-image-small" src="assets/img/avatar.png"/></p>
                           {{/if}}
-                          <p><span class="session-speaker-name">{{name2_he}}</span></p>
+                          <p><span class="session-speaker-name">{{name2_first_last}}</span></p>
                           {{#if has_data}}
                         </a>
                           {{/if}}
-                        {{#if organisation_he}}
-                        <p>{{organisation_he}}</p>
-                        {{/if}}
-                        {{#if short_biography_he}}
-                        <p><i>{{{short_biography_he}}}</i></p>
-                        {{/if}}
-                        {{#if long_biography_he}}
-                          {{#each long_biography_he}}
+                        {{#if bio2}}
+                          {{#each bio2}}
                         <p class="compact">{{{this}}}</p>
                           {{/each}}
                         {{/if}}
@@ -204,10 +192,10 @@
       </div>
       <div class="track-names">
       {{#each tracks}}
-      {{#if name_he}}
+      {{#if name2}}
         <ul class="title-inline title-legend">
           <li  style="background-color:{{{color}}}" class="titlecolor"></li>
-          <li>{{name_he}}</li>
+          <li>{{name2}}</li>
         </ul>
       {{/if}}
       {{/each}}

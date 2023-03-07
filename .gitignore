@@ -6,3 +6,5 @@ composer.phar
 lib/vendor
 limmud-test
 *.1
+*.bak
+lib.zip

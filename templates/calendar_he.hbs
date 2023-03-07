@@ -7,10 +7,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-  <meta name="description" content="{{event.name_he}}">
+  <meta name="description" content="{{event.name2}}">
   <meta name="author" content="{{event.organizer_name}}">
 
-  <title>{{event.name_he}}</title>
+  <title>{{event.name2}}</title>
 
   <!-- Bootstrap core CSS -->
   <!-- Latest compiled and minified CSS -->
@@ -48,7 +48,7 @@
       <div class="tabs">
         <span class="tabs-nav">
           <a href="#" class="all tabs-nav-link date-button is-active"> כל הימים </a>
-          {{#each timeList}}
+          {{#each roomsList}}
           <a href="#" class="{{slug}} tabs-nav-link date-button"> {{date_short_he}} </a>
           {{/each}}
         </span>
@@ -87,8 +87,8 @@
                   {{#each rooms}}
                   <div class="room" style="width: {{{../width}}};">
                     <div class="room-header" style="height: {{{../timeToPixel}}}px;">
-                      {{#if name_he}}
-                        <span>{{name_he}}</span>
+                      {{#if name2}}
+                        <span>{{name2}}</span>
                       {{/if}}
                     </div>
                     <div>
@@ -96,21 +96,21 @@
                       <div id="session-{{session_id}}" class="session find-container" style="top:{{{top}}}px; height:{{{height}}}px;background-color:{{{color}}};">
                         <div class="session-name">
                           <a href="schedule_he.html#{{session_id}}" class="find-target">
-                            {{title_he}}
+                            {{title2}}
                           </a>
                           <div class="session-details">
                         {{#if speakers_list}}
                             <br>
                             <div class="find-target">
                           {{#each speakers_list}}
-                            {{name2_he}}{{#unless last}},{{/unless}}
+                            {{name2_first_last}}{{#unless last}},{{/unless}}
                           {{/each}}
                             </div>
                         {{/if}}
                             <br>
                             {{start}}
-                        {{#if location_he}}
-                            &nbsp; | &nbsp; <span style="white-space: nowrap">{{location_he}}</span>
+                        {{#if location2}}
+                            &nbsp; | &nbsp; <span style="white-space: nowrap">{{location2}}</span>
                         {{/if}}
                         {{#if language_short}}
                             &nbsp; | &nbsp; <span style="white-space: nowrap">{{language_short}}</span>
@@ -138,10 +138,10 @@
       
       <div class="track-names">
       {{#each tracks}}
-      {{#if name_he}}
+      {{#if name2}}
         <ul class="title-inline title-legend">
           <li  style="background-color:{{{color}}}" class="titlecolor"></li>
-          <li>{{name_he}}</li>
+          <li>{{name2}}</li>
         </ul>
       {{/if}}
       {{/each}}

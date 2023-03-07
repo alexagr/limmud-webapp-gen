@@ -34,17 +34,8 @@
     {{> navbar}}
 
     <div class="poster">
-      <img class="poster-img desktop" src="assets/img/poster_desktop.png" style="width:100%;">
-      <img class="poster-img mobile" src="assets/img/poster_mobile.png" style="width:100%;">
-      <!--
-      <div class="poster-caption">
-        <h4>{{event.date}}</h4>
-        <h1>{{event.name}}</h1>
-        <h4><i class="fa fa-map-marker-alt"></i>
-          {{event.location_name}}</h4>
-        <p></p>
-      </div>
-      -->
+      <img class="poster-img desktop" src="{{event.poster}}" style="width:100%;">
+      <img class="poster-img mobile" src="{{event.poster_mobile}}" style="width:100%;">
     </div>
 
     <div class ="container">

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="he">
+<html lang="en">
 <head>
 
   <meta charset="utf-8">
@@ -16,7 +16,7 @@
   <!-- Latest compiled and minified CSS -->
   {{> fonts}}
   <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-  <link rel="stylesheet" href="assets/css/schedule_he.css">
+  <link rel="stylesheet" href="assets/css/schedule.css">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="assets/img/icon.png"/>
 
@@ -28,16 +28,16 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
       <![endif]-->
 </head>
-<body dir="rtl">
+<body>
   <a id="top"></a>
-  {{> navbar_he}}
+  {{> navbar_en}}
 
 <div class="main container">
   <div class="row">
     <div class="middle col-sm-12">
       <h2 class="filter-heading track-heading text-center">
       <span>
-        מרצים
+        Speakers
       </span>
       </h2>
     </div>
@@ -46,7 +46,7 @@
   <div class="search-row container">
     <div class="search">
       <span class="filter search-filter search-filter-speakers">
-        <input class="search-filter-input" type="text" placeholder="חיפוש">
+        <input class="search-filter-input" type="text" placeholder="Search">
       </span>
     </div>
   </div>
@@ -75,15 +75,15 @@
           {{/if}}
           <hr class="speaker-hr">
           <div class="speaker-container">
-            <h4 class="speaker-title" class="text"><strong>יחידות</strong></h4>
+            <h4 class="speaker-title" class="text"><strong>Sessions</strong></h4>
             <div class="col-xs-12 col-md-12">
               {{#each sessions}}
               {{#unless is_cancelled}}
-              <a href="schedule_he.html#{{session_id}}">
+              <a href="schedule_en.html#{{session_id}}">
                 <div style="background-color:{{{color}}}"  class="speaker-event">
                   <h4>{{{title2}}}</h4>
                   <br>
-                  <h5><i class="fa fa-clock"></i>&nbsp;{{start}} - {{end}}, {{date_he}}</h5>
+                  <h5><i class="fa fa-clock"></i>&nbsp;{{start}} - {{end}}, {{date_en}}</h5>
                   {{#if location_color}}
                   <h5><i style="color:{{{location_color}}}" class="fa fa-map-marker-alt"></i>&nbsp;<i>{{location2}}</i></h5>
                   {{else}}
@@ -106,7 +106,7 @@
     {{/each}}
 </div>
 
-  {{> footer_he}}
+  {{> footer_en}}
 
   <a class="scroll" href="#" id="down-button" data-scroll-direction="0">
     <i class="fa fa-chevron-up" aria-hidden="true"></i>

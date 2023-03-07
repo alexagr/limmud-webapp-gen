@@ -7,10 +7,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-  <meta name="description" content="{{event.name_he}}">
+  <meta name="description" content="{{event.name2}}">
   <meta name="author" content="{{event.organizer_name}}">
 
-  <title>{{event.name_he}}</title>
+  <title>{{event.name2}}</title>
 
   <!-- Bootstrap core CSS -->
   <!-- Latest compiled and minified CSS -->
@@ -34,17 +34,8 @@
     {{> navbar_he}}
 
     <div class="poster">
-      <img class="poster-img desktop" src="assets/img/poster_desktop.png" style="width:100%;">
-      <img class="poster-img mobile" src="assets/img/poster_mobile.png" style="width:100%;">
-      <!--
-      <div class="poster-caption">
-        <h4>{{event.date_he}}</h4>
-        <h1>{{event.name_he}}</h1>
-        <h4><i class="fa fa-map-marker-alt"></i>
-          {{event.location_name_he}}</h4>
-        <p></p>
-      </div>
-      -->
+      <img class="poster-img desktop" src="{{event.poster}}" style="width:100%;">
+      <img class="poster-img mobile" src="{{event.poster_mobile}}" style="width:100%;">
     </div>
 
   <div class ="container">
@@ -55,7 +46,7 @@
 
     <div class="row">
       <div class="eventdes col-md-12 mobile">
-        <p>ברוכים הבאים לפסטיבל {{eventurls.name_he}}!</p>
+        <p>ברוכים הבאים לפסטיבל {{event.name2}}!</p>
         <p>על מנת לראות תוכנית הפסטיבל לחצו על הכפתור  <img src="assets/img/iconbar.png"/> בפינה הימנית העליונה ובחרו אופציה <b>תוכנית</b>.
         לחצו על שם היחידה על מנת לראות מידע נוסף אודותיה.
         אם אתם מחפשים הרצאה ספציפית, הקלידו את נושא ההרצאה או שם של המרצה בשדה חיפוש או השתמשו בכפתור <i class="fa fa-search"></i> בפינה הימנית.
@@ -78,7 +69,7 @@
         <br>
       </div>
       <div class="eventdes col-md-12 desktop">
-        <p>ברוכים הבאים לפסטיבל {{eventurls.name_he}}!</p>
+        <p>ברוכים הבאים לפסטיבל {{event.name2}}!</p>
         <p>על מנת לראות תוכנית הפסטיבל בחרו אופציה <b>תוכנית</b> בתפריט העליון.
         לחצו על שם היחידה על מנת לראות מידע נוסף אודותיה.
         אם אתם מחפשים הרצאה ספציפית, הקלידו את נושא ההרצאה או שם של המרצה בשדה חיפוש או השתמשו בכפתור <i class="fa fa-search"></i> בפינה הימנית.

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 
   <meta charset="utf-8">
@@ -7,10 +7,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-  <meta name="description" content="{{event.name}}">
+  <meta name="description" content="{{event.name2}}">
   <meta name="author" content="{{event.organizer_name}}">
 
-  <title>{{event.name}}</title>
+  <title>{{event.name2}}</title>
 
   <!-- Bootstrap core CSS -->
   <!-- Latest compiled and minified CSS -->
@@ -31,14 +31,14 @@
 
 <body>
   <a id="top"></a>
-  {{> navbar}}
+  {{> navbar_en}}
 
   <div class="main container wide-container" id="session-list">
     <div class="row">
       <div class="middle col-sm-12">
         <h2 class="filter-heading track-heading text-center">
         <span>
-          Сетка
+          Calendar
         </span>
         </h2>
       </div>
@@ -47,16 +47,16 @@
     <div class="date-list container">
       <div class="tabs">
         <span class="tabs-nav">
-          <a href="#" class="all tabs-nav-link date-button is-active"> все дни </a>
+          <a href="#" class="all tabs-nav-link date-button is-active"> All Days </a>
           {{#each roomsList}}
-          <a href="#" class="{{slug}} tabs-nav-link date-button"> {{date_short_ru}} </a>
+          <a href="#" class="{{slug}} tabs-nav-link date-button"> {{date_short_en}} </a>
           {{/each}}
         </span>
       </div>
     </div>
 
     <div class="row">
-      <div class="button-list container pull-right">
+      <div class="button-list container pull-left">
         <button class="btn btn-default export-png" type="button">
           <i class="fa fa-download" aria-hidden="true"></i>
         </button>
@@ -70,7 +70,7 @@
             <div class="{{slug}} calendar day-filter">
               <div class="col-md-12 paddingzero">
                 <a class="anchor" id="{{slug}}"></a>
-                <h5 class="text">{{date_ru}}</h5>
+                <h5 class="text">{{date_en}}</h5>
               </div>
               <div class="calendar-content">
                 <div class="times">
@@ -87,30 +87,30 @@
                   {{#each rooms}}
                   <div class="room" style="width: {{{../width}}};">
                     <div class="room-header" style="height: {{{../timeToPixel}}}px;">
-                      {{#if name}}
-                        <span>{{name}}</span>
+                      {{#if name2}}
+                        <span>{{name2}}</span>
                       {{/if}}
                     </div>
                     <div>
                       {{#each sessions}}
                       <div id="session-{{session_id}}" class="session find-container" style="top:{{{top}}}px; height:{{{height}}}px;background-color:{{{color}}};">
                         <div class="session-name">
-                          <a href="schedule.html#{{session_id}}" class="find-target">
-                            {{title}}
+                          <a href="schedule_en.html#{{session_id}}" class="find-target">
+                            {{title2}}
                           </a>
                           <div class="session-details">
                         {{#if speakers_list}}
                             <br>
                             <div class="find-target">
                           {{#each speakers_list}}
-                            {{name_first_last}}{{#unless last}},{{/unless}}
+                            {{name2_first_last}}{{#unless last}},{{/unless}}
                           {{/each}}
                             </div>
                         {{/if}}
                             <br>
                             {{start}}
-                        {{#if location}}
-                            &nbsp; | &nbsp; <span style="white-space: nowrap">{{location}}</span>
+                        {{#if location2}}
+                            &nbsp; | &nbsp; <span style="white-space: nowrap">{{location2}}</span>
                         {{/if}}
                         {{#if language_short}}
                             &nbsp; | &nbsp; <span style="white-space: nowrap">{{language_short}}</span>
@@ -138,10 +138,10 @@
       
       <div class="track-names">
       {{#each tracks}}
-      {{#if name}}
+      {{#if name2}}
         <ul class="title-inline title-legend">
           <li  style="background-color:{{{color}}}" class="titlecolor"></li>
-          <li>{{name}}</li>
+          <li>{{name2}}</li>
         </ul>
       {{/if}}
       {{/each}}
@@ -153,16 +153,16 @@
     <div class="modal-dialog vertical-align-center">
       <div class="modal-content">
         <div class="modal-header">
-          <h3>Создание PNG файла</h3>
+          <h3>Creating PNG file</h3>
         </div>
         <div class="modal-body">
-          <p>Пожалуйста, подождите несколько секунд до завершения процесса.</p>
+          <p>Please wait a few seconds.</p>
         </div>
       </div>
     </div>
   </div>
 
-  {{> footer}}
+  {{> footer_en}}
 
   <a class="scroll" href="#" id="down-button" data-scroll-direction="0">
     <i class="fa fa-chevron-up" aria-hidden="true"></i>
@@ -177,8 +177,8 @@
   <div class="findbuttondiv" id="find-button-div">
     <a class="findbutton" href="#" id="find-button" data-scroll-direction="0"><i class="fa fa-search" aria-hidden="true"></i></a>
   </div>
-  <input class="findfield" id="find-field" type="search" placeholder="Поиск"/>
-  <a class="findnext" href="#" id="find-next" data-scroll-direction="0"><i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+  <input class="findfield" id="find-field" type="search" placeholder="חיפוש"/>
+  <a class="findnext" href="#" id="find-next" data-scroll-direction="0"><i class="fa fa-angle-double-left" aria-hidden="true"></i></a>
   <script src="assets/js/mark.min.js" type="text/javascript"></script>
   <script src="assets/js/find2.js" type="text/javascript"></script>
 
@@ -205,17 +205,18 @@
           $(this).toggleClass('hide', !showThing);
         });
       });
-
+    
       $(".export-png").click(function() {
         $('#saveModal').modal('show');
         let maxWidth = 0;
         let initialWidth = [];
         let count = 0;
+        let widthOfChild = 0;
         $('.calendar').each(function() {
           let $timeline = $(this);
           initialWidth[count] = $timeline.width();
           let numberOfChildElements = $timeline.find('.rooms')[0].childElementCount - 1;
-          let widthOfChild = $timeline.find('.room').width() + 3;
+          widthOfChild = $timeline.find('.room').width() + 3;
           let canvasWidth = numberOfChildElements * widthOfChild + 50;
           $timeline.width(canvasWidth);
           if(canvasWidth > maxWidth){
@@ -225,11 +226,12 @@
         });
 
         $timeline = $('.calendar').parent()[0];
-        html2canvas($timeline,{width: maxWidth}).then(function(canvas) {
+        // html2canvas creates some weird offset for RTL text block - try to compensate for it
+        html2canvas($timeline,{width: maxWidth, windowWidth: maxWidth, x: -widthOfChild * 2 - 100}).then(function(canvas) {
           canvas.id = "generated-canvas";
           canvas.toBlob(function(blob) {
             $('#saveModal').modal('hide');
-            saveAs(blob, 'limmud-calendar.png');
+            saveAs(blob, 'limmud-calendar-en.png');
           });
         });
 
