@@ -46,7 +46,7 @@ function get_defaults()
         'webapp_folder' => 'webapp',
         'close_calendar_gaps' => '15',
         'close_calendar_gaps_ignore_meals' => 'yes',
-        'server_timezone' => '',
+        'event_timezone' => 'Asia/Jerusalem',
         'schedule_sheet' => 'Schedule',
         'schedule_date_column' => 'date',
         'schedule_start_column' => 'start',
@@ -1269,6 +1269,10 @@ function generate()
     $config = json_decode(file_get_contents('data/config.json'), true);
     $config = array_merge($config, get_defaults());
 
+    if (!empty($config['event_timezone'])) {
+        date_default_timezone_set($config['event_timezone']);
+    }
+
     list($event, $sessions, $speakers, $locations, $tracks) = parse_sheets($client, $config);
 
     $model = array(
@@ -1328,7 +1332,6 @@ function generate()
 }
 
 try {
-    date_default_timezone_set('Asia/Jerusalem');
     generate();
     print 'WebApp successfully generated';
 } catch (Exception $e) {
