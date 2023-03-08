@@ -1286,6 +1286,10 @@ a.findbutton:visited
     padding-left: 5px;
 }
 
+.date-list .tabs-nav-link {
+  padding: 10px 8px 10px 8px;
+}
+
 /* increase max width */
 @media (min-width: 1500px) {
   .wide-container {
