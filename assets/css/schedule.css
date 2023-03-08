@@ -1281,6 +1281,10 @@ a.findbutton:visited
   margin: -4px;
 }
 
+.date-list {
+    padding-right: 5px;
+    padding-left: 5px;
+}
 
 /* increase max width */
 @media (min-width: 1500px) {
