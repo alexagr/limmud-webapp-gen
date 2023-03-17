@@ -43,6 +43,14 @@
     </div>
   </div>
 
+  {{#if event.note2}}
+  <div class="container">
+      <div class="alert alert-danger">
+          <span>{{event.note2}}</span>
+      </div>    
+  </div>    
+  {{/if}}
+
   <div class="search-row container">
     <div class="search">
       <span class="filter search-filter search-filter-speakers">

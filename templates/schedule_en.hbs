@@ -44,11 +44,19 @@
       </div>
     </div>
 
+    {{#if event.note2}}
+    <div class="container">
+        <div class="alert alert-danger">
+            <span>{{event.note2}}</span>
+        </div>    
+    </div>    
+    {{/if}}
+
     <div class="date-list container">
       <div class="tabs">
         <span class="tabs-nav">
           <a href="#" class="all tabs-nav-link date-button is-active"> All Days </a>
-          {{#each timeList}}
+          {{#each timeList2}}
           <a href="#" class="{{slug}} tabs-nav-link date-button"> {{date_short_en}} </a>
           {{/each}}
         </span>
@@ -83,7 +91,7 @@
       <div style="margin: 15px 0 0 5px;" class="col-md-9 col-rtl">
         <div class="track-list container">
 
-          {{#each timeList}}
+          {{#each timeList2}}
           <div class="{{slug}} day-filter">
             <div style="padding:0" class="col-md-12">
               <a class="anchor" id="{{slug}}"></a>

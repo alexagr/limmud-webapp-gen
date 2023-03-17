@@ -44,9 +44,10 @@ function get_defaults()
 {
     $defaults = array(
         'webapp_folder' => 'webapp',
+        'event_timezone' => 'Asia/Jerusalem',
         'close_calendar_gaps' => '15',
         'close_calendar_gaps_ignore_meals' => 'yes',
-        'event_timezone' => 'Asia/Jerusalem',
+        'language2_hide_content_no_data' => 'no',
         'schedule_sheet' => 'Schedule',
         'schedule_date_column' => 'date',
         'schedule_start_column' => 'start',
@@ -431,6 +432,19 @@ function parse_sheets($client, $config)
         $tmp_start = get_cell($header, $row, $config['schedule_start_column'], '');
         $tmp_end = get_cell($header, $row, $config['schedule_end_column'], '');
 
+        if (substr($tmp_start, 0, 3) == '00:') {
+            $tmp_start = '24:' . substr($tmp_start, 3);
+        }
+        if (substr($tmp_start, 0, 3) == '01:') {
+            $tmp_start = '25:' . substr($tmp_start, 3);
+        }
+        if (substr($tmp_end, 0, 3) == '00:') {
+            $tmp_end = '24:' . substr($tmp_end, 3);
+        }
+        if (substr($tmp_end, 0, 3) == '01:') {
+            $tmp_end = '25:' . substr($tmp_end, 3);
+        }
+
         if (!empty($tmp_date)) {
             if (empty($tmp_start) && empty($tmp_end)) {
                 $current_date = $tmp_date;
@@ -808,7 +822,7 @@ $months_short_en = array(
     12 => 'Dec'
 );
 
-function foldByTime($sessions, $speakers, $tracks) {
+function foldByTime($sessions, $speakers, $tracks, $config, $lang) {
     global $days_ru;
     global $months_ru;
     global $months_short_ru;
@@ -821,6 +835,10 @@ function foldByTime($sessions, $speakers, $tracks) {
 
     $dates = array();
     foreach ($sessions as $session) {
+        if (empty($session['title2']) && ($lang == 'secondary') && $config['language2_hide_content_no_data'] == 'yes') {
+            continue;
+        }
+        
         $timestamp = strtotime($session['start_time']);
         $date = date('Y-m-d', $timestamp);
         $time = date('H:i', $timestamp);
@@ -932,7 +950,7 @@ function convertTimeToPixel($startTime, $sessionTime)
         $timeDiff += 24 * 60;
     }
     $top = $timeDiff * $timeToPixel / 15 + $timeToPixel; // distance of session from top of the table
-    return $top;
+    return round($top);
 }
 
 function createTimeLine($startTime, $endTime)
@@ -987,7 +1005,7 @@ function checkWidth($columns)
 }
 
 
-function foldByRooms($sessions, $speakers, $tracks, $config) {
+function foldByRooms($sessions, $speakers, $tracks, $config, $lang) {
     global $days_ru;
     global $months_ru;
     global $months_short_ru;
@@ -1000,6 +1018,10 @@ function foldByRooms($sessions, $speakers, $tracks, $config) {
 
     $dates = array();
     foreach ($sessions as $session) {
+       if (empty($session['title2']) && ($lang == 'secondary') && $config['language2_hide_content_no_data'] == 'yes') {
+            continue;
+        }
+        
         $timestamp = strtotime($session['start_time']);
         $date = date('Y-m-d', $timestamp);
         $time = date('H:i', $timestamp);
@@ -1157,7 +1179,7 @@ function foldByRooms($sessions, $speakers, $tracks, $config) {
     return $dates;
 }
 
-function getSpeakerSessions($speakerid, $sessions, $tracks)
+function getSpeakerSessions($speakerid, $sessions, $tracks, $config, $lang)
 {
     global $days_ru;
     global $months_ru;
@@ -1171,6 +1193,10 @@ function getSpeakerSessions($speakerid, $sessions, $tracks)
 
     $speakerSessions = array();
     foreach ($sessions as $session) {
+        if (empty($session['title2']) && ($lang == 'secondary') && $config['language2_hide_content_no_data'] == 'yes') {
+            continue;
+        }
+        
         $roomName = $session['location']['name'];
         if (($roomName == 'Отмена') /*|| ($roomName == 'Столовая') || ($roomName == 'Экскурсия')*/) {
             continue;
@@ -1218,37 +1244,18 @@ function getSpeakerSessions($speakerid, $sessions, $tracks)
     return $speakerSessions;
 }
 
-function foldBySpeakers($sessions, $speakers, $tracks)
+function foldBySpeakers($sessions, $speakers, $tracks, $config, $lang)
 {
     $speakersList = array();
     foreach ($speakers as $speaker) {
-        $speakerSessions = getSpeakerSessions($speaker['id'], $sessions, $tracks);
+        $speakerSessions = getSpeakerSessions($speaker['id'], $sessions, $tracks, $config, $lang);
         if (!empty($speakerSessions)) {
             $speaker['sessions'] = $speakerSessions;
-            $speakersList[$speaker['name']] = $speaker;
-        }
-    }
-    ksort($speakersList);
-
-    $i = 0;
-    foreach ($speakersList as $name => $speaker) {
-        if ($speakersList[$name]['has_data']) {
-            $speakersList[$name]['row_start'] = ($i % 3 == 0);
-            $speakersList[$name]['row_end'] = ($i % 3 == 2);
-            $i += 1;
-        }
-    }
-    return $speakersList;
-}
-
-function foldBySpeakers2($sessions, $speakers, $tracks)
-{
-    $speakersList = array();
-    foreach ($speakers as $speaker) {
-        $speakerSessions = getSpeakerSessions($speaker['id'], $sessions, $tracks);
-        if (!empty($speakerSessions)) {
-            $speaker['sessions'] = getSpeakerSessions($speaker['id'], $sessions, $tracks);
-            $speakersList[$speaker['name2']] = $speaker;
+            if ($lang == 'primary') {
+                $speakersList[$speaker['name']] = $speaker;
+            } else {
+                $speakersList[$speaker['name2']] = $speaker;
+            }
         }
     }
     ksort($speakersList);
@@ -1303,10 +1310,12 @@ function generate()
         'version' => date('mdHi')
     );
 
-    $model['timeList'] = foldByTime($sessions, $speakers, $tracks);
-    $model['roomsList'] = foldByRooms($sessions, $speakers, $tracks, $config);
-    $model['speakersList'] = foldBySpeakers($sessions, $speakers, $tracks);
-    $model['speakersList2'] = foldBySpeakers2($sessions, $speakers, $tracks);
+    $model['timeList'] = foldByTime($sessions, $speakers, $tracks, $config, 'primary');
+    $model['timeList2'] = foldByTime($sessions, $speakers, $tracks, $config, 'secondary');
+    $model['roomsList'] = foldByRooms($sessions, $speakers, $tracks, $config, 'primary');
+    $model['roomsList2'] = foldByRooms($sessions, $speakers, $tracks, $config, 'secondary');
+    $model['speakersList'] = foldBySpeakers($sessions, $speakers, $tracks, $config, 'primary');
+    $model['speakersList2'] = foldBySpeakers($sessions, $speakers, $tracks, $config, 'secondary');
 
     $partialsDir = __DIR__ . "/templates/partials";
     $partialsLoader = new FilesystemLoader($partialsDir,
