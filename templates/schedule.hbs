@@ -134,7 +134,6 @@
                       </div>
                     </div>
                     <div id="desc-{{session_id}}" class="collapse session-desc">
-                      <p class="compact"><i style="color:{{{color}}}" class="fa fa-circle" aria-hidden="true"></i>&nbsp;{{tracktitle}}</p>
                       <p class="compact"><i class="fa fa-clock" aria-hidden="true"></i>&nbsp;{{start}} - {{end}}, {{sessiondate_ru}}</p>
                       {{#if location}}
                       {{#if location_color}}
@@ -233,7 +232,7 @@
         var id = Number($(this).attr('id').substring(9));
         var curColor = $(this).css("color");
         if (curColor == "rgb(255, 255, 0)") {
-          $(this).css("color", "rgb(127, 127, 127)");
+          $(this).css("color", "");
           temp[id] = 0;
         }
         else {
