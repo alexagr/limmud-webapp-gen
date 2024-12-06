@@ -30,11 +30,11 @@ $(function() {
         });
     }
 
-    // if we still didn't find it - search for the first session
+    // if we still didn't find it - search for the first day
     if (!day)
     {
         day = $('.day-filter').first();
-        nowTime = '14:00';
+        // nowTime = '14:00';
     }
 
     var elem;

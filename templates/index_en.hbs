@@ -41,7 +41,12 @@
     <div class ="container">
       <div class="row">
         <br>
-        <div class="col-md-12"><a href="schedule.html" class="pull-right btn btn-lg btn-primary" role="button" style="border-radius: 24px;">Schedule</a></div>
+        <div class="col-md-12" style="text-align: right">
+          {{#if event.registration_url}}
+          <a href="{{event.registration_url}}" class="btn btn-lg button-primary" role="button">Registration</a> &nbsp; &nbsp; 
+          {{/if}}
+          <a href="schedule.html" class="btn btn-lg button-info" role="button">Schedule</a>
+        </div>
       </div>
 
       <div class="row">

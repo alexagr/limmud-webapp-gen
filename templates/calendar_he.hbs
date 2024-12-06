@@ -45,7 +45,7 @@
     </div>
 
     <div class="date-list container">
-      <div class="tabs">
+      <div class="tabs" {{#if hideRoomsList2}}style="display: none"{{/if}}>
         <span class="tabs-nav">
           <a href="#" class="all tabs-nav-link date-button is-active"> כל הימים </a>
           {{#each roomsList2}}
@@ -98,22 +98,21 @@
                           <a href="schedule_he.html#{{session_id}}" class="find-target">
                             {{title2}}
                           </a>
-                          <div class="session-details">
+                          <div class="session-details find-target">
                         {{#if speakers_list}}
                             <br>
-                            <div class="find-target">
                           {{#each speakers_list}}
-                            {{name2_first_last}}{{#unless last}},{{/unless}}
+                            {{title}}{{name2_first_last}}{{#unless last}},{{/unless}}
                           {{/each}}
-                            </div>
                         {{/if}}
+                            <div class="session-details-data">
                             <br>
                             {{start}}
                         {{#if location2}}
-                            &nbsp; | &nbsp; <span style="white-space: nowrap">{{location2}}</span>
+                            &nbsp;|&nbsp; <span style="white-space: nowrap">{{location2}}</span>
                         {{/if}}
                         {{#if language_short}}
-                            &nbsp; | &nbsp; <span style="white-space: nowrap">{{language_short}}</span>
+                            &nbsp;|&nbsp; <span style="white-space: nowrap">{{language_short}}</span>
                             {{#if language_translate}}
                             <i class="fas fa-headphones-alt"></i>
                             {{/if}}
@@ -121,6 +120,7 @@
                         {{#if shabbat}}
                             &nbsp; <i class="fa fa-menorah" aria-hidden="true"></i>
                         {{/if}}
+                            </div>
                           </div>
                         </div>
                       </div>

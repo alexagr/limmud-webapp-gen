@@ -62,6 +62,8 @@ function get_defaults()
         'schedule_presenter2_column' => 'presenter2',
         'schedule_presenter3_column' => 'presenter3',
         'schedule_presenter4_column' => 'presenter4',
+        'schedule_presenter5_column' => 'presenter5',
+        'schedule_presenter6_column' => 'presenter6',
         'presenter_sheet' => 'Presenters',
         'presenter_name_column' => 'name-russian',
         'presenter_name2_column' => 'name-hebrew',
@@ -82,6 +84,8 @@ function get_defaults()
         'presenter_session2_language_column' => 'session2-language',
         'presenter_name_first_last_column' => 'name-first-last',
         'presenter_name2_first_last_column' => 'name-he-first-last',
+        'presenter_title_column' => 'title',
+        'presenter_title2_column' => 'title-he',
         'session_type_sheet' => 'Tracks',
         'session_type_name_column' => 'name',
         'session_type_name2_column' => 'name-he',
@@ -112,6 +116,7 @@ function get_defaults()
         'event_facebook_url_column' => 'facebook-url',
         'event_instagram_url_column' => 'instagram-url',
         'event_telegram_url_column' => 'telegram-url',
+        'event_registration_url_column' => 'registration-url',
         'event_email_column' => 'email',
         'event_logo_column' => 'logo',
         'event_icon_column' => 'icon',
@@ -124,7 +129,7 @@ function get_cell($header, $row, $column, $default)
 {
     $value = $default;
     $key = array_search($column, $header);
-    if ($key !== null && array_key_exists($key, $row)) {
+    if ((is_string($key) || is_int($key)) && array_key_exists($key, $row)) {
         $value = $row[$key];
     }
     return $value;
@@ -182,6 +187,8 @@ function parse_sheets($client, $config)
         if (!empty($value)) {
             $event['social_links'][] = array('link' => $value, 'icon' => 'telegram', 'name' => 'Telegram');
         }
+
+        $event['registration_url'] = get_cell($header, $row, $config['event_registration_url_column'], '');
 
         $event['second_language'] = get_cell($header, $row, $config['event_second_language_column'], $event['second_language']);
         if ($event['second_language'] == 'en') {
@@ -319,6 +326,17 @@ function parse_sheets($client, $config)
             $name2_first_last = implode(' ', $name2_parts);
         }
 
+        $title = get_cell($header, $row, $config['presenter_title_column'], '');
+        if (!empty($title)) {
+            $title .= ' ';
+        }
+        $title2 = get_cell($header, $row, $config['presenter_title2_column'], '');
+        if (!empty($title2)) {
+            $title2 .= ' ';
+        }
+
+        $has_data = ($photo != 'avatar.png') && !empty($bio);
+
         if (array_key_exists($name, $speakers_map)) {
             $id = $speakers_map[$name];
             if (!empty($bio)) {
@@ -329,14 +347,8 @@ function parse_sheets($client, $config)
             }
         } else {
             $id = count($speakers);
-            $speakers[$id] = array('id' => $id, 'name' => $name, 'name2' => $name2, 'name_first_last' => $name_first_last, 'name2_first_last' => $name2_first_last, 'photo' => $photo, 'bio' => $bio, 'bio2' => $bio2, 'sessions' => array(), 'has_data' => true);
+            $speakers[$id] = array('id' => $id, 'name' => $name, 'name2' => $name2, 'name_first_last' => $name_first_last, 'name2_first_last' => $name2_first_last, 'photo' => $photo, 'bio' => $bio, 'bio2' => $bio2, 'title' => $title, 'title2' => $title2, 'sessions' => array(), 'has_data' => $has_data);
             $speakers_map[$name] = $id;
-        }
-    }
-
-    foreach ($speakers as $key => $speaker) {
-        if (($speaker['photo'] == 'avatar.png') && (empty($speaker['bio']))) {
-            $speakers[$key]['has_data'] = false;
         }
     }
 
@@ -568,49 +580,21 @@ function parse_sheets($client, $config)
         } else {
             $shabbat = false;
         }
-        $tmp_speaker2 = get_cell($header, $row, $config['schedule_presenter2_column'], '');
-        if (!empty($tmp_speaker2)) {
-            $speaker = $tmp_speaker2;
-            $people[] = $speaker;
-            if (array_key_exists($speaker, $speakers_map)) {
-                $speaker_id = $speakers_map[$speaker];
-                $people2[] = $speakers[$speaker_id]['name2'];
-                $people_first_last[] = $speakers[$speaker_id]['name_first_last'];
-                $people2_first_last[] = $speakers[$speaker_id]['name2_first_last'];
-            } else {
-                $people2[] = $speaker;
-                $people_first_last[] = $speaker;
-                $people2_first_last[] = $speaker;
-            }
-        }
-        $tmp_speaker3 = get_cell($header, $row, $config['schedule_presenter3_column'], '');
-        if (!empty($tmp_speaker3)) {
-            $speaker = $tmp_speaker3;
-            $people[] = $speaker;
-            if (array_key_exists($speaker, $speakers_map)) {
-                $speaker_id = $speakers_map[$speaker];
-                $people2[] = $speakers[$speaker_id]['name2'];
-                $people_first_last[] = $speakers[$speaker_id]['name_first_last'];
-                $people2_first_last[] = $speakers[$speaker_id]['name2_first_last'];
-            } else {
-                $people2[] = $speaker;
-                $people_first_last[] = $speaker;
-                $people2_first_last[] = $speaker;
-            }
-        }
-        $tmp_speaker4 = get_cell($header, $row, $config['schedule_presenter4_column'], '');
-        if (!empty($tmp_speaker4)) {
-            $speaker = $tmp_speaker4;
-            $people[] = $speaker;
-            if (array_key_exists($speaker, $speakers_map)) {
-                $speaker_id = $speakers_map[$speaker];
-                $people2[] = $speakers[$speaker_id]['name2'];
-                $people_first_last[] = $speakers[$speaker_id]['name_first_last'];
-                $people2_first_last[] = $speakers[$speaker_id]['name2_first_last'];
-            } else {
-                $people2[] = $speaker;
-                $people_first_last[] = $speaker;
-                $people2_first_last[] = $speaker;
+        for ($i = 0; $i < 7; $i++) {
+            $tmp_speaker2 = get_cell($header, $row, $config['schedule_presenter' . strval($i + 2) . '_column'], '');
+            if (!empty($tmp_speaker2)) {
+                $speaker = $tmp_speaker2;
+                $people[] = $speaker;
+                if (array_key_exists($speaker, $speakers_map)) {
+                    $speaker_id = $speakers_map[$speaker];
+                    $people2[] = $speakers[$speaker_id]['name2'];
+                    $people_first_last[] = $speakers[$speaker_id]['name_first_last'];
+                    $people2_first_last[] = $speakers[$speaker_id]['name2_first_last'];
+                } else {
+                    $people2[] = $speaker;
+                    $people_first_last[] = $speaker;
+                    $people2_first_last[] = $speaker;
+                }
             }
         }
 
@@ -1316,6 +1300,17 @@ function generate()
     $model['roomsList2'] = foldByRooms($sessions, $speakers, $tracks, $config, 'secondary');
     $model['speakersList'] = foldBySpeakers($sessions, $speakers, $tracks, $config, 'primary');
     $model['speakersList2'] = foldBySpeakers($sessions, $speakers, $tracks, $config, 'secondary');
+    
+    if (count($model['timeList']) < 2) {
+        $model['hideTimeList'] = strval(count($model['timeList']));
+    } else {
+        $model['hideTimeList'] = '';
+    }
+    if (count($model['roomsList2']) < 2) {
+        $model['hideRoomsList2'] = strval(count($model['roomsList2']));
+    } else {
+        $model['hideRoomsList2'] = '';
+    }
 
     $partialsDir = __DIR__ . "/templates/partials";
     $partialsLoader = new FilesystemLoader($partialsDir,

@@ -1,4 +1,4 @@
-RedirectMatch 302 ^\/webapp\/?$ https://limmudfsu.org.il/webapp/limmud2019/index.html
+RedirectMatch 302 ^\/webapp\/?$ https://limmudfsu.org.il/webapp/limmud2024/index.html
 
 RewriteEngine On
 RewriteCond %{HTTPS} !=on

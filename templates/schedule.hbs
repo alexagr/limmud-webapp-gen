@@ -45,7 +45,7 @@
     </div>
 
     <div class="date-list container">
-      <div class="tabs">
+      <div class="tabs" {{#if hideTimeList}}style="display: none"{{/if}}>
         <span class="tabs-nav">
           <a href="#" class="all tabs-nav-link date-button is-active"> все дни </a>
           {{#each timeList}}
@@ -112,22 +112,22 @@
                         <div class="row speaker-short-info">
                           <h5 class="find-target">
                           {{#each speakers_list}}
-                            {{name_first_last}}{{#unless last}},{{/unless}}
+                            {{title}}{{name_first_last}}{{#unless last}},{{/unless}}
                           {{/each}}
                           </h5>
                           <h6>
                           {{start}}
                           {{#if location}}
-                          &nbsp; | &nbsp; <span style="white-space: nowrap">{{location}}</span>
+                          &nbsp;|&nbsp; <span style="white-space: nowrap">{{location}}</span>
                           {{/if}}
                           {{#if language_short}}
-                          &nbsp; | &nbsp; <span style="white-space: nowrap">{{language_short}}</span>
+                          &nbsp;|&nbsp; <span style="white-space: nowrap">{{language_short}}</span>
                             {{#if language_translate}}
                             &nbsp; <i class="fas fa-headphones-alt"></i>
                             {{/if}}
                           {{/if}}
                           {{#if shabbat}}
-                          &nbsp; | &nbsp; <i class="fa fa-menorah" aria-hidden="true"></i>
+                          &nbsp;|&nbsp; <i class="fa fa-menorah" aria-hidden="true"></i>
                           {{/if}}
                           </h6>
                         </div>
@@ -159,22 +159,20 @@
                         {{#each speakers_list}}
                           {{#if has_data}}
                         <a href="speakers.html#{{id}}">
-                          {{/if}}
                           {{#if photo}}
                             <p class="session-speakers"><img onError="this.onerror=null;this.src='assets/img/avatar.png';" class="card-img-top speaker-image-small" src="speakers/thumbs/{{{photo}}}"/></p>
                           {{else}}
                             <p class="session-speakers"><img class="card-img-top speaker-image-small" src="assets/img/avatar.png"/></p>
                           {{/if}}
                           <p><span class="session-speaker-name">{{name_first_last}}</span></p>
-                          {{#if has_data}}
                         </a>
-                          {{/if}}
-                        {{#if bio}}
+                          {{#if bio}}
                           {{#each bio}}
                         <p class="compact">{{{this}}}</p>
                           {{/each}}
-                        {{/if}}
+                          {{/if}}
                         <hr class="clear-both">
+                          {{/if}}
                         {{/each}}
                       </div>
                     </div>
