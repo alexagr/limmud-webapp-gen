@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+  <meta name="description" content="{{event.name}}">
+  <meta name="author" content="{{event.organizer_name}}">
+
+  <title>{{event.name}}</title>
+
+  <!-- Bootstrap core CSS -->
+  <!-- Latest compiled and minified CSS -->
+  {{> fonts}}
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/schedule.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="{{event.icon}}"/>
+
+  {{> analytics}}
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <![endif]-->
+</head>
+
+<body>
+  <a id="top"></a>
+  {{> navbar_ukr}}
+
+  <div class="main container wide-container" id="session-list">
+    <div class="row">
+      <div class="middle col-sm-12">
+        <h2 class="filter-heading track-heading text-center">
+        <span>
+          Сітка
+        </span>
+        </h2>
+      </div>
+    </div>
+
+    <div class="date-list container">
+      <div class="tabs" {{#if hideRoomsList2}}style="display: none"{{/if}}>
+        <span class="tabs-nav">
+          <a href="#" class="all tabs-nav-link date-button is-active"> всі дні </a>
+          {{#each roomsList}}
+          <a href="#" class="{{slug}} tabs-nav-link date-button"> {{date_short_ukr}} </a>
+          {{/each}}
+        </span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="button-list container pull-right">
+        <button class="btn btn-default export-png" type="button">
+          <i class="fa fa-download" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12 calendar-view">
+        <div id="track-list" class="container wide-container">
+        {{#each roomsList}}
+            <div class="{{slug}} calendar day-filter">
+              <div class="col-md-12 paddingzero">
+                <a class="anchor" id="{{slug}}"></a>
+                <h5 class="text">{{date_ukr}}</h5>
+              </div>
+              <div class="calendar-content">
+                <div class="times">
+                  <div class="time" style="height: {{{timeToPixelOffset}}}px">
+                    &nbsp;
+                  </div>
+                  {{#each timeline}}
+                  <div class="time" style="height: {{{../timeToPixel}}}px; line-height: {{{../timeToPixel}}}px">
+                    {{time}}
+                  </div>
+                  {{/each}}
+                </div>
+                <div class="rooms" style="height: {{{height}}}px;background-image: url('assets/img/timeline{{{timeToPixel}}}.png');background-repeat: repeat;">
+                  {{#each rooms}}
+                  <div class="room" style="width: {{{../width}}};">
+                    <div class="room-header" style="height: {{{../timeToPixel}}}px;">
+                      {{#if name}}
+                        <span>{{name}}</span>
+                      {{/if}}
+                    </div>
+                    <div>
+                      {{#each sessions}}
+                      <div id="session-{{session_id}}" class="session find-container" style="top:{{{top}}}px; height:{{{height}}}px;background-color:{{{color}}};">
+                        <div class="session-name">
+                          <a href="schedule.html#{{session_id}}" class="find-target">
+                            {{title}}
+                          </a>
+                          <div class="session-details find-target">
+                        {{#if speakers_list}}
+                            <br>
+                          {{#each speakers_list}}
+                            {{title}}{{name_first_last}}{{#unless last}},{{/unless}}
+                          {{/each}}
+                        {{/if}}
+                            <div class="session-details-data">
+                            <br>
+                            {{start}}
+                        {{#if location}}
+                            &nbsp;|&nbsp; <span style="white-space: nowrap">{{location}}</span>
+                        {{/if}}
+                        {{#if language_short}}
+                            &nbsp;|&nbsp; <span style="white-space: nowrap">{{language_short}}</span>
+                            {{#if language_translate}}
+                            <i class="fas fa-headphones-alt"></i>
+                            {{/if}}
+                        {{/if}}
+                        {{#if shabbat}}
+                            &nbsp; <i class="fa fa-menorah" aria-hidden="true"></i>
+                        {{/if}}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      {{/each}}
+                    </div>
+                  </div>
+                  {{/each}}
+                  <div class="calendar-footer"></div>
+                </div>
+              </div>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+
+      <div class="track-names">
+      {{#each tracks}}
+      {{#if name}}
+        <ul class="title-inline title-legend">
+          <li  style="background-color:{{{color}}}" class="titlecolor"></li>
+          <li>{{name}}</li>
+        </ul>
+      {{/if}}
+      {{/each}}
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="saveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog vertical-align-center">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Створення PNG файлу</h3>
+        </div>
+        <div class="modal-body">
+          <p>Будь ласка, зачекайте кілька секунд до завершення процесу.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{> footer_ukr}}
+
+  <a class="scroll" href="#" id="down-button" data-scroll-direction="0">
+    <i class="fa fa-chevron-up" aria-hidden="true"></i>
+  </a>
+  <script src="assets/js/scroll.js" type="text/javascript"></script>
+
+  <a class="now" href="#" id="now-button" data-scroll-direction="0">
+    <i class="fa fa-clock" aria-hidden="true"></i>
+  </a>
+  <script src="assets/js/scroll_now.js" type="text/javascript"></script>
+
+  <div class="findbuttondiv" id="find-button-div">
+    <a class="findbutton" href="#" id="find-button" data-scroll-direction="0"><i class="fa fa-search" aria-hidden="true"></i></a>
+  </div>
+  <input class="findfield" id="find-field" type="search" placeholder="Пошук"/>
+  <a class="findnext" href="#" id="find-next" data-scroll-direction="0"><i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+  <script src="assets/js/mark.min.js" type="text/javascript"></script>
+  <script src="assets/js/find2.js" type="text/javascript"></script>
+
+  <script src="assets/js/async.min.js" type="text/javascript"></script>
+  <script src="assets/js/FileSaver.js" type="text/javascript"></script>
+  <script src="assets/js/html2canvas.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      function getCurrentDate() {
+        var className = '';
+        $('.date-button').each(function() {
+          if($(this).hasClass('is-active')) {
+            className = $(this).attr('class').split(' ')[0];
+          }
+        });
+        return className;
+      }
+      $('.date-button').click(function() {
+        let date = $(this).attr('class').split(' ')[0];
+        $(this).addClass('is-active');
+        $(this).siblings().removeClass('is-active');
+        $('.day-filter').each(function () {
+          const showThing = date === 'all' || $(this).hasClass(date);
+          $(this).toggleClass('hide', !showThing);
+        });
+      });
+
+      $(".export-png").click(function() {
+        $('#saveModal').modal('show');
+        let maxWidth = 0;
+        let initialWidth = [];
+        let count = 0;
+        $('.calendar').each(function() {
+          let $timeline = $(this);
+          initialWidth[count] = $timeline.width();
+          let numberOfChildElements = $timeline.find('.rooms')[0].childElementCount - 1;
+          let widthOfChild = $timeline.find('.room').width() + 3;
+          let canvasWidth = numberOfChildElements * widthOfChild + 50;
+          $timeline.width(canvasWidth);
+          if(canvasWidth > maxWidth){
+            maxWidth = canvasWidth;
+          }
+          count++;
+        });
+
+        $timeline = $('.calendar').parent()[0];
+        html2canvas($timeline,{width: maxWidth}).then(function(canvas) {
+          canvas.id = "generated-canvas";
+          canvas.toBlob(function(blob) {
+            $('#saveModal').modal('hide');
+            saveAs(blob, 'limmud-calendar.png');
+          });
+        });
+
+        count = 0;
+        $('.calendar').each(function() {
+          $(this).width(initialWidth[count]);
+          count++;
+        });
+      });
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const elems = document.getElementsByClassName('rooms');
+        var elemsData = [];
+
+        for (var i = 0; i < elems.length; i++) {
+            elems[i].style.cursor = 'grab';
+
+            const mouseDownHandler = function (i, e) {
+                if (e.srcElement && e.srcElement.nodeName == 'A') {
+                    return;
+                }
+
+                elemsData[i].left = elems[i].scrollLeft;
+                elemsData[i].x = e.clientX;
+
+                document.addEventListener('mousemove', elemsData[i].move);
+                document.addEventListener('mouseup', elemsData[i].up);
+
+                elems[i].style.cursor = 'grabbing';
+                elems[i].style.userSelect = 'none';
+            };
+
+            const mouseMoveHandler = function (i, e) {
+                const dx = e.clientX - elemsData[i].x;
+                elems[i].scrollLeft = elemsData[i].left - dx;
+            };
+
+            const mouseUpHandler = function (i) {
+                document.removeEventListener('mousemove', elemsData[i].move);
+                document.removeEventListener('mouseup', elemsData[i].up);
+
+                elems[i].style.cursor = 'grab';
+                elems[i].style.removeProperty('user-select');
+            };
+
+            elemsData.push({ left: 0, x: 0, down: mouseDownHandler.bind(null, i), move: mouseMoveHandler.bind(null, i), up: mouseUpHandler.bind(null, i)});
+            elems[i].addEventListener('mousedown', elemsData[i].down);
+        }
+    });
+  </script>
+
+</body>
+</html>

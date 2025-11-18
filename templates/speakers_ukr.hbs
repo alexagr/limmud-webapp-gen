@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
 
   <meta charset="utf-8">
@@ -7,10 +7,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-  <meta name="description" content="{{event.name2}}">
+  <meta name="description" content="{{event.name}}">
   <meta name="author" content="{{event.organizer_name}}">
 
-  <title>{{event.name2}}</title>
+  <title>{{event.name}}</title>
 
   <!-- Bootstrap core CSS -->
   <!-- Latest compiled and minified CSS -->
@@ -30,72 +30,64 @@
 </head>
 <body>
   <a id="top"></a>
-  {{> navbar_en}}
+  {{> navbar_ukr}}
 
 <div class="main container">
   <div class="row">
     <div class="middle col-sm-12">
       <h2 class="filter-heading track-heading text-center">
-      <span>
-        Speakers
-      </span>
+        <span>
+          Презентери
+        </span>
       </h2>
     </div>
   </div>
 
-  {{#if event.note2}}
-  <div class="container">
-      <div class="alert alert-danger">
-          <span>{{event.note2}}</span>
-      </div>
-  </div>
-  {{/if}}
-
   <div class="search-row container">
     <div class="search">
       <span class="filter search-filter search-filter-speakers">
-        <input class="search-filter-input" type="text" placeholder="Search">
+        <input class="search-filter-input" type="text" placeholder="Пошук">
       </span>
     </div>
   </div>
 
-  {{#each speakersList2}}
+  {{#each speakersList}}
     {{#if row_start}}
   <div class="row">
     {{/if}}
     {{#if has_data}}
-    <div class="speaker-inline col-xs-12 col-sm-12 col-md-4 col-rtl">
+    <div class="speaker-inline col-xs-12 col-sm-12 col-md-4">
       <a class="anchor" id="{{id}}"></a>
       <div class="speaker-container">
         <p id="speaker-{{id}}" class="speaker-image" data-toggle="collapse" data-target="#desc-{{id}}">
         {{#if photo}}
-        <img onError="this.onerror=null;this.src='assets/img/avatar.png';"  class="speaker-photo" alt="{{{name2}}}" src="speakers/{{{photo}}}"/>
+        <img onError="this.onerror=null;this.src='assets/img/avatar.png';"  class="speaker-photo" alt="{{{name}}}" src="speakers/{{{photo}}}"/>
         {{else}}
-        <img class="background-image" alt="{{{name2}}}" src="assets/img/avatar.png"/>
+        <img class="background-image" alt="{{{name}}}" src="assets/img/avatar.png"/>
         {{/if}}
         </p>
-        <p class="speaker-name">{{{name2}}}</p>
+        <p class="speaker-name">{{{name}}}</p>
         <div id="desc-{{id}}" class="collapse speaker-desc" aria-hidden="true">
-          {{#if bio2}}
-              {{#each bio2}}
+          {{#if bio}}
+              {{#each bio}}
             <p class="speaker-bio">{{{this}}}</p>
               {{/each}}
           {{/if}}
           <hr class="speaker-hr">
           <div class="speaker-container">
-            <h4 class="speaker-title" class="text"><strong>Sessions</strong></h4>
+            <h4 class="speaker-title" class="text"><strong>Сесії</strong></h4>
             <div class="col-xs-12 col-md-12">
               {{#each sessions}}
               {{#unless is_cancelled}}
-              <a href="schedule_en.html#{{session_id}}">
+              <a href="schedule.html#{{session_id}}">
                 <div style="background-color:{{{color}}}"  class="speaker-event">
-                  <h4>{{{title2}}}</h4>
+                  <h4>{{{title}}}</h4>
                   <br>
-                  <h5><i class="fa fa-clock"></i>&nbsp;{{start}} - {{end}}, {{date_en}}</h5>
+                  <h5><i class="fa fa-clock"></i>&nbsp;{{start}} - {{end}}, {{date_ukr}}</h5>
                   {{#if location_color}}
-                  <h5><i style="color:{{{location_color}}}" class="fa fa-map-marker-alt"></i>&nbsp;<i>{{location2}}</i></h5>
+                  <h5><i style="color:{{{location_color}}}" class="fa fa-map-marker-alt"></i>&nbsp;<i>{{location}}</i></h5>
                   {{else}}
-                  <h5><i class="fa fa-map-marker-alt"></i>&nbsp;<i>{{location2}}</i></h5>
+                  <h5><i class="fa fa-map-marker-alt"></i>&nbsp;<i>{{location}}</i></h5>
                   {{/if}}
                 </div>
               </a>
@@ -114,7 +106,7 @@
     {{/each}}
 </div>
 
-  {{> footer_en}}
+  {{> footer_ukr}}
 
   <a class="scroll" href="#" id="down-button" data-scroll-direction="0">
     <i class="fa fa-chevron-up" aria-hidden="true"></i>
@@ -151,7 +143,7 @@
 
         $('#no-results').remove();
         if ($('.speaker-inline:visible').length == 0) {
-          const message = (filterVal) ? 'לא נמצאו תוצאות לחיפוש' : 'אין סימניות';
+          const message = (filterVal) ? 'Нічого не знайдено' : 'Закладок немає';
           $('.search-row').after('<p class="no-bookmarks" id="no-results">'+message+'</p>');
         }
       }

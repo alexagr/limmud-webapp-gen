@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+  <meta name="description" content="{{event.name}}">
+  <meta name="author" content="{{event.organizer_name}}">
+
+  <title>{{event.name}}</title>
+
+  <!-- Bootstrap core CSS -->
+  <!-- Latest compiled and minified CSS -->
+  {{> fonts}}
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/schedule.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="{{event.icon}}"/>
+
+  {{> analytics}}
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <a id="top"></a>
+    {{> navbar_ukr}}
+
+    <div class="poster">
+      <img class="poster-img desktop" src="{{event.poster}}" style="width:100%;">
+      <img class="poster-img mobile" src="{{event.poster_mobile}}" style="width:100%;">
+    </div>
+
+    <div class ="container">
+      <div class="row">
+        <br>
+        <div class="col-md-12" style="text-align: right">
+          {{#if event.registration_url}}
+          <a href="{{event.registration_url}}" class="btn btn-lg button-primary" role="button">Реєстрація</a> &nbsp; &nbsp;
+          {{/if}}
+          <a href="schedule.html" class="btn btn-lg button-info" role="button">Програма</a>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="eventdes col-md-12 mobile">
+          <p>Ласкаво просимо на {{event.name}}!</p>
+          <p>Для перегляду програми конференції натисніть на кнопку <i class="fa fa-bars"></i> в горішньому меню та
+            оберіть опцію <a href="schedule.html"><b>&laquo;ПРОГРАМА&raquo;</b></a>.
+            Натисніть на назву сесії, щоб побачити додаткову інформацію про неї.
+            Поле <b>&laquo;ПОШУК&raquo;</b> допоможе знайти лекції за назвою або ім'ям лектора/-ки.
+            Для цього ви також можете скористатись кнопкою <i class="fa fa-search"></i> у правому нижньому куті.
+          </p>
+          <p>Використовуйте іконку годинника <i class="fa fa-clock"></i> у лівому нижньому куті, щоб перейти на найближчу сесію.</p>
+          <p>Зірочкою <i class="fa fa-star"></i> поруч із назвою можна позначити сесії, які вас зацікавили. Позначка
+             збережеться і під час наступних переглядів програми з вашого комп&#39;ютера. Якщо ви
+             хочете бачити ТІЛЬКИ обрані сесії, натисніть кнопку із зірочкою праворуч від поля пошуку.
+          </p>
+          <p>Якщо вас цікавить інформація про презентерів, оберіть опцію <a href="speakers.html"><b>&laquo;ПРЕЗЕНТЕРИ&raquo;</b></a>.
+            Натисніть на фотографію, аби побачити коротку біографію та перелік сесій.
+          </p>
+          <p>Аби побачити розклад Лімуду у вигляді сітки, оберіть опцію <a href="calendar.html"><b>&laquo;СІТКА&raquo;</b></a>.
+            Натисніть на назву сесії, аби отримати додаткову інформацію про неї. Ви також можете зберегти сітку у
+            файлі PNG, за допомогою кнопки <i class="fa fa-download" aria-hidden="true"></i>, наприклад для друку.
+          </p>
+          <p>Програмою конференції буде зручніше користуватися, якщо створити для неї іконку на робочому столі.</p>
+          <p>Для цього:</p>
+          <ul>
+            <li>якщо ви користуєтеся Android (Chrome), натисніть на кнопку <b>&laquo;Меню&raquo;</b> (Menu) <i class="fas fa-ellipsis-v"></i> у правому верхньому куті та виберіть <b>&laquo;Встановити додаток&raquo;</b> (Install app)</li>
+            <li>якщо ви користуєтеся iPhone (Safari), натисніть на кнопку <b>&laquo;Відправити&raquo;</b> (Send) внизу посередині та виберіть <b>&laquo;Додати на головний екран&raquo;</b> (Add to Home Screen)</li>
+          </ul>
+          <br>
+        </div>
+        <div class="eventdes col-md-12 desktop">
+          <p>Ласкаво просимо на {{event.name}}!</p>
+          <p>Для перегляду програми конференції оберіть опцію <a href="schedule.html"><b>&laquo;ПРОГРАМА&raquo;</b></a> в горішньому меню.
+            Натисніть на назву сесії, щоб побачити додаткову інформацію про неї.
+            Поле <b>&laquo;ПОШУК&raquo;</b> допоможе знайти лекції за назвою або ім'ям лектора/-ки.
+            Для цього ви також можете скористатись кнопкою <i class="fa fa-search"></i> у правому нижньому куті.
+          </p>
+          <p>Використовуйте іконку годинника <i class="fa fa-clock"></i> у лівому нижньому куті, щоб перейти на найближчу сесію.
+          </p>
+          <p>Зірочкою <i class="fa fa-star"></i> поруч із назвою можна позначити сесії, які вас зацікавили. Позначка
+             збережеться і під час наступних переглядів програми з вашого комп&#39;ютера. Якщо ви
+             хочете бачити ТІЛЬКИ обрані сесії, натисніть кнопку із зірочкою праворуч від поля пошуку.
+          </p>
+          <p>Якщо вас цікавить інформація про презентерів, оберіть опцію <a href="speakers.html"><b>&laquo;ПРЕЗЕНТЕРИ&raquo;</b></a>.
+            Натисніть на фотографію, аби побачити коротку біографію та перелік сесій.
+          </p>
+          <p>Аби побачити розклад Лімуду у вигляді сітки, оберіть опцію <a href="calendar.html"><b>&laquo;СІТКА&raquo;</b></a>.
+            Натисніть на назву сесії, аби отримати додаткову інформацію про неї. Ви також можете зберегти сітку у
+            файлі PNG, за допомогою кнопки <i class="fa fa-download" aria-hidden="true"></i>, наприклад для друку.
+          </p>
+          <p>Зверніть увагу, що програмою конференції можна користуватись також і з мобільного телефона.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  {{> footer_ukr}}
+  <script>
+    $(document).ready(function() {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+  </script>
+</body>
+</html>

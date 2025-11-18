@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
 
   <meta charset="utf-8">
@@ -7,10 +7,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-  <meta name="description" content="{{event.name2}}">
+  <meta name="description" content="{{event.name}}">
   <meta name="author" content="{{event.organizer_name}}">
 
-  <title>{{event.name2}}</title>
+  <title>{{event.name}}</title>
 
   <!-- Bootstrap core CSS -->
   <!-- Latest compiled and minified CSS -->
@@ -31,40 +31,32 @@
 
 <body>
   <a id="top"></a>
-  {{> navbar_en}}
+  {{> navbar_ukr}}
 
   <div class="main container" id="session-list">
     <div class="row">
       <div class="middle col-sm-12">
         <h2 class="filter-heading track-heading text-center">
         <span>
-          Schedule
+          Програма
         </span>
         </h2>
       </div>
     </div>
 
-    {{#if event.note2}}
-    <div class="container">
-        <div class="alert alert-danger">
-            <span>{{event.note2}}</span>
-        </div>
-    </div>
-    {{/if}}
-
     <div class="date-list container">
       <div class="tabs" {{#if hideTimeList}}style="display: none"{{/if}}>
         <span class="tabs-nav">
-          <a href="#" class="all tabs-nav-link date-button is-active"> All Days </a>
-          {{#each timeList2}}
-          <a href="#" class="{{slug}} tabs-nav-link date-button"> {{date_short_en}} </a>
+          <a href="#" class="all tabs-nav-link date-button is-active"> всі дні </a>
+          {{#each timeList}}
+          <a href="#" class="{{slug}} tabs-nav-link date-button"> {{date_short_ukr}} </a>
           {{/each}}
         </span>
       </div>
 
       <div class="search">
         <span class="filter search-filter search-filter-schedule">
-          <input class="search-filter-input" type="text" placeholder="Search">
+          <input class="search-filter-input" type="text" placeholder="Пошук">
         </span>
         <span class="filter show-button-filter">
           <button class="btn btn-default bookmark-toggle" id="starred"><i class="fa fa-star" aria-hidden="true"></i></button>
@@ -73,13 +65,13 @@
 
       <div class="track-legend">
         <div class="track-legend-toggle" data-toggle="collapse" href="#collapseTracks">
-          <a>What do the colors mean?&nbsp;&nbsp;<i class="fa fa-chevron-down"></i></a>
+          <a>Що означають кольори?&nbsp;&nbsp;<i class="fa fa-chevron-down"></i></a>
         </div>
         <div class="track-legend-list collapse" id="collapseTracks">
         {{#each tracks}}
         {{#if name}}
           <span class="track-legend-item">
-            <i style="background-color:{{{color}}}" class="track-legend-color"></i>&nbsp;{{name2}}
+            <i style="background-color:{{{color}}}" class="track-legend-color"></i>&nbsp;{{name}}
           </span>
         {{/if}}
         {{/each}}
@@ -88,22 +80,23 @@
     </div>
 
     <div class="row">
-      <div style="margin: 15px 0 0 5px;" class="col-md-9 col-rtl">
+      <div style="margin: 15px 0 0 5px;" class="col-md-9">
         <div class="track-list container">
 
-          {{#each timeList2}}
+          {{#each timeList}}
           <div class="{{slug}} day-filter">
             <div style="padding:0" class="col-md-12">
               <a class="anchor" id="{{slug}}"></a>
-              <h4 class="text">{{date_en}}</h4>
+              <h4 class="text">{{date_ukr}}</h4>
             </div>
             {{#each times}}
 
             <div class="row time-filter">
-              <div class="eventtime col-xs-2 col-sm-2 col-md-2 col-rtl">
+              <div class="eventtime col-xs-2 col-sm-2 col-md-2">
                 <h4>{{caption}}</h4>
               </div>
-              <div class="tracks col-xs-10 col-sm-10 col-md-10 col-rtl">
+
+              <div class="tracks col-xs-10 col-sm-10 col-md-10">
                 {{#each sessions}}
                 {{#unless is_cancelled}}
                 <div class="track-inline">
@@ -111,9 +104,9 @@
                   <div style="padding-right:0px;" class="schedule-container">
                     <div id="title-{{session_id}}" class="sizeevent event find-container" style="background-color:{{{color}}}"
                       data-toggle="collapse" data-target="#desc-{{session_id}}, #desc2-{{session_id}}">
-                      <h4 class="find-target">{{title2}}</h4>
-                      {{#if comment2}}
-                      <p>{{comment2}}</p>
+                      <h4 class="find-target">{{title}}</h4>
+                      {{#if comment}}
+                      <p>{{comment}}</p>
                       {{/if}}
                       <a id="bookmark-{{session_id}}" class="bookmark">
                         <i class="fa fa-star" aria-hidden="true"></i>
@@ -128,13 +121,13 @@
                       {{/if}}
                           <h5 class="find-target">
                           {{#each speakers_list}}
-                            {{title2}}{{name2_first_last}}{{#unless last}},{{/unless}}
+                            {{title}}{{name_first_last}}{{#unless last}},{{/unless}}
                           {{/each}}
                           </h5>
                           <h6>
                           {{start}}
-                          {{#if location2}}
-                          &nbsp;|&nbsp; <span style="white-space: nowrap">{{location2}}</span>
+                          {{#if location}}
+                          &nbsp;|&nbsp; <span style="white-space: nowrap">{{location}}</span>
                           {{/if}}
                           {{#if language_short}}
                           &nbsp;|&nbsp; <span style="white-space: nowrap">{{language_short}}</span>
@@ -162,23 +155,23 @@
                       </div>
                     </div>
                     <div id="desc-{{session_id}}" class="collapse session-desc">
-                      <p class="compact"><i class="fa fa-clock" aria-hidden="true"></i>&nbsp;{{start}} - {{end}}, {{sessiondate_en}}</p>
-                      {{#if location2}}
+                      <p class="compact"><i class="fa fa-clock" aria-hidden="true"></i>&nbsp;{{start}} - {{end}}, {{sessiondate_ukr}}</p>
+                      {{#if location}}
                       {{#if location_color}}
-                      <p class="compact"><i style="color:{{{location_color}}}" class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;<i>{{location2}}</i></p>
+                      <p class="compact"><i style="color:{{{location_color}}}" class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;<i>{{location}}</i></p>
                       {{else}}
-                      <p class="compact"><i class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;<i>{{location2}}</i></p>
+                      <p class="compact"><i class="fa fa-map-marker-alt" aria-hidden="true"></i>&nbsp;{{location}}</p>
                       {{/if}}
                       {{/if}}
-                      {{#if language2}}
-                      <p class="compact"><i class="fa fa-globe" aria-hidden="true"></i>&nbsp;{{language2}}</p>
+                      {{#if language}}
+                      <p class="compact"><i class="fa fa-globe" aria-hidden="true"></i>&nbsp;{{language}}</p>
                       {{/if}}
                       {{#if shabbat}}
-                      <p class="compact"><i class="fa fa-menorah" aria-hidden="true"></i>&nbsp;שומר שבת</p>
+                      <p class="compact"><i class="fa fa-menorah" aria-hidden="true"></i>&nbsp;шабатній формат</p>
                       {{/if}}
                       <hr class="clear-both">
-                      {{#if description2}}
-                        {{#each description2}}
+                      {{#if description}}
+                        {{#each description}}
                       <p class="compact">{{{this}}}</p>
                         {{/each}}
                       <hr class="clear-both">
@@ -186,21 +179,19 @@
                       <div class="session-speakers-list">
                         {{#each speakers_list}}
                           {{#if has_data}}
-                        <a href="speakers_en.html#{{id}}">
+                        <a href="speakers.html#{{id}}">
                           {{#if photo}}
                             <p class="session-speakers"><img onError="this.onerror=null;this.src='assets/img/avatar.png';" class="card-img-top speaker-image-small" src="speakers/thumbs/{{{photo}}}"/></p>
                           {{else}}
                             <p class="session-speakers"><img class="card-img-top speaker-image-small" src="assets/img/avatar.png"/></p>
                           {{/if}}
-                          <p><span class="session-speaker-name">{{name2_first_last}}</span></p>
-                          {{#if has_data}}
+                          <p><span class="session-speaker-name">{{name_first_last}}</span></p>
                         </a>
-                          {{/if}}
-                        {{#if bio2}}
-                          {{#each bio2}}
+                          {{#if bio}}
+                          {{#each bio}}
                         <p class="compact">{{{this}}}</p>
                           {{/each}}
-                        {{/if}}
+                          {{/if}}
                         <hr class="clear-both">
                           {{/if}}
                         {{/each}}
@@ -220,10 +211,10 @@
       </div>
       <div class="track-names">
       {{#each tracks}}
-      {{#if name2}}
+      {{#if name}}
         <ul class="title-inline title-legend">
           <li  style="background-color:{{{color}}}" class="titlecolor"></li>
-          <li>{{name2}}</li>
+          <li>{{name}}</li>
         </ul>
       {{/if}}
       {{/each}}
@@ -231,7 +222,7 @@
     </div>
   </div>
 
-  {{> footer_en}}
+  {{> footer_ukr}}
 
   <a class="scroll" href="#" id="down-button" data-scroll-direction="0">
     <i class="fa fa-chevron-up" aria-hidden="true"></i>
@@ -246,13 +237,13 @@
   <div class="findbuttondiv" id="find-button-div">
     <a class="findbutton" href="#" id="find-button" data-scroll-direction="0"><i class="fa fa-search" aria-hidden="true"></i></a>
   </div>
-  <input class="findfield" id="find-field" type="search" placeholder="Search"/>
-  <a class="findnext" href="#" id="find-next" data-scroll-direction="0"><i class="fa fa-angle-double-left" aria-hidden="true"></i></a>
+  <input class="findfield" id="find-field" type="search" placeholder="Пошук"/>
+  <a class="findnext" href="#" id="find-next" data-scroll-direction="0"><i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
   <script src="assets/js/mark.min.js" type="text/javascript"></script>
   <script src="assets/js/find2.js" type="text/javascript"></script>
 
   <script type="text/javascript">
-    var favorite=false;
+    var favorite = false;
     var lastClicked = null;
     $(document).ready(function() {
       $('.bookmark').click(function(e){
@@ -345,8 +336,8 @@
         $('#no-results').remove();
         $('.track-names').show();
         if ($('.track-inline:visible').length == 0) {
-          const message = (filterVal) ? 'No matches' : 'No bookmarks';
-          $('.date-list').after('<p class="no-bookmarks" id="no-results">'+message+'</p>');
+          const message = (filterVal) ? 'Нічого не знайдено' : 'Закладок немає';
+          $('.date-list').after("<p style = 'padding-left: 15px; margin-top: 15px; font-weight: bold; color: red; text-align: center;' id='no-results'>"+message+"</p>");
           $('.track-names').hide();
         }
       }

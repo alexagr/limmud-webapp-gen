@@ -144,7 +144,7 @@
         $('#no-results').remove();
         if ($('.speaker-inline:visible').length == 0) {
           const message = (filterVal) ? 'Ничего не найдено' : 'Нет закладок';
-          $('.search-row').after("<p style = 'padding-left: 15px; margin-top: 15px; font-weight: bold; color: red; text-align: center;' id='no-results'>"+message+"</p>");
+          $('.search-row').after('<p class="no-bookmarks" id="no-results">'+message+'</p>');
         }
       }
 

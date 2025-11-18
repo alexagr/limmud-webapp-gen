@@ -60,7 +60,7 @@
         </span>
         <span class="filter show-button-filter">
           <button class="btn btn-default bookmark-toggle" id="starred"><i class="fa fa-star" aria-hidden="true"></i></button>
-        </span>      
+        </span>
       </div>
 
       <div class="track-legend">
@@ -104,11 +104,20 @@
                     <div id="title-{{session_id}}" class="sizeevent event find-container" style="background-color:{{{color}}}"
                       data-toggle="collapse" data-target="#desc-{{session_id}}, #desc2-{{session_id}}">
                       <h4 class="find-target">{{title2}}</h4>
+                      {{#if comment2}}
+                      <p>{{comment2}}</p>
+                      {{/if}}
                       <a id="bookmark-{{session_id}}" class="bookmark">
                         <i class="fa fa-star" aria-hidden="true"></i>
                       </a>
+                      {{#if ../../../event.speaker_photos}}
+                      <div id="desc2-{{session_id}}" class="speaker-short-collapse collapse in">
+                        <div class="row speaker-short-container">
+                          <div class="speaker-short-text">
+                      {{else}}
                       <div id="desc2-{{session_id}}" class="collapse in">
                         <div class="row speaker-short-info">
+                      {{/if}}
                           <h5 class="find-target">
                           {{#each speakers_list}}
                             {{title2}}{{name2_first_last}}{{#unless last}},{{/unless}}
@@ -129,6 +138,18 @@
                           &nbsp;|&nbsp; <i class="fa fa-menorah" aria-hidden="true"></i>
                           {{/if}}
                           </h6>
+                          {{#if ../../../event.speaker_photos}}
+                          </div>
+                          <div class="speaker-short-photo">
+                            {{#each speakers_list}}
+                              {{#if has_data}}
+                                {{#if photo}}
+                                <img onError="this.onerror=null;this.src='assets/img/avatar.png';" class="card-img-top speaker-image-tiny" src="speakers/thumbs/{{{photo}}}"/>
+                                {{/if}}
+                              {{/if}}
+                            {{/each}}
+                          </div>
+                          {{/if}}
                         </div>
                       </div>
                     </div>
@@ -272,7 +293,7 @@
           if($(this).is(':visible')) {
             filterVal = $(this).val();
           }
-        });      
+        });
         $('.day-filter').each(function() {
             let showDate = false;
             $(this).find('.time-filter').each(function() {
@@ -306,18 +327,18 @@
                 }
             });
             if (showDate) {
-                $(this).show(); 
+                $(this).show();
             }
             else {
                 $(this).hide();
             }
         });
-        
+
         $('#no-results').remove();
         $('.track-names').show();
         if ($('.track-inline:visible').length == 0) {
           const message = (filterVal) ? 'לא נמצאו תוצאות לחיפוש' : 'אין סימניות';
-          $('.date-list').after("<p style = 'padding-left: 15px; margin-top: 15px; font-weight: bold; color: red; text-align: center;' id='no-results'>"+message+"</p>");
+          $('.date-list').after('<p class="no-bookmarks" id="no-results">'+message+'</p>');
           $('.track-names').hide();
         }
       }
@@ -352,7 +373,7 @@
         }
         display();
       });
-      
+
       $('.search-filter-input').change(function() {
         display();
       }).keyup(function() {

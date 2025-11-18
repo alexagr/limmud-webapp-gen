@@ -36,7 +36,7 @@ function get_client()
         }
         file_put_contents($tokenPath, json_encode($client->getAccessToken()));
     }
-    
+
     return $client;
 }
 
@@ -74,6 +74,8 @@ function get_defaults()
         'presenter_session_name2_column' => 'session-name-hebrew',
         'presenter_session_desc_column' => 'session-descr-russian',
         'presenter_session_desc2_column' => 'session-descr-hebrew',
+        'presenter_session_comment_column' => 'session-comment-russian',
+        'presenter_session_comment2_column' => 'session-comment-hebrew',
         'presenter_session_type_column' => 'session-type',
         'presenter_session_language_column' => 'session-language',
         'presenter_session2_name_column' => 'session2-name-russian',
@@ -120,7 +122,9 @@ function get_defaults()
         'event_email_column' => 'email',
         'event_logo_column' => 'logo',
         'event_icon_column' => 'icon',
-        'event_analytics_column' => 'google-analytics-tag'
+        'event_analytics_column' => 'google-analytics-tag',
+        'speaker_photos_column' => 'speaker-photos',
+        'second_language_ribbon_column' => 'second-language-ribbon'
     );
     return $defaults;
 }
@@ -165,6 +169,11 @@ function parse_sheets($client, $config)
         $event['email'] = get_cell($header, $row, $config['event_email_column'], $event['email']);
         $event['analytics'] = get_cell($header, $row, $config['event_analytics_column'], '');
 
+        $event['speaker_photos'] = get_cell($header, $row, $config['speaker_photos_column'], '');
+        if ($event['speaker_photos'] != 'yes') {
+            $event['speaker_photos'] = '';
+        }
+
         $event['copyright']['holder'] = $event['organizer_name'];
 
         $value = get_cell($header, $row, $config['event_site_url_column'], '');
@@ -208,15 +217,6 @@ function parse_sheets($client, $config)
         if (!empty($value)) {
             $event['icon'] = $value;
         }
-
-        $value = get_cell($header, $row, $config['event_logo_column'], '');
-        if (!empty($value)) {
-            $event['logo'] = $value;
-        }
-        $value = get_cell($header, $row, $config['event_icon_column'], '');
-        if (!empty($value)) {
-            $event['icon'] = $value;
-        }
     }
 
     # parse locations
@@ -232,7 +232,7 @@ function parse_sheets($client, $config)
         }
         $hotel2 = get_cell($header, $row, $config['location_hotel2_column'], $hotel);
         $room2 = get_cell($header, $row, $config['location_room2_column'], $room);
-        
+
         $id = 100 + count($locations);
         $order = get_cell($header, $row, $config['location_order_column'], '');
         if (!empty($order)) {
@@ -360,11 +360,14 @@ function parse_sheets($client, $config)
         if (!empty($name)) {
             $name2 = get_cell($header, $row, $config['presenter_session_name2_column'], $name);
 
+            $comment = get_cell($header, $row, $config['presenter_session_comment_column'], '');
+            $comment2 = get_cell($header, $row, $config['presenter_session_comment2_column'], '');
+
             $description = get_cell($header, $row, $config['presenter_session_desc_column'], '');
             $description = empty($description) ? [] : explode("\n\n", $description);
 
             $description2 = get_cell($header, $row, $config['presenter_session_desc2_column'], '');
-            $description2 = empty($description_en) ? [] : explode("\n\n", $description2);
+            $description2 = empty($description2) ? [] : explode("\n\n", $description2);
 
             $track = get_cell($header, $row, $config['presenter_session_type_column'], '');
             if (array_key_exists($track, $tracks_map)) {
@@ -372,6 +375,9 @@ function parse_sheets($client, $config)
                 $track2 = $tracks[$track_id]['name2'];
             } else {
                 $track = 'лекция';
+                if ($event['main_language'] == 'ukr') {
+                    $track = 'лекція';
+                }
                 if ($event['second_language'] == 'en') {
                     $track2 = 'lecture';
                 }
@@ -390,7 +396,7 @@ function parse_sheets($client, $config)
                 $language2 = '';
                 $language_short = '';
             }
-            $session_data[$name] = array('name2' => $name2, 'description' => $description, 'description2' => $description2, 'language' => $language, 'language2' => $language2, 'language_short' => $language_short, 'id' => $idx);
+            $session_data[$name] = array('name2' => $name2, 'comment' => $comment, 'comment2' => $comment2, 'description' => $description, 'description2' => $description2, 'language' => $language, 'language2' => $language2, 'language_short' => $language_short, 'id' => $idx);
         }
 
         $idx++;
@@ -600,11 +606,15 @@ function parse_sheets($client, $config)
 
         if (array_key_exists($name, $session_data)) {
             $name2 = $session_data[$name]['name2'];
+            $comment = $session_data[$name]['comment'];
+            $comment2 = $session_data[$name]['comment2'];
             $description = $session_data[$name]['description'];
             $description2 = $session_data[$name]['description2'];
             $id = $session_data[$name]['id'];
         } else {
             $name2 = '';
+            $comment = '';
+            $comment2 = '';
             $description = '';
             $description2 = '';
             $id = 0;
@@ -655,7 +665,7 @@ function parse_sheets($client, $config)
 
         # update sessions
         $session = array(
-            'id' => $id, 'title' => $name, 'title2' => $name2,
+            'id' => $id, 'title' => $name, 'title2' => $name2, 'comment' => $comment, 'comment2' => $comment2,
             'start_time' => $start_time, 'end_time' => $end_time,
             'location' => array('id' => $location_id, 'name' => $location, 'name2' => $location2),
             'track' => array('id' => $track_id, 'name' => $track, 'name2' => $track2), 'speakers' => array(),
@@ -806,6 +816,44 @@ $months_short_en = array(
     12 => 'Dec'
 );
 
+$days_ukr = array(
+    0 => 'неділя',
+    1 => 'понеділок',
+    2 => 'вівторок',
+    3 => 'середа',
+    4 => 'четвер',
+    5 => 'п’ятниця',
+    6 => 'субота'
+);
+$months_ukr = array(
+    1 => 'січня',
+    2 => 'лютого',
+    3 => 'березня',
+    4 => 'квітня',
+    5 => 'травня',
+    6 => 'червня',
+    7 => 'липня',
+    8 => 'серпня',
+    9 => 'вересня',
+    10 => 'жовтня',
+    11 => 'листопада',
+    12 => 'грудня'
+);
+$months_short_ukr = array(
+    1 => 'січ.',
+    2 => 'лют.',
+    3 => 'бер.',
+    4 => 'квіт.',
+    5 => 'трав.',
+    6 => 'черв.',
+    7 => 'лип.',
+    8 => 'серп.',
+    9 => 'вер.',
+    10 => 'жовт.',
+    11 => 'лист.',
+    12 => 'груд.'
+);
+
 function foldByTime($sessions, $speakers, $tracks, $config, $lang) {
     global $days_ru;
     global $months_ru;
@@ -816,13 +864,16 @@ function foldByTime($sessions, $speakers, $tracks, $config, $lang) {
     global $days_en;
     global $months_en;
     global $months_short_en;
+    global $days_ukr;
+    global $months_ukr;
+    global $months_short_ukr;
 
     $dates = array();
     foreach ($sessions as $session) {
         if (empty($session['title2']) && ($lang == 'secondary') && $config['language2_hide_content_no_data'] == 'yes') {
             continue;
         }
-        
+
         $timestamp = strtotime($session['start_time']);
         $date = date('Y-m-d', $timestamp);
         $time = date('H:i', $timestamp);
@@ -836,9 +887,11 @@ function foldByTime($sessions, $speakers, $tracks, $config, $lang) {
             $dates[$date] = array(
                 'slug' => $date,
                 'date_ru' => $days_ru[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_ru[date('n', $timestamp)],
+                'date_ukr' => $days_ukr[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_ukr[date('n', $timestamp)],
                 'date_he' => $days_he[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_he[date('n', $timestamp)],
                 'date_en' => $days_en[date('w', $timestamp)] . ', ' . $months_en[date('n', $timestamp)] . ' ' . date('j', $timestamp),
                 'date_short_ru' => $days_ru[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_short_ru[date('n', $timestamp)],
+                'date_short_ukr' => $days_ukr[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_short_ukr[date('n', $timestamp)],
                 'date_short_he' => $days_he[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_short_he[date('n', $timestamp)],
                 'date_short_en' => $days_en[date('w', $timestamp)] . ', ' . $months_short_en[date('n', $timestamp)] . ' ' . date('j', $timestamp),
                 'times' => array()
@@ -862,17 +915,25 @@ function foldByTime($sessions, $speakers, $tracks, $config, $lang) {
             $speakersList[count($speakersList)-1]['last'] = true;
         }
 
+        $manySpeakersList = '';
+        if (count($speakersList) > 2) {
+            $manySpeakersList = 'yes';
+        }
+
         $dates[$date]['times'][$sortKey]['sessions'][$session['location']['id']] = array(
             'start' => date('H:i', strtotime($session['start_time'])),
             'end' => date('H:i', strtotime($session['end_time'])),
             'color' => $tracks[$session['track']['id']]['color'],
             'title' => $session['title'],
             'title2' => $session['title2'],
+            'comment' => $session['comment'],
+            'comment2' => $session['comment2'],
             'location' => $session['location']['name'],
             'location2' => $session['location']['name2'],
             'location_color' => $session['location']['color'],
             'is_cancelled' => ($session['location']['name'] == 'Отмена'),
             'speakers_list' => $speakersList,
+            'many_speakers_list' => $manySpeakersList,
             'description' => $session['long_abstract'],
             'description2' => $session['long_abstract2'],
             'shabbat' => $session['shabbat'],
@@ -883,6 +944,7 @@ function foldByTime($sessions, $speakers, $tracks, $config, $lang) {
             'language_short' => $session['language_short'],
             'session_id' => $session['id'],
             'sessiondate_ru' => $days_ru[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_short_ru[date('n', $timestamp)],
+            'sessiondate_ukr' => $days_ukr[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_short_ukr[date('n', $timestamp)],
             'sessiondate_he' => $days_he[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_short_he[date('n', $timestamp)],
             'sessiondate_en' => $days_en[date('w', $timestamp)] . ', ' . $months_short_en[date('n', $timestamp)] . ' ' . date('j', $timestamp),
             'tracktitle' => $session['track']['name'],
@@ -937,7 +999,7 @@ function convertTimeToPixel($startTime, $sessionTime)
     return round($top);
 }
 
-function createTimeLine($startTime, $endTime)
+function createTimeLine($startTime, $endTime, $sessionTimes)
 {
     global $timeToPixel;
     global $columnWidth;
@@ -959,6 +1021,10 @@ function createTimeLine($startTime, $endTime)
         if ($i % 30 == 0) {
             $time = ($startHour < 10 ? '0' : '') . $startHour . ':' . ($i == 0 ? '00' : strval($i));
         } else {
+            $time = '';
+        }
+        $time = ($startHour < 10 ? '0' : '') . $startHour . ':' . ($i == 0 ? '00' : strval($i));
+        if (!in_array($time, $sessionTimes)) {
             $time = '';
         }
 
@@ -999,13 +1065,16 @@ function foldByRooms($sessions, $speakers, $tracks, $config, $lang) {
     global $days_en;
     global $months_en;
     global $months_short_en;
+    global $days_ukr;
+    global $months_ukr;
+    global $months_short_ukr;
 
     $dates = array();
     foreach ($sessions as $session) {
        if (empty($session['title2']) && ($lang == 'secondary') && $config['language2_hide_content_no_data'] == 'yes') {
             continue;
         }
-        
+
         $timestamp = strtotime($session['start_time']);
         $date = date('Y-m-d', $timestamp);
         $time = date('H:i', $timestamp);
@@ -1026,13 +1095,16 @@ function foldByRooms($sessions, $speakers, $tracks, $config, $lang) {
             $dates[$date] = array(
                 'slug' => $date,
                 'date_ru' => $days_ru[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_ru[date('n', $timestamp)],
+                'date_ukr' => $days_ukr[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_ukr[date('n', $timestamp)],
                 'date_he' => $days_he[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_he[date('n', $timestamp)],
                 'date_en' => $days_en[date('w', $timestamp)] . ', ' . $months_en[date('n', $timestamp)] . ' ' . date('j', $timestamp),
                 'date_short_ru' => $days_ru[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_short_ru[date('n', $timestamp)],
+                'date_short_ukr' => $days_ukr[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_short_ukr[date('n', $timestamp)],
                 'date_short_he' => $days_he[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_short_he[date('n', $timestamp)],
                 'date_short_en' => $days_en[date('w', $timestamp)] . ', ' . $months_short_en[date('n', $timestamp)] . ' ' . date('j', $timestamp),
                 'start_time' => $start_time,
                 'end_time' => $end_time,
+                'session_times' => array(),
                 'timeLine' => array(),
                 'sessions' => array(),
                 'locations' => array()
@@ -1059,6 +1131,9 @@ function foldByRooms($sessions, $speakers, $tracks, $config, $lang) {
         if ($dates[$date]['end_time'] < $end_time) {
             $dates[$date]['end_time'] = $end_time;
         }
+        if (!in_array($start_time, $dates[$date]['session_times'])) {
+            $dates[$date]['session_times'][] = $start_time;
+        }
 
         $speakersList = array();
         foreach($session['speakers'] as $speaker) {
@@ -1068,6 +1143,11 @@ function foldByRooms($sessions, $speakers, $tracks, $config, $lang) {
         }
         if (!empty($speakersList)) {
             $speakersList[count($speakersList)-1]['last'] = true;
+        }
+
+        $manySpeakersList = '';
+        if (count($speakersList) > 2) {
+            $manySpeakersList = 'yes';
         }
 
         $dates[$date]['sessions'][$sortKey] = array(
@@ -1080,6 +1160,7 @@ function foldByRooms($sessions, $speakers, $tracks, $config, $lang) {
             'location2' => $session['location']['name2'],
             'is_cancelled' => ($session['location']['name'] == 'Отмена'),
             'speakers_list' => $speakersList,
+            'many_speakers_list' => $manySpeakersList,
             'description' => $session['long_abstract'],
             'description2' => $session['long_abstract2'],
             'shabbat' => $session['shabbat'],
@@ -1089,6 +1170,7 @@ function foldByRooms($sessions, $speakers, $tracks, $config, $lang) {
             'language_short' => $session['language_short'],
             'session_id' => $session['id'],
             'sessiondate_ru' => $days_ru[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_short_ru[date('n', $timestamp)],
+            'sessiondate_ukr' => $days_ukr[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_short_ukr[date('n', $timestamp)],
             'sessiondate_he' => $days_he[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_short_he[date('n', $timestamp)],
             'sessiondate_en' => $days_en[date('w', $timestamp)] . ', ' . $months_short_en[date('n', $timestamp)] . ' ' . date('j', $timestamp),
             'tracktitle' => $session['track']['name'],
@@ -1103,7 +1185,7 @@ function foldByRooms($sessions, $speakers, $tracks, $config, $lang) {
 
         $dates[$date]['rooms'] = array();
 
-        $timeline = createTimeLine($dates[$date]['start_time'], $dates[$date]['end_time']);
+        $timeline = createTimeLine($dates[$date]['start_time'], $dates[$date]['end_time'], $dates[$date]['session_times']);
         $dates[$date]['timeline'] = $timeline['timeline'];
         $dates[$date]['height'] = $timeline['height'];
         $dates[$date]['timeToPixel'] = $timeline['timeToPixel'];
@@ -1140,11 +1222,20 @@ function foldByRooms($sessions, $speakers, $tracks, $config, $lang) {
         // extend session to cover 15 min break after them
         global $timeToPixel;
         foreach ($dates as $date => $data) {
+            $tops = array();
             foreach ($dates[$date]['rooms'] as $room => $value) {
-                $tops = array();
                 foreach ($dates[$date]['rooms'][$room]['sessions'] as $key => $session) {
-                    $tops[] = $session['top'];
+                    if (!in_array($session['top'], $tops)) {
+                        $tops[] = $session['top'];
+                    }
                 }
+            }
+
+            foreach ($dates[$date]['rooms'] as $room => $value) {
+                #$tops = array();
+                #foreach ($dates[$date]['rooms'][$room]['sessions'] as $key => $session) {
+                #    $tops[] = $session['top'];
+                #}
                 foreach ($dates[$date]['rooms'][$room]['sessions'] as $key => $session) {
                     if (($config['close_calendar_gaps_ignore_meals'] == 'yes') && ($session['location'] == 'Столовая'))
                         continue;
@@ -1174,13 +1265,16 @@ function getSpeakerSessions($speakerid, $sessions, $tracks, $config, $lang)
     global $days_en;
     global $months_en;
     global $months_short_en;
+    global $days_ukr;
+    global $months_ukr;
+    global $months_short_ukr;
 
     $speakerSessions = array();
     foreach ($sessions as $session) {
         if (empty($session['title2']) && ($lang == 'secondary') && $config['language2_hide_content_no_data'] == 'yes') {
             continue;
         }
-        
+
         $roomName = $session['location']['name'];
         if (($roomName == 'Отмена') /*|| ($roomName == 'Столовая') || ($roomName == 'Экскурсия')*/) {
             continue;
@@ -1220,6 +1314,7 @@ function getSpeakerSessions($speakerid, $sessions, $tracks, $config, $lang)
             'date_ru' => $days_ru[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_short_ru[date('n', $timestamp)],
             'date_he' => $days_he[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_short_he[date('n', $timestamp)],
             'date_en' => $days_en[date('w', $timestamp)] . ', ' . $months_short_en[date('n', $timestamp)] . ' ' . date('j', $timestamp),
+            'date_ukr' => $days_ukr[date('w', $timestamp)] . ', ' . $months_short_ukr[date('n', $timestamp)] . ' ' . date('j', $timestamp),
             'tracktitle' => $session['track']['name'],
             'tracktitle2' => $session['track']['name2']
         );
@@ -1288,6 +1383,16 @@ function generate()
 
     list($event, $sessions, $speakers, $locations, $tracks) = parse_sheets($client, $config);
 
+    $event['main_language'] = 'ru';
+    $event['main_language_text'] = 'РУС';
+    if (file_exists('data/custom.json')) {
+        $custom = json_decode(file_get_contents('data/custom.json'), true);
+        if (!empty($custom['main_language'])) {
+            $event['main_language'] = $custom['main_language'];
+            $event['main_language_text'] = $custom['main_language_text'];
+        }
+    }
+
     $model = array(
         'event' => $event,
         'tracks' => $tracks,
@@ -1300,7 +1405,7 @@ function generate()
     $model['roomsList2'] = foldByRooms($sessions, $speakers, $tracks, $config, 'secondary');
     $model['speakersList'] = foldBySpeakers($sessions, $speakers, $tracks, $config, 'primary');
     $model['speakersList2'] = foldBySpeakers($sessions, $speakers, $tracks, $config, 'secondary');
-    
+
     if (count($model['timeList']) < 2) {
         $model['hideTimeList'] = strval(count($model['timeList']));
     } else {
@@ -1335,16 +1440,22 @@ function generate()
     if (!empty($event['map'])) {
         $pages[] = 'map';
     }
-    
+
+    if ($event['main_language'] != 'ru') {
+        $page_suffix = '_' . $event['main_language'];
+    } else {
+        $page_suffix = '';
+    }
+
     foreach ($pages as $page) {
-        if (!empty($event['second_language'])) {        
+        if (!empty($event['second_language'])) {
             $model['otherpage'] = $page . '_' . $event['second_language'];
             $model['otherpage2'] = $page;
-            file_put_contents(__DIR__ . '/' . $event['app_name'] . '/' . $page . '.html',  $handlebars->render($page, $model));
+            file_put_contents(__DIR__ . '/' . $event['app_name'] . '/' . $page . '.html',  $handlebars->render($page . $page_suffix, $model));
             file_put_contents(__DIR__ . '/' . $event['app_name'] . '/' . $page . '_'  . $event['second_language'] . '.html',  $handlebars->render($page . '_' . $event['second_language'], $model));
         } else {
             $model['otherpage'] = '';
-            file_put_contents(__DIR__ . '/' . $event['app_name'] . '/' . $page . '.html',  $handlebars->render($page, $model));
+            file_put_contents(__DIR__ . '/' . $event['app_name'] . '/' . $page . '.html',  $handlebars->render($page . $page_suffix, $model));
         }
     }
 
