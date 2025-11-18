@@ -94,6 +94,11 @@
                     <div>
                       {{#each sessions}}
                       <div id="session-{{session_id}}" class="session find-container" style="top:{{{top}}}px; height:{{{height}}}px;background-color:{{{color}}};">
+                        {{#if ../../../event.second_language_ribbon}}
+                          {{#if language_ribbon}}
+                        <div class="language-ribbon-calendar">{{language_ribbon}}</div>
+                          {{/if}}
+                        {{/if}}
                         <div class="session-name">
                           <a href="schedule.html#{{session_id}}" class="find-target">
                             {{title}}
@@ -135,7 +140,7 @@
           {{/each}}
         </div>
       </div>
-      
+
       <div class="track-names">
       {{#each tracks}}
       {{#if name}}

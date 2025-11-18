@@ -90,6 +90,11 @@
               <a href="schedule_en.html#{{session_id}}">
                 <div style="background-color:{{{color}}}"  class="speaker-event">
                   <h4>{{{title2}}}</h4>
+                  {{#if ../../event.second_language_ribbon}}
+                    {{#if language_ribbon}}
+                  <div class="language-ribbon">{{language_ribbon}}</div>
+                    {{/if}}
+                  {{/if}}
                   <br>
                   <h5><i class="fa fa-clock"></i>&nbsp;{{start}} - {{end}}, {{date_en}}</h5>
                   {{#if location_color}}

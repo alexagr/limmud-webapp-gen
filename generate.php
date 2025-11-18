@@ -174,6 +174,11 @@ function parse_sheets($client, $config)
             $event['speaker_photos'] = '';
         }
 
+        $event['second_language_ribbon'] = get_cell($header, $row, $config['second_language_ribbon_column'], '');
+        if ($event['second_language_ribbon'] != 'yes') {
+            $event['second_language_ribbon'] = '';
+        }
+
         $event['copyright']['holder'] = $event['organizer_name'];
 
         $value = get_cell($header, $row, $config['event_site_url_column'], '');
@@ -440,7 +445,6 @@ function parse_sheets($client, $config)
 
     # parse schedule
     $sessions = array();
-    $sessions_map = array();
     $current_date = '';
     $next_end = '';
     $header = $service->spreadsheets_values->get($sheet_id, $config['schedule_sheet'] . '!A1:1')->getValues()[0];
@@ -518,6 +522,7 @@ function parse_sheets($client, $config)
             }
             continue;
         }
+
         $people = array();
         $people2 = array();
         $people_first_last = array();
@@ -537,6 +542,7 @@ function parse_sheets($client, $config)
                 $people2_first_last[] = $speaker;
             }
         }
+
         $tmp_name = get_cell($header, $row, $config['schedule_session_name_column'], '');
         if (!empty($tmp_name)) {
             $name = $tmp_name;
@@ -546,6 +552,7 @@ function parse_sheets($client, $config)
             }
             continue;
         }
+
         $language = '';
         $language2 = '';
         $language_short = '';
@@ -558,12 +565,19 @@ function parse_sheets($client, $config)
                 $language_short = $languages[$language_id]['short'];
             }
         }
+
+        $language_ribbon = '';
+        if (($event['second_language'] == 'he') && ($language_short == 'עבר')) {
+            $language_ribbon = 'עבר';
+        }
+
         $language_translate = (strpos($language, 'РУССКИЙ') !== false);
         if ($language_translate) {
             $language = str_replace('РУССКИЙ', 'синхронный перевод на русский язык', $language);
             $language2 = str_replace('RUSSIAN', 'simultaneous translation into Russian', $language2);
             $language2 = str_replace('רוסית', 'תירגום סימולטני לרוסית', $language2);
         }
+
         $track = 'лекция';
         if ($event['second_language'] == 'en') {
             $track2 = 'lecture';
@@ -580,12 +594,14 @@ function parse_sheets($client, $config)
                 $tracks[$track_id]['in_use'] = true;
             }
         }
+
         $tmp_sabbath = get_cell($header, $row, $config['schedule_session_sabbath_column'], '');
         if (!empty($tmp_sabbath)) {
             $shabbat = true;
         } else {
             $shabbat = false;
         }
+
         for ($i = 0; $i < 7; $i++) {
             $tmp_speaker2 = get_cell($header, $row, $config['schedule_presenter' . strval($i + 2) . '_column'], '');
             if (!empty($tmp_speaker2)) {
@@ -670,7 +686,7 @@ function parse_sheets($client, $config)
             'location' => array('id' => $location_id, 'name' => $location, 'name2' => $location2),
             'track' => array('id' => $track_id, 'name' => $track, 'name2' => $track2), 'speakers' => array(),
             'long_abstract' => $description, 'long_abstract2' => $description2,
-            'language' => $language, 'language2' => $language2, 'language_short' => $language_short,
+            'language' => $language, 'language2' => $language2, 'language_short' => $language_short, 'language_ribbon' => $language_ribbon,
             'shabbat' => $shabbat, 'language_translate' => $language_translate
         );
         foreach($people as $key => $speaker) {
@@ -942,6 +958,7 @@ function foldByTime($sessions, $speakers, $tracks, $config, $lang) {
             'language' => $session['language'],
             'language2' => $session['language2'],
             'language_short' => $session['language_short'],
+            'language_ribbon' => $session['language_ribbon'],
             'session_id' => $session['id'],
             'sessiondate_ru' => $days_ru[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_short_ru[date('n', $timestamp)],
             'sessiondate_ukr' => $days_ukr[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_short_ukr[date('n', $timestamp)],
@@ -1168,6 +1185,7 @@ function foldByRooms($sessions, $speakers, $tracks, $config, $lang) {
             'language' => $session['language'],
             'language2' => $session['language2'],
             'language_short' => $session['language_short'],
+            'language_ribbon' => $session['language_ribbon'],
             'session_id' => $session['id'],
             'sessiondate_ru' => $days_ru[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_short_ru[date('n', $timestamp)],
             'sessiondate_ukr' => $days_ukr[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_short_ukr[date('n', $timestamp)],
@@ -1310,6 +1328,7 @@ function getSpeakerSessions($speakerid, $sessions, $tracks, $config, $lang)
             'language' => $session['language'],
             'language2' => $session['language2'],
             'language_short' => $session['language_short'],
+            'language_ribbon' => $session['language_ribbon'],
             'session_id' => $session['id'],
             'date_ru' => $days_ru[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_short_ru[date('n', $timestamp)],
             'date_he' => $days_he[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_short_he[date('n', $timestamp)],

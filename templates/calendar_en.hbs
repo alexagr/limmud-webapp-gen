@@ -48,8 +48,8 @@
     <div class="container">
         <div class="alert alert-danger">
             <span>{{event.note2}}</span>
-        </div>    
-    </div>    
+        </div>
+    </div>
     {{/if}}
 
     <div class="date-list container">
@@ -102,6 +102,11 @@
                     <div>
                       {{#each sessions}}
                       <div id="session-{{session_id}}" class="session find-container" style="top:{{{top}}}px; height:{{{height}}}px;background-color:{{{color}}};">
+                        {{#if ../../../event.second_language_ribbon}}
+                          {{#if language_ribbon}}
+                        <div class="language-ribbon-calendar">{{language_ribbon}}</div>
+                          {{/if}}
+                        {{/if}}
                         <div class="session-name">
                           <a href="schedule_en.html#{{session_id}}" class="find-target">
                             {{title2}}
@@ -143,7 +148,7 @@
           {{/each}}
         </div>
       </div>
-      
+
       <div class="track-names">
       {{#each tracks}}
       {{#if name2}}
@@ -213,7 +218,7 @@
           $(this).toggleClass('hide', !showThing);
         });
       });
-    
+
       $(".export-png").click(function() {
         $('#saveModal').modal('show');
         let maxWidth = 0;

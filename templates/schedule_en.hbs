@@ -118,6 +118,11 @@
                       <a id="bookmark-{{session_id}}" class="bookmark">
                         <i class="fa fa-star" aria-hidden="true"></i>
                       </a>
+                      {{#if ../../../event.second_language_ribbon}}
+                        {{#if language_ribbon}}
+                      <div class="language-ribbon">{{language_ribbon}}</div>
+                        {{/if}}
+                      {{/if}}
                       {{#if ../../../event.speaker_photos}}
                       <div id="desc2-{{session_id}}" class="speaker-short-collapse collapse in">
                         <div class="row speaker-short-container">
