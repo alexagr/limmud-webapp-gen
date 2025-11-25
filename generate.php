@@ -64,6 +64,8 @@ function get_defaults()
         'schedule_presenter4_column' => 'presenter4',
         'schedule_presenter5_column' => 'presenter5',
         'schedule_presenter6_column' => 'presenter6',
+        'schedule_alt_presenter_summary_column' => 'alt-presenter-summary',
+        'schedule_alt_presenter_summary2_column' => 'alt-presenter-summary-he',
         'presenter_sheet' => 'Presenters',
         'presenter_name_column' => 'name-russian',
         'presenter_name2_column' => 'name-hebrew',
@@ -626,6 +628,9 @@ function parse_sheets($client, $config)
             }
         }
 
+        $alt_presenter_summary = get_cell($header, $row, $config['schedule_alt_presenter_summary_column'], '');
+        $alt_presenter_summary2 = get_cell($header, $row, $config['schedule_alt_presenter_summary2_column'], '');
+
         if (array_key_exists($name, $session_data)) {
             $name2 = $session_data[$name]['name2'];
             $comment = $session_data[$name]['comment'];
@@ -693,7 +698,8 @@ function parse_sheets($client, $config)
             'track' => array('id' => $track_id, 'name' => $track, 'name2' => $track2), 'speakers' => array(),
             'long_abstract' => $description, 'long_abstract2' => $description2,
             'language' => $language, 'language2' => $language2, 'language_short' => $language_short, 'language_ribbon' => $language_ribbon,
-            'shabbat' => $shabbat, 'language_translate' => $language_translate
+            'shabbat' => $shabbat, 'language_translate' => $language_translate,
+            'alt_presenter_summary' => $alt_presenter_summary, 'alt_presenter_summary2' => $alt_presenter_summary2
         );
         foreach($people as $key => $speaker) {
             $session['speakers'][] = array('id' => $speakers_map[$speaker], 'name' => $speaker, 'name2' => $people2[$key], 'name_first_last' => $people_first_last[$key], 'name2_first_last' => $people2_first_last[$key]);
@@ -971,7 +977,9 @@ function foldByTime($sessions, $speakers, $tracks, $config, $lang) {
             'sessiondate_he' => $days_he[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_short_he[date('n', $timestamp)],
             'sessiondate_en' => $days_en[date('w', $timestamp)] . ', ' . $months_short_en[date('n', $timestamp)] . ' ' . date('j', $timestamp),
             'tracktitle' => $session['track']['name'],
-            'tracktitle2' => $session['track']['name2']
+            'tracktitle2' => $session['track']['name2'],
+            'alt_presenter_summary' => $session['alt_presenter_summary'],
+            'alt_presenter_summary2' => $session['alt_presenter_summary2']
         );
     }
 
@@ -1198,7 +1206,9 @@ function foldByRooms($sessions, $speakers, $tracks, $config, $lang) {
             'sessiondate_he' => $days_he[date('w', $timestamp)] . ', ' . date('j', $timestamp) . ' ' . $months_short_he[date('n', $timestamp)],
             'sessiondate_en' => $days_en[date('w', $timestamp)] . ', ' . $months_short_en[date('n', $timestamp)] . ' ' . date('j', $timestamp),
             'tracktitle' => $session['track']['name'],
-            'tracktitle2' => $session['track']['name2']
+            'tracktitle2' => $session['track']['name2'],
+            'alt_presenter_summary' => $session['alt_presenter_summary'],
+            'alt_presenter_summary2' => $session['alt_presenter_summary2']
         );
     }
 

@@ -124,9 +124,13 @@
                         <div class="row speaker-short-info">
                       {{/if}}
                           <h5 class="find-target">
+                          {{#if alt_presenter_summary2}}
+                            {{alt_presenter_summary2}}
+                          {{else}}
                           {{#each speakers_list}}
                             {{title2}}{{name2_first_last}}{{#unless last}},{{/unless}}
                           {{/each}}
+                          {{/if}}
                           </h5>
                           <h6>
                           {{start}}
