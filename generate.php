@@ -124,7 +124,8 @@ function get_defaults()
         'event_icon_column' => 'icon',
         'event_analytics_column' => 'google-analytics-tag',
         'speaker_photos_column' => 'speaker-photos',
-        'second_language_ribbon_column' => 'second-language-ribbon'
+        'second_language_ribbon_column' => 'second-language-ribbon',
+        'export_bookmarks_column' => 'export-bookmarks'
     );
     return $defaults;
 }
@@ -177,6 +178,11 @@ function parse_sheets($client, $config)
         $event['second_language_ribbon'] = get_cell($header, $row, $config['second_language_ribbon_column'], '');
         if ($event['second_language_ribbon'] != 'yes') {
             $event['second_language_ribbon'] = '';
+        }
+
+        $event['export_bookmarks'] = get_cell($header, $row, $config['export_bookmarks_column'], '');
+        if ($event['export_bookmarks'] != 'yes') {
+            $event['export_bookmarks'] = '';
         }
 
         $event['copyright']['holder'] = $event['organizer_name'];

@@ -1,7 +1,7 @@
 :root {
   --background-color: #003568;
   --navbar-color: #0051a4;
-  --line-color: #104a90;
+  --line-color: #004875;
   --body-color: #d7d7d7;
   --link-color: #e3e3e3;
   --header-color: #f0f0f0;
@@ -1638,11 +1638,20 @@ a.findbutton:visited
   }
 }
 
+@media screen and (min-width: 768px) {
+  .speaker-short-photo {
+    padding-right: .5rem;
+  }
+  .speaker-short-photo-many {
+    padding-right: .5rem;
+  }
+}
+
 .speaker-image-tiny {
   height: 5rem;
   width: 5rem;
   border-radius: 50%;
-  margin: .5rem;
+  margin: .3rem .1rem .3rem .1rem;
 }
 
 .speaker-image-tiny-many {
@@ -1653,6 +1662,10 @@ a.findbutton:visited
 }
 
 @media screen and (max-width: 767px) {
+  .speaker-image-tiny {
+    margin: .3rem .5rem .3rem .5rem;
+  }
+
   .speaker-image-tiny-many {
     height: 4rem;
     width: 4rem;
@@ -1698,4 +1711,13 @@ a.findbutton:visited
   left: -48px;
   bottom: -2px;
   transform: rotate(45deg);
+}
+
+#save-bookmarks {
+  text-align: center;
+}
+
+#save-bookmarks-button {
+  padding: 6px 9px;
+  border-radius: 18px;
 }

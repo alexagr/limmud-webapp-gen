@@ -235,6 +235,13 @@
     </div>
   </div>
 
+  <div id="save-bookmarks">
+    Сохранить закладки &nbsp;
+    <button class="btn btn-default" type="button" id="save-bookmarks-button">
+      <i class="fa fa-download" aria-hidden="true"></i>
+    </button>
+  </div>
+
   {{> footer}}
 
   <a class="scroll" href="#" id="down-button" data-scroll-direction="0">
@@ -254,6 +261,10 @@
   <a class="findnext" href="#" id="find-next" data-scroll-direction="0"><i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
   <script src="assets/js/mark.min.js" type="text/javascript"></script>
   <script src="assets/js/find2.js" type="text/javascript"></script>
+
+  {{#if event.export_bookmarks}}
+  <script src="assets/js/export_bookmarks.js" type="text/javascript"></script>
+  {{/if}}
 
   <script type="text/javascript">
     var favorite = false;
@@ -419,6 +430,32 @@
         }
       });
 
+      {{#if event.export_bookmarks}}
+      $('#save-bookmarks-button').click(function() {
+        const temp = JSON.parse(localStorage["{{event.name}}"] || "{}");
+        const bookmarkedSessions = [];
+
+        Object.keys(temp).forEach(function(key) {
+          if (temp[key] == 1) {
+            const id = key;
+            const titleElement = document.querySelector(`#title-${id} h4.find-target`);
+            const presenterElements = document.querySelectorAll(`#desc2-${id} h5.find-target`);
+
+            if (titleElement) {
+              const title = titleElement.textContent.trim();
+              const presenters = Array.from(presenterElements)
+                .map(el => el.textContent.trim())
+                .join(', ');
+
+              bookmarkedSessions.push({ title, presenters });
+            }
+          }
+        });
+        if (bookmarkedSessions.length !== 0) {
+          generateJPEG(bookmarkedSessions);
+        }
+      });
+      {{/if}}
     });
   </script>
 
