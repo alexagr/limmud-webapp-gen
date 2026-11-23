@@ -12,7 +12,6 @@ function check_notify() {
         buttonText = 'סגור';
       }
       if (msg && 
-          (Date.now() > Date.parse(data['not_before'])) &&
           (Date.now() < Date.parse(data['not_after'])) &&
           ((localStorage.hasOwnProperty('webapp_notify_timestamp') === false) ||
            (localStorage['webapp_notify_timestamp'] < data['timestamp']))) {

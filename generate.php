@@ -27,6 +27,10 @@ function get_client()
         $refresh_token = $client->getRefreshToken();
         if ($refresh_token) {
             $accessToken = $client->fetchAccessTokenWithRefreshToken($refresh_token);
+            if (array_key_exists('error', $accessToken)) {
+                $desc = isset($accessToken['error_description']) ? ' - ' . $accessToken['error_description'] : '';
+                throw new Exception('Google refused to refresh the token (' . $accessToken['error'] . $desc . '). Re-authorize via get_token.php');
+            }
             if (!array_key_exists('refresh_token', $accessToken)) {
                 $accessToken['refresh_token'] = $refresh_token;
             }
@@ -235,6 +239,7 @@ function parse_sheets($client, $config)
     # parse locations
     $locations = array();
     $locations_map = array();
+    $locations_name2 = array();
     $header = $service->spreadsheets_values->get($sheet_id, $config['location_sheet'] . '!A1:1')->getValues()[0];
     $rows = $service->spreadsheets_values->get($sheet_id, $config['location_sheet'] . '!A2:AZ')->getValues();
     foreach ($rows as $row) {
@@ -259,8 +264,12 @@ function parse_sheets($client, $config)
             $location = $room;
             $location2 = $room2;
         }
-        $locations[$id] = array('id' => $id, 'name' => $location, 'name2' => $location2);
+
+        if (!array_key_exists($id, $locations)) {
+            $locations[$id] = array('id' => $id, 'name' => $location, 'name2' => $location2);
+        }
         $locations_map[$location] = $id;
+        $locations_name2[$location] = $location2;
     }
     ksort($locations);
 
@@ -518,9 +527,8 @@ function parse_sheets($client, $config)
         $tmp_room = get_cell($header, $row, $config['schedule_room_column'], '');
         if (!empty($tmp_room)) {
             $room = $tmp_room;
-            if (array_key_exists($room, $locations_map)) {
-                $location_id = $locations_map[$room];
-                $room2 = $locations[$location_id]['name2'];
+            if (array_key_exists($room, $locations_name2)) {
+                $room2 = $locations_name2[$room];
             } else {
                 $room2 = $room;
             }
@@ -661,6 +669,7 @@ function parse_sheets($client, $config)
             $location_id = count($locations);
             $locations[$location_id] = array('id' => $location_id, 'name' => $location, 'name2' => $location2);
             $locations_map[$location] = $location_id;
+            $locations_name2[$location] = $location2;
         }
 
         # update speakers
@@ -1086,7 +1095,7 @@ function checkWidth($columns)
 }
 
 
-function foldByRooms($sessions, $speakers, $tracks, $config, $lang) {
+function foldByRooms($sessions, $speakers, $locations, $tracks, $config, $lang) {
     global $days_ru;
     global $months_ru;
     global $months_short_ru;
@@ -1189,6 +1198,7 @@ function foldByRooms($sessions, $speakers, $tracks, $config, $lang) {
             'title2' => $session['title2'],
             'location' => $session['location']['name'],
             'location2' => $session['location']['name2'],
+            'location_id' => $session['location']['id'],
             'is_cancelled' => ($session['location']['name'] == 'Отмена'),
             'speakers_list' => $speakersList,
             'many_speakers_list' => $manySpeakersList,
@@ -1239,8 +1249,14 @@ function foldByRooms($sessions, $speakers, $tracks, $config, $lang) {
                     $dates[$date]['rooms'][] = $room;
                     $room = array('sessions' => array(), 'valid' => false);
                 }
-                $room['name'] = $dates[$date]['sessions'][$key]['location'];
-                $room['name2'] = $dates[$date]['sessions'][$key]['location2'];
+                $location_id = $dates[$date]['sessions'][$key]['location_id'];
+                if (array_key_exists($location_id, $locations)) {
+                    $room['name'] = $locations[$location_id]['name'];
+                    $room['name2'] = $locations[$location_id]['name2'];
+                } else {
+                    $room['name'] = $dates[$date]['sessions'][$key]['location'];
+                    $room['name2'] = $dates[$date]['sessions'][$key]['location2'];
+                }
                 $room['sessions'][] = $dates[$date]['sessions'][$key];
                 $room['valid'] = true;
                 $prevLocation = $room['name'];
@@ -1436,8 +1452,8 @@ function generate()
 
     $model['timeList'] = foldByTime($sessions, $speakers, $tracks, $config, 'primary');
     $model['timeList2'] = foldByTime($sessions, $speakers, $tracks, $config, 'secondary');
-    $model['roomsList'] = foldByRooms($sessions, $speakers, $tracks, $config, 'primary');
-    $model['roomsList2'] = foldByRooms($sessions, $speakers, $tracks, $config, 'secondary');
+    $model['roomsList'] = foldByRooms($sessions, $speakers, $locations, $tracks, $config, 'primary');
+    $model['roomsList2'] = foldByRooms($sessions, $speakers, $locations, $tracks, $config, 'secondary');
     $model['speakersList'] = foldBySpeakers($sessions, $speakers, $tracks, $config, 'primary');
     $model['speakersList2'] = foldBySpeakers($sessions, $speakers, $tracks, $config, 'secondary');
 

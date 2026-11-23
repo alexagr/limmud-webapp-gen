@@ -178,7 +178,7 @@
         function updateConfig() {
           $("#config-status").html('');
           jQuery.ajax({
-            url: 'config.php',
+            url: 'save_settings.php',
             data: 'sheet_id='+$("#sheet-id").val()+'&app_name='+$("#app-name").val(),
             type: 'POST',
 		        success: function(data){
@@ -189,7 +189,7 @@
               }
 		        },
 		        error:function(){
-              $("#config-status").html('<p class="error">ERROR: Cannot execute config.php</p>');
+              $("#config-status").html('<p class="error">ERROR: Cannot execute save_settings.php</p>');
             }
 		      });
 	      }         
@@ -198,7 +198,7 @@
           $("#generate-status").html('<p class="info">Copying assets</p>');
           jQuery.ajax({
             url: 'copy_assets.php',
-            data: '',
+            data: 'run=1',
             type: 'POST',
     		    success: function(data){
               if (data.includes('ERROR')) {
@@ -217,7 +217,7 @@
           $("#generate-status").html('<p class="info">Generating WebApp</p>');
           jQuery.ajax({
             url: 'generate.php',
-            data: '',
+            data: 'run=1',
             type: 'POST',
             success: function(data){
               if (data.includes('ERROR')) {

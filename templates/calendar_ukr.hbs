@@ -106,9 +106,13 @@
                           <div class="session-details find-target">
                         {{#if speakers_list}}
                             <br>
+                          {{#if alt_presenter_summary}}
+                            {{alt_presenter_summary}}
+                          {{else}}
                           {{#each speakers_list}}
                             {{title}}{{name_first_last}}{{#unless last}},{{/unless}}
                           {{/each}}
+                          {{/if}}
                         {{/if}}
                             <div class="session-details-data">
                             <br>
