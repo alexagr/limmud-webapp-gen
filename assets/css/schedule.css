@@ -1732,3 +1732,15 @@ a.findbutton:visited
   outline: 2px solid currentColor;
   outline-offset: 2px;
 }
+
+/* any link/button (e.g. presenter photo in an expanded session): no focus ring after a mouse click or tap,
+   but keep it for keyboard navigation; no grey tap flash on phones */
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible),
+.btn:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+a, button, .btn {
+  -webkit-tap-highlight-color: transparent;
+}
