@@ -17,6 +17,7 @@
   {{> fonts}}
   <link rel="stylesheet" href="assets/css/bootstrap.min.css">
   <link rel="stylesheet" href="assets/css/schedule.css">
+  {{#if event.theme}}<link rel="stylesheet" href="assets/css/themes/{{event.theme}}.css">{{/if}}
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="{{event.icon}}"/>
 

@@ -1,0 +1,152 @@
+/*
+ * Limmud FSU Israel 2026 theme (option C: night purple + brand gradient).
+ * Loaded after schedule.css when the Event sheet has theme = limmud2026.
+ * Session-type colours come from the Tracks sheet column "color-limmud2026".
+ * Only colours, fonts and corner radius change here - layout and features stay as in schedule.css.
+ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+  /* variables already used throughout schedule.css */
+  --background-color: #1b1446;
+  --navbar-color: #28317B;
+  --line-color: #3a2f7a;
+  --body-color: #d9d6f2;
+  --link-color: #ece8ff;       /* also the colour of unselected ★ and calendar titles */
+  --header-color: #ffffff;
+  --active-color: #F324D4;
+
+  /* brand */
+  --brand-gradient: linear-gradient(90deg, #654ADC 0%, #F324D4 55%, #FD7A31 100%);
+  --brand-orange: #FD7A31;
+  --brand-pink: #F324D4;
+  --surface: #2a2163;          /* inputs, inactive tabs */
+  --muted: #b9b2e6;
+  --grid-quarter: rgba(185, 178, 230, 0.10);
+  --grid-half: rgba(185, 178, 230, 0.18);
+  --grid-hour: rgba(185, 178, 230, 0.32);
+}
+
+body,
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+  font-family: 'Inter', 'Rubik', sans-serif;
+}
+
+/* page titles ("Программа", "Презентеры", "Сетка") with brand gradient */
+.track-heading span {
+  background: linear-gradient(90deg, #a48cff 0%, #F324D4 55%, #FD7A31 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 900;
+}
+
+/* navbar: current item = brand-orange block, white bold text */
+.navbar-default {
+  background-color: var(--navbar-color);
+  border-color: var(--navbar-color);
+}
+.navbar-default .navbar-nav li a.active,
+.navbar-default .navbar-nav li a.active:hover,
+.navbar-default .navbar-nav li a.active:focus {
+  background-color: var(--brand-orange) !important;
+  color: #fff !important;
+}
+.navbar-default .navbar-nav li a:not(.active):hover {
+  color: #ffffff !important;
+  opacity: 0.8;
+}
+
+/* day tabs */
+.tabs-nav-link {
+  background-color: var(--surface);
+  color: var(--body-color);
+  border-radius: 999px;
+}
+.tabs-nav-link:not(.is-active):hover {
+  color: #fff;
+}
+.tabs-nav-link.is-active {
+  background: var(--brand-gradient);
+  color: #fff;
+}
+
+/* home page buttons: "Программа" in the same orange as the current menu item */
+.button-info,
+.button-info:hover,
+.button-info:focus {
+  background-color: var(--brand-orange);
+  border-color: var(--brand-orange);
+  color: #fff;
+}
+
+/* search + favourites filter */
+.search-filter-input {
+  border-radius: 999px;
+  border-color: var(--line-color);
+}
+.search-filter input:focus {
+  box-shadow: 0 0 0 2px var(--brand-pink);
+}
+.bookmark-toggle {
+  border-radius: 999px;
+}
+.bookmark-toggle.is-active {
+  background-color: var(--brand-orange);
+  border-color: var(--brand-orange);
+  color: #fff;
+}
+
+/* session cards (programme) and sessions (сетка): softer brand shadow, rounder */
+.event {
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+.session {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* presenter photos on cards: thin ring */
+.speaker-image-tiny,
+.speaker-image-tiny-many {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85);
+}
+
+/* "עבר" ribbon: same shape and position as before, brand colours */
+.language-ribbon,
+.language-ribbon-calendar {
+  background-color: #ffffff;
+  color: #28317B;
+  font-weight: 700;
+}
+
+/* сетка: time lines drawn in CSS instead of assets/img/timeline35.png
+   (35px per 15 minutes, 140px per hour; first line at 34px like the PNG) */
+.rooms {
+  background-image:
+    linear-gradient(to bottom, transparent 139px, var(--grid-hour) 139px, var(--grid-hour) 140px),
+    linear-gradient(to bottom, transparent 69px, var(--grid-half) 69px, var(--grid-half) 70px, transparent 70px),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 34px, var(--grid-quarter) 34px, var(--grid-quarter) 35px) !important;
+  background-size: 100% 140px !important;
+  background-repeat: repeat !important;
+}
+.times .time,
+.eventtime h4 {
+  color: var(--brand-orange);
+}
+
+/* floating left buttons stay monochrome, just lighter for the dark background */
+#now-button,
+#down-button,
+a.findbutton {
+  color: #8f88c4;
+}
+#find-button-div {
+  background: #8f88c4;
+}
+
+/* colour legend dots */
+.track-legend-color {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4);
+}

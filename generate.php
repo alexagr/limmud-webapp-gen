@@ -131,7 +131,8 @@ function get_defaults()
         'event_analytics_column' => 'google-analytics-tag',
         'speaker_photos_column' => 'speaker-photos',
         'second_language_ribbon_column' => 'second-language-ribbon',
-        'export_bookmarks_column' => 'export-bookmarks'
+        'export_bookmarks_column' => 'export-bookmarks',
+        'event_theme_column' => 'theme'
     );
     return $defaults;
 }
@@ -190,6 +191,9 @@ function parse_sheets($client, $config)
         if ($event['export_bookmarks'] != 'yes') {
             $event['export_bookmarks'] = '';
         }
+
+        // optional per-year theme: loads assets/css/themes/<theme>.css and Tracks column 'color-<theme>'
+        $event['theme'] = preg_replace('/[^a-z0-9_-]/', '', strtolower(trim(get_cell($header, $row, $config['event_theme_column'], ''))));
 
         $event['copyright']['holder'] = $event['organizer_name'];
 
@@ -285,6 +289,12 @@ function parse_sheets($client, $config)
         }
         $track2 = get_cell($header, $row, $config['session_type_name2_column'], $track);
         $color = get_cell($header, $row, $config['session_type_color_column'], '#EEE');
+        if (!empty($event['theme'])) {
+            $theme_color = get_cell($header, $row, 'color-' . $event['theme'], '');
+            if (!empty($theme_color)) {
+                $color = $theme_color;
+            }
+        }
 
         $id = count($tracks);
         $tracks[$id] = array('id' => $id, 'name' => $track, 'name2' => $track2, 'color' => $color, 'in_use' => false);
