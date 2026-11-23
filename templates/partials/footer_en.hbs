@@ -101,8 +101,10 @@
       // Ensure refresh is only called once.
       // This works around a bug in "force update on reload".
       var refreshing;
+      // first visit: the worker takes control via clients.claim() - no reload needed then
+      var hadController = !!navigator.serviceWorker.controller;
       navigator.serviceWorker.addEventListener('controllerchange', function() {
-        if (refreshing) return;
+        if (refreshing || !hadController) return;
         window.location.reload();
         refreshing = true;
       });

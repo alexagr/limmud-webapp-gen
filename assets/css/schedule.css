@@ -1721,3 +1721,14 @@ a.findbutton:visited
   padding: 6px 9px;
   border-radius: 18px;
 }
+/* bottom-left floating buttons: no leftover focus ring after a mouse click (keyboard focus still visible) */
+#down-button:focus, #now-button:focus, #find-button:focus, #find-next:focus,
+#down-button:active, #now-button:active, #find-button:active, #find-next:active {
+  outline: none;
+  box-shadow: none;
+  text-decoration: none;
+}
+#down-button:focus-visible, #now-button:focus-visible, #find-button:focus-visible, #find-next:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}

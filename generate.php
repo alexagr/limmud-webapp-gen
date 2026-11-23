@@ -132,7 +132,11 @@ function get_defaults()
         'speaker_photos_column' => 'speaker-photos',
         'second_language_ribbon_column' => 'second-language-ribbon',
         'export_bookmarks_column' => 'export-bookmarks',
-        'event_theme_column' => 'theme'
+        'event_theme_column' => 'theme',
+        'event_short_name_column' => 'app-short-name',
+        'event_icon_large_column' => 'icon-large',
+        'event_theme_color_column' => 'theme-color',
+        'event_background_color_column' => 'background-color'
     );
     return $defaults;
 }
@@ -194,6 +198,12 @@ function parse_sheets($client, $config)
 
         // optional per-year theme: loads assets/css/themes/<theme>.css and Tracks column 'color-<theme>'
         $event['theme'] = preg_replace('/[^a-z0-9_-]/', '', strtolower(trim(get_cell($header, $row, $config['event_theme_column'], ''))));
+
+        // PWA manifest (defaults keep the previous behaviour)
+        $event['short_name'] = get_cell($header, $row, $config['event_short_name_column'], '') ?: $event['title'];
+        $event['icon_large'] = get_cell($header, $row, $config['event_icon_large_column'], '');
+        $event['theme_color'] = get_cell($header, $row, $config['event_theme_color_column'], '') ?: '#fe9b00';
+        $event['background_color'] = get_cell($header, $row, $config['event_background_color_column'], '') ?: '#003568';
 
         $event['copyright']['holder'] = $event['organizer_name'];
 
@@ -1444,6 +1454,18 @@ function generate()
 
     list($event, $sessions, $speakers, $locations, $tracks) = parse_sheets($client, $config);
 
+    // cache-busting: add the photo file's modification time, so a replaced photo with the same name
+    // is downloaded again by browsers and the service worker (e.g. speakers/thumbs/x.jpg?v=1764023456)
+    foreach ($speakers as $key => $speaker) {
+        $dir = __DIR__ . '/' . $event['app_name'] . '/speakers/';
+        foreach (array($dir . 'thumbs/' . $speaker['photo'], $dir . $speaker['photo']) as $file) {
+            if ($speaker['photo'] != 'avatar.png' && file_exists($file)) {
+                $speakers[$key]['photo'] = $speaker['photo'] . '?v=' . filemtime($file);
+                break;
+            }
+        }
+    }
+
     $event['main_language'] = 'ru';
     $event['main_language_text'] = 'РУС';
     if (file_exists('data/custom.json')) {
@@ -1524,9 +1546,55 @@ function generate()
 
     // $model['folderHash'] = folderHash($event['app_name']);
     $model['folderHash'] = date("YmdHis");
+    $model['precacheJson'] = json_encode(build_precache_list($event, $pages, $speakers), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     file_put_contents(__DIR__ . '/' . $event['app_name'] . '/sw.js',  $handlebars->render('sw_js', $model));
 
     file_put_contents(__DIR__ . '/' . $event['app_name'] . '/.htaccess',  $handlebars->render('htaccess', $model));
+}
+
+// Files the service worker saves on install, so the whole app works offline
+// and the previous version keeps working until the new one is fully downloaded.
+function build_precache_list($event, $pages, $speakers)
+{
+    $appDir = __DIR__ . '/' . $event['app_name'];
+    $list = array('./', 'manifest.json');
+    foreach ($pages as $page) {
+        $list[] = $page . '.html';
+        if (!empty($event['second_language'])) {
+            $list[] = $page . '_' . $event['second_language'] . '.html';
+        }
+    }
+
+    // everything under <app>/assets except legacy font formats modern browsers never request
+    $skip = array('eot', 'svg', 'ttf', 'otf', 'map', 'scss', 'less', 'md', 'txt');
+    if (is_dir($appDir . '/assets')) {
+        $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($appDir . '/assets', FilesystemIterator::SKIP_DOTS));
+        foreach ($it as $file) {
+            $ext = strtolower(pathinfo($file->getFilename(), PATHINFO_EXTENSION));
+            if (in_array($ext, $skip)) {
+                continue;
+            }
+            $rel = str_replace('\\', '/', substr($file->getPathname(), strlen($appDir) + 1));
+            $list[] = implode('/', array_map('rawurlencode', explode('/', $rel)));
+        }
+    }
+
+    // presenter thumbnails actually used in the programme
+    foreach ($speakers as $speaker) {
+        $parts = explode('?', $speaker['photo'], 2);
+        if (empty($parts[0]) || $parts[0] == 'avatar.png') {
+            continue;
+        }
+        $query = isset($parts[1]) ? '?' . $parts[1] : '';
+        // small photo in programme cards + full photo on the presenters page
+        foreach (array('speakers/thumbs/', 'speakers/') as $folder) {
+            if (file_exists($appDir . '/' . $folder . $parts[0])) {
+                $list[] = $folder . rawurlencode($parts[0]) . $query;
+            }
+        }
+    }
+
+    return array_values(array_unique($list));
 }
 
 try {

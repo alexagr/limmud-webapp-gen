@@ -1,17 +1,31 @@
 {
   "name": "{{ event.title }}",
-  "short_name": "{{ event.title }}",
+  "short_name": "{{ event.short_name }}",
+  "description": "{{ event.title }}",
   "icons": [
     {
       "src": "{{event.icon}}",
-      "sizes": "192x192"
-    }
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    }{{#if event.icon_large}},
+    {
+      "src": "{{event.icon_large}}",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "{{event.icon_large}}",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }{{/if}}
   ],
   "start_url": "index.html",
   "scope": ".",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#003568",
-  "theme_color": "#fe9b00",
-  "description": "{{ event.title }}"
+  "background_color": "{{ event.background_color }}",
+  "theme_color": "{{ event.theme_color }}"
 }
