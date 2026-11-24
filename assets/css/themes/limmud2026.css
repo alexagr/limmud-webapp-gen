@@ -204,10 +204,6 @@ a.findbutton {
   border-color: var(--brand-orange);
   color: #fff;
 }
-.session-modal-link {
-  color: var(--brand-orange);
-  font-weight: 600;
-}
 
 /* "Мой Лимуд" counter */
 :root {
