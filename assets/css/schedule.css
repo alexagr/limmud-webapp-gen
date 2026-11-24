@@ -1951,3 +1951,22 @@ body.session-modal-open {
 .session-modal-loading {
   opacity: 0.6;
 }
+
+/* programme: search + "Мой Лимуд" (favourites) button always on one line - the search box shrinks */
+.search {
+  flex-wrap: nowrap;
+  align-items: flex-start;
+}
+.search-filter-schedule {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.show-button-filter {
+  flex: 0 0 auto;
+}
+.bookmark-toggle {
+  white-space: nowrap;
+}
+.bookmark-toggle-label {
+  font-size: 13px;
+}
