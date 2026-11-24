@@ -2289,3 +2289,8 @@ body {
   line-height: 1.2;
   white-space: nowrap;
 }
+
+/* Сетка: no focus ring around each title line after a session card closes (focus returns to the link) */
+.calendar-view .session a.find-target:focus {
+  outline: none;
+}
