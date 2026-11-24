@@ -1970,3 +1970,27 @@ body.session-modal-open {
 .bookmark-toggle-label {
   font-size: 13px;
 }
+/* number of marked sessions on the "Мой Лимуд" button */
+.fav-count {
+  display: inline-block;
+  min-width: 18px;
+  height: 18px;
+  margin-left: 5px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background-color: var(--fav-count-bg, #ff8700);
+  color: #fff;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 18px;
+  text-align: center;
+  vertical-align: 1px;
+}
+[dir="rtl"] .fav-count {
+  margin-left: 0;
+  margin-right: 5px;
+}
+.bookmark-toggle.is-active .fav-count {
+  background-color: #fff;
+  color: #333;
+}

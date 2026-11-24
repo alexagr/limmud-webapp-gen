@@ -60,7 +60,7 @@
           <input class="search-filter-input" type="text" placeholder="חיפוש">
         </span>
         <span class="filter show-button-filter">
-          <button class="btn btn-default bookmark-toggle" id="starred" title="הצג רק מפגשים מועדפים"><i class="fa fa-star" aria-hidden="true"></i>&nbsp;<span class="bookmark-toggle-label">הלימוד שלי</span></button>
+          <button class="btn btn-default bookmark-toggle" id="starred" data-favorites-key="{{event.name}}" title="הצג רק מפגשים מועדפים"><i class="fa fa-star" aria-hidden="true"></i>&nbsp;<span class="bookmark-toggle-label">הלימוד שלי</span></button>
         </span>
       </div>
 
@@ -244,6 +244,7 @@
     <i class="fa fa-clock" aria-hidden="true"></i>
   </a>
   <script src="assets/js/scroll_now.js" type="text/javascript"></script>
+  <script src="assets/js/favorites_count.js" type="text/javascript"></script>
 
   <div class="findbuttondiv" id="find-button-div">
     <a class="findbutton" href="#" id="find-button" data-scroll-direction="0"><i class="fa fa-search" aria-hidden="true"></i></a>

@@ -208,3 +208,27 @@ a.findbutton {
   color: var(--brand-orange);
   font-weight: 600;
 }
+
+/* "Мой Лимуд" counter */
+:root {
+  --fav-count-bg: var(--brand-pink);
+}
+.bookmark-toggle.is-active .fav-count {
+  color: var(--brand-orange);
+}
+
+/* "Мой Лимуд" buttons: same dark lavender as the inactive day tabs instead of white */
+.bookmark-toggle,
+.bookmark-toggle:hover,
+.bookmark-toggle:focus {
+  background-color: var(--surface);
+  border-color: var(--line-color);
+  color: var(--body-color);
+}
+.bookmark-toggle.is-active,
+.bookmark-toggle.is-active:hover,
+.bookmark-toggle.is-active:focus {
+  background-color: var(--brand-orange);
+  border-color: var(--brand-orange);
+  color: #fff;
+}
