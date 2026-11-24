@@ -2320,14 +2320,15 @@ body {
 }
 
 /* Сетка session card: time / room / language lines and presenter bio a bit smaller than the description */
-/* same on the programme page (expanded session) */
-.session-modal-body .session-speakers-list p.compact,
-.session-desc .session-speakers-list p.compact {
+.session-modal-body .session-speakers-list p.compact {
   font-size: 13px;
 }
-.session-modal-body p.compact:has(> i.fa),
-.session-desc > p.compact:has(> i.fa) {
+.session-modal-body p.compact:has(> i.fa) {
   font-size: 12px;
+}
+/* programme page (expanded session): the description a bit larger than the rest */
+.session-desc > p.compact:not(:has(> i.fa)) {
+  font-size: 15px;
 }
 
 /* Сетка: very short sessions (e.g. 10 min "Зажигание свечей", marked .is-short by calendar_zoom.js):
