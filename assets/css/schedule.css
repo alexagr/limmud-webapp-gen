@@ -2380,3 +2380,24 @@ body {
   margin-left: 0;
   margin-right: 6px;
 }
+
+/* bottom-left search: the »» find-next arrow is vertically centred on the field (same bottom + height) */
+#find-field {
+  box-sizing: border-box;
+  padding-top: 0;
+  padding-bottom: 0;
+  line-height: 26px;   /* 30px minus the 2px borders: text centred */
+  -webkit-appearance: none;
+  appearance: none;
+}
+#find-next {
+  bottom: 46px;
+  height: 30px;
+  line-height: 30px;
+  padding: 0 4px;
+  margin: 0;
+}
+#find-next .fa {
+  line-height: 30px;
+  vertical-align: top;
+}
