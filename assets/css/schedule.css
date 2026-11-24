@@ -1744,3 +1744,67 @@ button:focus:not(:focus-visible),
 a, button, .btn {
   -webkit-tap-highlight-color: transparent;
 }
+
+/* Сетка zoom: positions are calc(<px> * var(--zx|--zy)), set by assets/js/calendar_zoom.js */
+.calendar-view {
+  --zx: 1;
+  --zy: 1;
+}
+.room {
+  min-width: calc(160px * var(--zx, 1));
+  vertical-align: top;  /* columns start exactly at the top of the grid at any zoom */
+}
+.rooms {
+  background-size: 50px calc(140px * var(--zy, 1));  /* timeline PNG tile follows the time zoom */
+  touch-action: pan-x pan-y;                        /* two-finger pinch is handled by the script */
+}
+/* room names stay visible: the script moves the header row down under the navbar */
+.room-header {
+  position: relative;
+  z-index: 3;
+  background-color: var(--background-color);
+  will-change: transform;
+}
+.room-header.is-stuck {
+  box-shadow: 0 8px 8px -8px rgba(0, 0, 0, 0.6);
+}
+.zoom-controls {
+  display: inline-flex;
+  margin-right: 8px;
+  vertical-align: top;
+}
+.zoom-controls .btn {
+  border-radius: 0;
+  margin-left: -1px;
+}
+.zoom-controls .btn:first-child {
+  border-radius: 4px 0 0 4px;
+}
+.zoom-controls .btn:last-child {
+  border-radius: 0 4px 4px 0;
+}
+.zoom-controls .zoom-level {
+  min-width: 58px;
+  font-size: 12px;
+}
+/* text in the grid follows the zoom (never below 9px) */
+.calendar-view .session {
+  font-size: max(9px, calc(14px * var(--zy, 1)));
+}
+.calendar-view .session-details {
+  font-size: max(9px, calc(12px * var(--zy, 1)));
+}
+.calendar-view .session-details-data {
+  font-size: max(9px, calc(10px * var(--zy, 1)));
+}
+.calendar-view .room-header,
+.calendar-view .times .time {
+  font-size: max(9px, calc(14px * var(--zy, 1)));
+}
+/* "עבר" band in the grid follows the zoom (scaled around its own centre, so it stays in the corner) */
+.calendar-view .language-ribbon-calendar {
+  transform: rotate(-45deg) scale(var(--zy, 1));
+}
+[dir="rtl"] .calendar-view .language-ribbon-calendar {
+  transform: rotate(45deg) scale(var(--zy, 1));
+}
