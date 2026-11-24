@@ -2318,3 +2318,9 @@ body {
 .session-modal-body .session-speakers-list > hr:last-child {
   display: none;
 }
+
+/* Сетка session card: time / room / language lines and presenter bio a bit smaller than the description */
+.session-modal-body p.compact:has(> i.fa),
+.session-modal-body .session-speakers-list p.compact {
+  font-size: 13px;
+}
