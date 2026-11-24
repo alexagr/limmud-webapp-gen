@@ -1870,10 +1870,7 @@ a, button, .btn {
 .calendar-view.only-favorites .session:not(.is-fav) {
   visibility: hidden;
 }
-.grid-favorites-toggle {
-  margin-right: 8px;
-  vertical-align: top;
-}
+
 
 /* Сетка: session details card (assets/js/calendar_extras.js) */
 .session-modal {
@@ -2002,4 +1999,29 @@ body.session-modal-open {
 }
 .calendar-view .session {
   transition: opacity 0.15s;
+}
+
+/* search row (programme + Сетка): input and "Мой Лимуд" button aligned, right edge flush with the day tabs,
+   14px below the day tabs */
+.search {
+  margin-top: 6px;
+  align-items: center;
+}
+.search .filter {
+  padding-top: 8px;
+}
+.search .search-filter-input {
+  margin-top: 0;
+  height: 34px;
+}
+.search .show-button-filter .bookmark-toggle {
+  height: 34px;
+  margin: 0;
+}
+.search .filter {
+  display: flex;
+  align-items: center;
+}
+.search .search-filter-schedule .search-filter-input {
+  width: 100%;
 }
