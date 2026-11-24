@@ -2025,3 +2025,25 @@ body.session-modal-open {
 .search .search-filter-schedule .search-filter-input {
   width: 100%;
 }
+
+/* bottom-left buttons: colours come from variables (themes can override); scripts only toggle classes */
+#now-button,
+#down-button {
+  color: var(--fab-color, #999);
+}
+#now-button.is-flash,
+#down-button.is-flash {
+  color: var(--fab-active, #1090f0);
+}
+#find-button-div {
+  background: var(--fab-color, #999);
+}
+#find-button-div.is-open {
+  background: var(--fab-active, #1090f0);
+}
+#find-field {
+  border-color: var(--find-accent, #60b0ff);
+}
+#find-next {
+  color: var(--find-accent, #60b0ff);
+}

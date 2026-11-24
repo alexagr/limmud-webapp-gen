@@ -2,8 +2,8 @@ $(function() {
   $('#now-button').show();
 
   $('#now-button').click(function() {
-    $(this).css('color', '#1090f0');
-    setTimeout(function() { $('#now-button').css('color', '#999'); }, 2000);
+    $(this).addClass('is-flash');
+    setTimeout(function() { $('#now-button').removeClass('is-flash'); }, 2000);
 
     let now = new Date();
     let nowDate = now.getFullYear() + '-' + ('0' + (now.getMonth()+1)).slice(-2) + '-' + ('0' + now.getDate()).slice(-2);

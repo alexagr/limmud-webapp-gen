@@ -141,14 +141,25 @@ body,
   color: var(--brand-orange);
 }
 
-/* floating left buttons stay monochrome, just lighter for the dark background */
-#now-button,
-#down-button,
-a.findbutton {
-  color: #8f88c4;
+/* bottom-left buttons: calm lavender; click highlight and open search in brand orange */
+:root {
+  --fab-color: #8f88c4;
+  --fab-active: var(--brand-orange);
+  --find-accent: var(--brand-orange);
 }
-#find-button-div {
-  background: #8f88c4;
+a.findbutton,
+a.findbutton:hover,
+a.findbutton:visited,
+#find-button {
+  color: var(--background-color);   /* dark magnifier on the round button */
+}
+#find-field {
+  background-color: var(--surface);
+  color: #fff;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+}
+#find-field::placeholder {
+  color: var(--muted);
 }
 
 /* colour legend dots */

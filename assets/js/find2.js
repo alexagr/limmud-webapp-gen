@@ -65,13 +65,13 @@ $(function() {
     function show_find() {
         $('#find-field').css('display', 'block');
         $('#find-field').focus();
-        $('#find-button-div').css('background', '#1090f0');
+        $('#find-button-div').addClass('is-open');
         $('#find-button').html('<div style="font-size: 16px"><i class="fa fa-times" aria-hidden="true"></i></div>');
     }
 
     function hide_find() {
         $('#find-field, #find-next').css('display', 'none');
-        $('#find-button-div').css('background', '#999');
+        $('#find-button-div').removeClass('is-open');
         $('#find-button').html('find-button').html('<i class="fa fa-search" aria-hidden="true"></i>');
     }
 
