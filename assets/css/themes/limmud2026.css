@@ -179,3 +179,8 @@ a.findbutton {
 .room-header.is-stuck {
   box-shadow: 0 8px 8px -8px rgba(0, 0, 0, 0.6);
 }
+
+/* сетка: "now" line in brand orange */
+.calendar-view {
+  --now-color: var(--brand-orange);
+}

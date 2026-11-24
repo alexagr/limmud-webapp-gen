@@ -1808,3 +1808,69 @@ a, button, .btn {
 [dir="rtl"] .calendar-view .language-ribbon-calendar {
   transform: rotate(45deg) scale(var(--zy, 1));
 }
+
+/* Сетка: "now" line (assets/js/calendar_extras.js) */
+.rooms,
+.times {
+  position: relative;
+}
+.now-line {
+  position: absolute;
+  left: 0;
+  height: 2px;
+  margin-top: -1px;
+  background-color: var(--now-color, #ff8700);
+  box-shadow: 0 0 6px var(--now-color, #ff8700);
+  z-index: 2;              /* above sessions, below the room-name row */
+  pointer-events: none;
+}
+.now-label {
+  position: absolute;
+  left: 0;
+  right: 2px;
+  transform: translateY(-50%);
+  padding: 1px 0;
+  border-radius: 6px;
+  background-color: var(--now-color, #ff8700);
+  color: #fff;
+  font-size: 11px;
+  font-weight: bold;
+  text-align: center;
+  z-index: 2;
+}
+
+/* Сетка: favourites */
+.session .grid-fav {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  padding: 2px 4px;
+  border: 0;
+  background: none;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: max(9px, calc(12px * var(--zy, 1)));
+  line-height: 1;
+  cursor: pointer;
+  z-index: 1;
+}
+[dir="rtl"] .session .grid-fav {
+  right: auto;
+  left: 2px;
+}
+.session.is-fav .grid-fav {
+  color: rgb(255, 255, 0);   /* same yellow as the ★ on the programme page */
+}
+.session .session-name {
+  padding-right: 16px;       /* keep the title clear of the ★ */
+}
+[dir="rtl"] .session .session-name {
+  padding-right: 0;
+  padding-left: 16px;
+}
+.calendar-view.only-favorites .session:not(.is-fav) {
+  visibility: hidden;
+}
+.grid-favorites-toggle {
+  margin-right: 8px;
+  vertical-align: top;
+}

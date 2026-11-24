@@ -58,6 +58,7 @@
 
     <div class="row">
       <div class="button-list container pull-right">
+        <button class="btn btn-default bookmark-toggle grid-favorites-toggle" type="button" title="Показати лише обрані сесії"><i class="fa fa-star" aria-hidden="true"></i></button>
         <span class="zoom-controls"><button class="btn btn-default" type="button" data-zoom="out" title="-"><i class="fa fa-search-minus" aria-hidden="true"></i></button><button class="btn btn-default zoom-level" type="button" data-zoom="reset">100%</button><button class="btn btn-default" type="button" data-zoom="in" title="+"><i class="fa fa-search-plus" aria-hidden="true"></i></button></span>
         <button class="btn btn-default export-png" type="button">
           <i class="fa fa-download" aria-hidden="true"></i>
@@ -66,10 +67,10 @@
     </div>
 
     <div class="row">
-      <div class="col-md-12 calendar-view">
+      <div class="col-md-12 calendar-view" data-favorites-key="{{event.name}}">
         <div id="track-list" class="container wide-container">
         {{#each roomsList}}
-            <div class="{{slug}} calendar day-filter">
+            <div class="{{slug}} calendar day-filter" data-date="{{slug}}" data-start="{{start_time}}">
               <div class="col-md-12 paddingzero">
                 <a class="anchor" id="{{slug}}"></a>
                 <h5 class="text">{{date_ukr}}</h5>
@@ -197,6 +198,7 @@
   <script src="assets/js/FileSaver.js" type="text/javascript"></script>
   <script src="assets/js/html2canvas.min.js" type="text/javascript"></script>
   <script src="assets/js/calendar_zoom.js" type="text/javascript"></script>
+  <script src="assets/js/calendar_extras.js" type="text/javascript"></script>
   <script type="text/javascript">
     $(document).ready(function() {
       function getCurrentDate() {
