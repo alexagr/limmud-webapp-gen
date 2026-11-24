@@ -2326,3 +2326,8 @@ body {
 .session-modal-body p.compact:has(> i.fa) {
   font-size: 12px;
 }
+
+/* Сетка: very short sessions (e.g. 10 min "Зажигание свечей") get at least one readable line */
+.calendar-view .session {
+  min-height: 24px;
+}
