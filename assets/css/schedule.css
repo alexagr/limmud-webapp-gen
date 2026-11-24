@@ -1994,3 +1994,12 @@ body.session-modal-open {
   background-color: #fff;
   color: #333;
 }
+
+/* Сетка search: non-matching sessions fade out */
+.calendar-view .session.search-dim {
+  opacity: 0.15;
+  filter: grayscale(0.6);
+}
+.calendar-view .session {
+  transition: opacity 0.15s;
+}

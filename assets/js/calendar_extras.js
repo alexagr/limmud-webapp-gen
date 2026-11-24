@@ -271,3 +271,36 @@
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
 })();
+
+/*
+ * Search on the Сетка: sessions whose title / presenters don't match fade out
+ * (they stay in place, so the grid keeps its shape and you keep your place in time).
+ */
+(function () {
+  var input = document.querySelector('.grid-search');
+  var view = document.querySelector('.calendar-view');
+  if (!input || !view) return;
+
+  function norm(s) { return String(s || '').toLowerCase().replace(/ё/g, 'е').replace(/\s+/g, ' ').trim(); }
+
+  function apply() {
+    var q = norm(input.value);
+    var sessions = view.querySelectorAll('.session[id^="session-"]');
+    var hits = 0;
+    for (var i = 0; i < sessions.length; i++) {
+      var s = sessions[i];
+      var text = '';
+      var parts = s.querySelectorAll('.find-target');
+      for (var j = 0; j < parts.length; j++) text += ' ' + parts[j].textContent;
+      var match = !q || norm(text).indexOf(q) !== -1;
+      s.classList.toggle('search-dim', !match);
+      if (q && match) hits++;
+    }
+    view.classList.toggle('is-searching', !!q);
+  }
+
+  input.addEventListener('input', apply);
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { input.value = ''; apply(); }
+  });
+})();
