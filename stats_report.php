@@ -33,28 +33,50 @@ $ids = array_values(array_unique($ids));
 sort($ids);
 
 $file = __DIR__ . '/data/stats_' . $app . '.json';
-$fp = fopen($file, 'c+');
-if (!$fp) {
+$lock = fopen($file . '.lock', 'c');   // separate lock file: the data file itself is replaced by rename
+if (!$lock) {
     http_response_code(500);
     exit('{"ok":false}');
 }
-flock($fp, LOCK_EX);
-$data = json_decode(stream_get_contents($fp), true);
-if (!is_array($data)) {
-    $data = array();
-}
-if (!isset($data[$device]) && count($data) >= 20000) {   // guard against flooding with fake devices
-    flock($fp, LOCK_UN);
-    fclose($fp);
-    http_response_code(429);
+flock($lock, LOCK_EX);
+function fail_unlock($lock, $code) {
+    flock($lock, LOCK_UN);
+    fclose($lock);
+    http_response_code($code);
     exit('{"ok":false}');
 }
+$data = array();
+$raw = file_exists($file) ? file_get_contents($file) : '';
+if ($raw !== '' && $raw !== false) {
+    $data = json_decode($raw, true);
+    if (!is_array($data)) {
+        // never overwrite data we cannot read: try the last good copy, otherwise refuse
+        $bak = file_exists($file . '.bak') ? json_decode(file_get_contents($file . '.bak'), true) : null;
+        if (!is_array($bak)) {
+            fail_unlock($lock, 500);
+        }
+        $data = $bak;
+    }
+}
+if (!isset($data[$device]) && count($data) >= 20000) {   // guard against flooding with fake devices
+    fail_unlock($lock, 429);
+}
 $data[$device] = array('s' => $ids, 't' => time());
-ftruncate($fp, 0);
-rewind($fp);
-fwrite($fp, json_encode($data));
-fflush($fp);
-flock($fp, LOCK_UN);
-fclose($fp);
+// atomic write: temp file + rename, so the file is always either the old or the new version
+$tmp = $file . '.tmp';
+$json = json_encode($data);
+if (file_put_contents($tmp, $json) !== strlen($json)) {
+    @unlink($tmp);
+    fail_unlock($lock, 500);
+}
+if (is_array(json_decode($raw, true))) {
+    @copy($file, $file . '.bak');   // keep the previous good version
+}
+if (!rename($tmp, $file)) {
+    @unlink($tmp);
+    fail_unlock($lock, 500);
+}
+flock($lock, LOCK_UN);
+fclose($lock);
 
 echo '{"ok":true}';
