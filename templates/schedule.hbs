@@ -462,7 +462,10 @@
                 .map(el => el.textContent.trim())
                 .join(', ');
 
-              bookmarkedSessions.push({ title, presenters });
+              // card colour of the session type, as on the programme (used by the themed export)
+              const card = document.getElementById(`title-${id}`);
+              const color = card ? getComputedStyle(card).backgroundColor : '';
+              bookmarkedSessions.push({ title, presenters, color });
             }
           }
         });

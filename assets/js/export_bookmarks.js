@@ -220,27 +220,16 @@ async function generateJPEG(bookmarkedSessions) {
   // utility: draw rounded rectangle and text inside
   function drawSessionBox(ctx, x, y, width, height, box) {
     // rounded white rectangle
-    roundRect(ctx, x, y, width, height, RECT_RADIUS, true, false, '#ffffff');
-    if (theme.themed) {
-      // brand accent strip along the left edge of the card
-      ctx.save();
-      roundRect(ctx, x, y, width, height, RECT_RADIUS, false, false);
-      ctx.clip();
-      const a = ctx.createLinearGradient(0, y, 0, y + height);
-      a.addColorStop(0, theme.stripe[0]);
-      a.addColorStop(0.55, theme.stripe[1]);
-      a.addColorStop(1, theme.stripe[2]);
-      ctx.fillStyle = a;
-      ctx.fillRect(x, y, 6, height);
-      ctx.restore();
-    }
+    // themed: filled with the session-type colour like the programme cards, white text; otherwise white card
+    const filled = theme.themed && box.color;
+    roundRect(ctx, x, y, width, height, RECT_RADIUS, true, false, filled ? box.color : '#ffffff');
 
     // prepare inner text area
     const innerX = x + RECT_PADDING_X;
     let innerY = y + RECT_PADDING_Y;
 
     // draw title lines
-    ctx.fillStyle = '#000000';
+    ctx.fillStyle = filled ? '#ffffff' : '#000000';
     ctx.textBaseline = 'top';
     ctx.font = `${box.titleFontSize}px Arial`;
     const titleLines = box.titleLines;
@@ -254,7 +243,7 @@ async function generateJPEG(bookmarkedSessions) {
 
     // draw presenter lines
     ctx.font = `${box.presFontSize}px Arial`;
-    ctx.fillStyle = '#333333';
+    ctx.fillStyle = filled ? 'rgba(255, 255, 255, 0.85)' : '#333333';
     const presLines = box.presLines;
     for (let i = 0; i < presLines.length; i++) {
       ctx.fillText(presLines[i], innerX, innerY);
@@ -356,7 +345,8 @@ function computeBoxSizeForSession(mctx, session, availableRowWidth, forcedWidth 
       titleLines,
       presLines,
       titleLineHeight,
-      presLineHeight
+      presLineHeight,
+      color: session.color || ''
     };
   }
 
