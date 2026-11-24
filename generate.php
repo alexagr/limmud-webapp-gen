@@ -399,7 +399,7 @@ function parse_sheets($client, $config)
             }
         } else {
             $id = count($speakers);
-            $speakers[$id] = array('id' => $id, 'name' => $name, 'name2' => $name2, 'name_first_last' => $name_first_last, 'name2_first_last' => $name2_first_last, 'photo' => $photo, 'photo_parts' => $photo_parts, 'bio' => $bio, 'bio2' => $bio2, 'title' => $title, 'title2' => $title2, 'sessions' => array(), 'has_data' => $has_data);
+            $speakers[$id] = array('id' => $id, 'name' => $name, 'name2' => $name2, 'name_first_last' => $name_first_last, 'name2_first_last' => $name2_first_last, 'photo' => $photo, 'photo_parts' => $photo_parts, 'bio' => $bio, 'bio2' => $bio2, 'title' => $title, 'title2' => $title2, 'sessions' => array(), 'has_data' => $has_data, 'has_photo' => ($photo != 'avatar.png'));   // has_photo: card circles also for presenters without a bio
             $speakers_map[$name] = $id;
         }
     }

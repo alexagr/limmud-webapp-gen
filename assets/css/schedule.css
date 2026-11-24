@@ -2401,3 +2401,34 @@ body {
   line-height: 30px;
   vertical-align: top;
 }
+
+/* desktop track legend: colour dot vertically centred on the track name (was sitting on the text baseline) */
+.title-legend {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.title-legend li.titlecolor {
+  flex: 0 0 12px;
+}
+
+/* phone: card with several presenter photos in a 2-column grid; with an odd number the top-left cell
+   stays empty (_ X / X X), so the rows stay even and the order still follows the presenter names */
+@media screen and (max-width: 767px) {
+  .speaker-short-photo-many {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    justify-content: center;
+    align-content: center;
+    gap: 8px;   /* same gap across and down: 4px visible between the 2px white rings (box-shadow) */
+    padding: calc(.3rem + 2px) 2px 2px 2px;   /* room for the 2px white rings: the row around clips (overflow hidden) */
+    max-width: none;   /* 2 x 40px + 8px gap + 2 x 2px padding = 92px (the old 9rem limit cut the right ring) */
+    flex: 0 0 auto;
+  }
+  .speaker-short-photo-many img {
+    margin: 0;
+  }
+  .speaker-short-photo-many img:first-child:nth-last-child(odd) {
+    grid-column-start: 2;
+  }
+}
