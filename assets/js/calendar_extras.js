@@ -172,3 +172,102 @@
   window.addEventListener('pageshow', markFavorites);
   markFavorites();
 })();
+
+/*
+ * Session details on the Сетка: tapping a session opens a card with the same details as on the
+ * programme page (time, room, language, description, presenters) instead of jumping there.
+ * The details are read from the programme page itself (schedule.html / schedule_he.html ...),
+ * which the service worker has saved, so this also works offline.
+ */
+(function () {
+  var view = document.querySelector('.calendar-view');
+  if (!view) return;
+
+  var cache = {};   // programme page URL -> parsed document (promise)
+
+  function programmeDoc(url) {
+    if (!cache[url]) {
+      cache[url] = fetch(url).then(function (r) { return r.text(); }).then(function (html) {
+        return new DOMParser().parseFromString(html, 'text/html');
+      });
+    }
+    return cache[url];
+  }
+
+  // build the card once
+  var overlay = document.createElement('div');
+  overlay.className = 'session-modal';
+  overlay.innerHTML =
+    '<div class="session-modal-card" role="dialog" aria-modal="true">' +
+    '  <button type="button" class="session-modal-close" aria-label="×">&times;</button>' +
+    '  <h4 class="session-modal-title"></h4>' +
+    '  <div class="session-modal-body"></div>' +
+    '  <div class="session-modal-footer">' +
+    '    <button type="button" class="btn btn-default session-modal-fav"><i class="fa fa-star" aria-hidden="true"></i></button>' +
+    '    <a class="session-modal-link"></a>' +
+    '  </div>' +
+    '</div>';
+  document.body.appendChild(overlay);
+
+  var current = null;   // session element whose details are shown
+
+  function close() {
+    overlay.classList.remove('is-open');
+    document.body.classList.remove('session-modal-open');
+    current = null;
+  }
+
+  function syncFav() {
+    if (!current) return;
+    overlay.querySelector('.session-modal-fav').classList.toggle('is-active', current.classList.contains('is-fav'));
+  }
+
+  function open(session) {
+    var link = session.querySelector('.session-name a');
+    if (!link) return;
+    var href = link.getAttribute('href');                    // e.g. schedule.html#42
+    var page = href.split('#')[0];
+    var id = session.id.replace(/^session-/, '');
+    current = session;
+
+    overlay.querySelector('.session-modal-title').textContent = link.textContent.trim();
+    overlay.querySelector('.session-modal-body').innerHTML = '<p class="session-modal-loading">…</p>';
+    var a = overlay.querySelector('.session-modal-link');
+    a.href = href;
+    var progLabel = document.getElementById('schedulelink');
+    a.innerHTML = (progLabel ? progLabel.textContent.trim() : '') + ' &rarr;';
+    syncFav();
+    overlay.classList.add('is-open');
+    document.body.classList.add('session-modal-open');
+
+    programmeDoc(page).then(function (doc) {
+      if (current !== session) return;
+      var desc = doc.getElementById('desc-' + id);
+      var body = overlay.querySelector('.session-modal-body');
+      if (!desc) { body.innerHTML = ''; return; }
+      body.innerHTML = desc.innerHTML;
+      // presenter links lead to the presenters page - keep them working as normal links
+    }).catch(function () {
+      overlay.querySelector('.session-modal-body').innerHTML = '';
+    });
+  }
+
+  // tap on a session (but not on its ★) opens the card instead of jumping to the programme
+  view.addEventListener('click', function (e) {
+    if (e.target.closest('.grid-fav')) return;
+    var s = e.target.closest('.session[id^="session-"]');
+    if (!s) return;
+    e.preventDefault();
+    open(s);
+  });
+
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay || e.target.closest('.session-modal-close')) { close(); return; }
+    if (e.target.closest('.session-modal-fav') && current) {
+      var star = current.querySelector('.grid-fav');
+      if (star) star.click();           // same toggle as the ★ on the grid (saves + updates the grid)
+      syncFav();
+    }
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+})();

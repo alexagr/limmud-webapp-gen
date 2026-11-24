@@ -184,3 +184,27 @@ a.findbutton {
 .calendar-view {
   --now-color: var(--brand-orange);
 }
+
+/* session details card on the сетка */
+.calendar-view,
+.session-modal {
+  --modal-bg: #241b5c;
+}
+.session-modal-card {
+  border: 1px solid var(--line-color);
+}
+.session-modal-fav {
+  border-radius: 999px;
+  background-color: var(--surface);
+  border-color: var(--line-color);
+  color: var(--body-color);
+}
+.session-modal-fav.is-active {
+  background-color: var(--brand-orange);
+  border-color: var(--brand-orange);
+  color: #fff;
+}
+.session-modal-link {
+  color: var(--brand-orange);
+  font-weight: 600;
+}
