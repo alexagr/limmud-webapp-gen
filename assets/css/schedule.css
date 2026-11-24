@@ -2271,3 +2271,8 @@ html,
 body {
   overflow-x: clip;
 }
+
+/* search fields: smaller placeholder ("Поиск"); typed text stays 16px so iPhone Safari does not zoom in on focus */
+.search-filter-input::placeholder {
+  font-size: 14px;
+}
