@@ -46,6 +46,7 @@
   if ('serviceWorker' in navigator) {
     
     _updateReady = function(worker) {
+      window.appUpdating = true;   // notify.js waits: the page reloads in a moment
       Snackbar.show({
         text: 'Found new Web App version',
         pos: 'bottom-center',

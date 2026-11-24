@@ -288,3 +288,47 @@ a.findbutton:visited,
 :root {
   --tip-chip: linear-gradient(90deg, #654ADC 0%, #F324D4 55%, #FD7A31 100%);
 }
+
+/* admin message popup (assets/js/notify.js, SweetAlert2): dark card with brand gradient edge and button.
+   "body" prefix: sweetalert2 injects its own CSS after this file */
+body .swal2-container.swal2-backdrop-show {
+  background: rgba(10, 6, 35, 0.6);
+}
+body .swal2-popup {
+  background: #2a2163;
+  color: #ffffff;
+  border-radius: 18px;
+  border: 0;
+  box-shadow: 0 0 0 1px rgba(243, 36, 212, 0.35), 0 12px 40px rgba(0, 0, 0, 0.55), 0 0 60px rgba(101, 74, 220, 0.35);
+  overflow: hidden;
+  padding-top: 1.6em;
+}
+body .swal2-popup::before {   /* brand gradient strip on top */
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 5px;
+  background: var(--brand-gradient);
+}
+body .swal2-icon.swal2-info {
+  border-color: var(--brand-pink);
+  color: var(--brand-pink);
+}
+body .swal2-html-container {
+  color: #ffffff;
+  font-family: 'Inter', 'Rubik', sans-serif;
+  font-weight: 500;
+  line-height: 1.4;
+}
+body .swal2-styled.swal2-confirm {
+  background: var(--brand-gradient);
+  border: 0;
+  border-radius: 999px;
+  padding: 0.55em 2.2em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  box-shadow: 0 4px 14px rgba(243, 36, 212, 0.35);
+}
+body .swal2-styled.swal2-confirm:focus {
+  box-shadow: 0 0 0 3px rgba(243, 36, 212, 0.4);
+}
