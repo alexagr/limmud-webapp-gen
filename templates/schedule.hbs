@@ -203,15 +203,15 @@
                       {{/if}}
                       <div class="session-speakers-list">
                         {{#each speakers_list}}
-                          {{#if has_data}}
-                        <a href="speakers.html#{{id}}">
+                          {{#if name}}
+                        {{#if has_data}}<a href="speakers.html#{{id}}">{{else}}<div>{{/if}}
                           {{#if photo}}
                             <p class="session-speakers"><img onError="this.onerror=null;this.src='assets/img/avatar.png';" class="card-img-top speaker-image-small" src="speakers/thumbs/{{{photo}}}"/></p>
                           {{else}}
                             <p class="session-speakers"><img class="card-img-top speaker-image-small" src="assets/img/avatar.png"/></p>
                           {{/if}}
                           <p><span class="session-speaker-name">{{name_first_last}}</span></p>
-                        </a>
+                        {{#if has_data}}</a>{{else}}</div>{{/if}}
                           {{#if bio}}
                           {{#each bio}}
                         <p class="compact">{{{this}}}</p>
