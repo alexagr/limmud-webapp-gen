@@ -3,7 +3,7 @@
   <footer class="classic">
     <div class="container">
       <div class="row ui-sortable">
-        <div  style="margin-bottom: 14px;" class="col-sm-7 col-md-7 col-xs-12">
+        <div  style="margin-bottom: 14px;" class="col-xs-12 text-center footer-copyright">
          {{#if event.copyright}}
          {{#if event.copyright.licence}}
          <p>
@@ -19,23 +19,6 @@
          {{/if}}
         {{/if}}
         </div>
-    <div  class="contact-details col-sm-5 col-md-5 col-xs-12">
-      <ul class="contact-methods">
-       {{#if event.email}}
-        <li>
-
-        <i class="fa fa-envelope"></i>
-          <span>
-          <a href="mailto:{{event.email}}" target="_self">
-          {{event.email}}
-          </a>
-          </span>
-
-
-        </li>
-        {{/if}}
-      </ul>
-    </div>
   </div>
   <div class="row ui-sortable">
     <div class="col-sm-12 text-center">
@@ -43,6 +26,9 @@
         {{#each event.social_links}}
           <li><a href="{{link}}"><i class="fab fa-lg fa-{{icon}}" aria-hidden="true" title="{{{name}}}"></i></a></li>
         {{/each}}
+        {{#if event.email}}
+          <li><a href="mailto:{{event.email}}"><i class="fas fa-lg fa-envelope" aria-hidden="true" title="{{event.email}}"></i></a></li>
+        {{/if}}
       </ul>
     </div>
   </div>
