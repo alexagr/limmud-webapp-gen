@@ -187,11 +187,6 @@ a.findbutton:visited,
   color: var(--muted);
 }
 
-/* colour legend dots */
-.track-legend-color {
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4);
-}
-
 /* сетка: thin vertical line between room names only (not in the grid below).
    Drawn 2px left of the column edge, i.e. centred in the ~4px gap between neighbouring sessions. */
 .room + .room .room-header::before {
