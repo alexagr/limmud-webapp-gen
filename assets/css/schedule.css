@@ -2176,3 +2176,9 @@ body.exporting .rooms {
 .home-tips li {
   text-align: start;   /* no justified gaps between words */
 }
+/* phone-only tips (menu, install app) stay hidden on wider screens */
+@media (min-width: 601px) {
+  .home-tips li.mobile {
+    display: none;
+  }
+}
