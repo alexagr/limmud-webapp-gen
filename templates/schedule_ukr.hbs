@@ -357,7 +357,7 @@
         $('.track-names').show();
         if ($('.track-inline:visible').length == 0) {
           const message = (filterVal) ? 'Нічого не знайдено' : 'Закладок немає';
-          ($('.date-list:visible').first().length ? $('.date-list:visible').first() : $('.date-list').first()).after("<p style = 'padding-left: 15px; margin-top: 15px; font-weight: bold; color: red; text-align: center;' id='no-results'>"+message+"</p>");
+          $('.date-list').last().after("<p style = 'padding-left: 15px; margin-top: 15px; font-weight: bold; color: red; text-align: center;' id='no-results'>"+message+"</p>");
           $('.track-names').hide();
         }
       }

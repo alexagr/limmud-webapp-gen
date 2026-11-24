@@ -366,7 +366,7 @@
         $('.track-names').show();
         if ($('.track-inline:visible').length == 0) {
           const message = (filterVal) ? 'No matches' : 'No bookmarks';
-          ($('.date-list:visible').first().length ? $('.date-list:visible').first() : $('.date-list').first()).after('<p class="no-bookmarks" id="no-results">'+message+'</p>');
+          $('.date-list').last().after('<p class="no-bookmarks" id="no-results">'+message+'</p>');
           $('.track-names').hide();
         }
       }
