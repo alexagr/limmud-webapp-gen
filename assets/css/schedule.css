@@ -1868,7 +1868,11 @@ a, button, .btn {
   padding-left: 16px;
 }
 .calendar-view.only-favorites .session:not(.is-fav) {
-  visibility: hidden;
+  opacity: 0.15;              /* "Мой Лимуд": unmarked sessions fade out, like search */
+  filter: grayscale(0.6);
+}
+body.exporting .calendar-view.only-favorites .session:not(.is-fav) {
+  visibility: hidden;         /* ...but the downloaded picture contains only the marked ones */
 }
 
 
