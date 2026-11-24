@@ -1790,10 +1790,6 @@ a, button, .btn {
 /* text in the grid follows the zoom (never below 9px) */
 .calendar-view .session {
   font-size: max(9px, calc(14px * var(--zy, 1)));
-  /* long words in narrow columns: break with a hyphen (by the page language), never overflow */
-  -webkit-hyphens: auto;
-  hyphens: auto;
-  overflow-wrap: anywhere;
 }
 .calendar-view .session-details {
   font-size: max(9px, calc(12px * var(--zy, 1)));
