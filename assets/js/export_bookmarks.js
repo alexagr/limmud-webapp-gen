@@ -45,10 +45,11 @@ function exportTheme() {
   return {
     themed: true,
     background: v('--background-color') || '#1b1446',
+    // the START page poster (festival name, dates, place) as the banner on top
+    logoSrc: 'assets/img/poster_' + (((navLogo && navLogo.getAttribute('alt')) || document.title || '').match(/\d{4}/) || [''])[0] + '_desktop.png',
     stripe: ['#654ADC', v('--brand-pink') || '#F324D4', v('--brand-orange') || '#FD7A31'],
-    logoSrc: navLogo ? navLogo.getAttribute('src') : 'assets/img/logo.png',
-    logoHeight: 56,
-    logoWidth: null    // from the image proportions
+    festival: (navLogo && navLogo.getAttribute('alt')) || document.title || '',
+    logoWidth: null    // banner: full width, height from the image proportions
   };
 }
 
@@ -59,9 +60,8 @@ async function generateJPEG(bookmarkedSessions) {
     console.warn('Failed to load logo image:', err);
     return null;
   });
-  if (logo && !theme.logoWidth) {
-    theme.logoWidth = Math.round(logo.naturalWidth * theme.logoHeight / logo.naturalHeight);
-  }
+  // themed: the poster banner across the top (0 if it could not be loaded - then the festival name is written instead)
+  const bannerHeight = (theme.themed && logo) ? Math.round(CANVAS_WIDTH * logo.naturalHeight / logo.naturalWidth) : 0;
 
   // create a temporary context to measure text (off-screen canvas)
   const measureCanvas = document.createElement('canvas');
@@ -72,7 +72,7 @@ async function generateJPEG(bookmarkedSessions) {
   mctx.font = HEADER_FONT;
   const headerHeight = 48; // approximate (font uses 32px plus spacing)
   const headerTopArea = theme.themed
-    ? 30 + headerHeight + 16                                    // header text (moved down 30px) + gap
+    ? bannerHeight + 20 + headerHeight + (bannerHeight ? 0 : 30) + 4 - PADDING   // banner + header (+ festival name) + gap
     : Math.max(headerHeight, (logo ? LOGO_HEIGHT : 0)); // no extra gap
 
   // available width for a row (between left padding and right padding)
@@ -154,13 +154,20 @@ async function generateJPEG(bookmarkedSessions) {
   ctx.fillStyle = theme.background;
   ctx.fillRect(0, 0, CANVAS_WIDTH, canvasHeight);
   if (theme.themed) {
-    // thin brand-gradient stripe along the top
-    const g = ctx.createLinearGradient(0, 0, CANVAS_WIDTH, 0);
-    g.addColorStop(0, theme.stripe[0]);
-    g.addColorStop(0.55, theme.stripe[1]);
-    g.addColorStop(1, theme.stripe[2]);
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, CANVAS_WIDTH, 8);
+    // soft coloured glows like on the poster: pink bottom-left, orange bottom-right, purple top-right
+    const glow = (x, y, r, color) => {
+      const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+      g.addColorStop(0, color);
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, CANVAS_WIDTH, canvasHeight);
+    };
+    glow(0, canvasHeight, CANVAS_WIDTH * 0.75, 'rgba(243, 36, 212, 0.55)');
+    glow(CANVAS_WIDTH, canvasHeight, CANVAS_WIDTH * 0.6, 'rgba(253, 122, 49, 0.45)');
+    glow(CANVAS_WIDTH, bannerHeight, CANVAS_WIDTH * 0.6, 'rgba(101, 74, 220, 0.45)');
+    if (logo) {
+      ctx.drawImage(logo, 0, 0, CANVAS_WIDTH, bannerHeight);
+    }
   }
 
   // draw header text at top-left
@@ -168,21 +175,19 @@ async function generateJPEG(bookmarkedSessions) {
   ctx.fillStyle = HEADER_COLOR;
   ctx.textBaseline = 'top';
   const headerX = PADDING;
-  const headerY = PADDING + 30; // moved down by 30px
+  const headerY = theme.themed ? bannerHeight + 20 : PADDING + 30; // below the banner / moved down by 30px
   ctx.fillText('Мой ТОП лист', headerX, headerY);
+  if (theme.themed && !bannerHeight && theme.festival) {
+    // no poster: festival name under the header
+    ctx.font = '600 20px "Arial"';
+    ctx.fillText(theme.festival, headerX, headerY + 44);
+  }
 
-  // draw logo top-right if available
-  if (logo) {
-    if (theme.themed) {
-      // navbar logo, vertically centred on the header text
-      const logoX = CANVAS_WIDTH - PADDING - theme.logoWidth;
-      const logoY = headerY + 16 - theme.logoHeight / 2;
-      ctx.drawImage(logo, logoX, logoY, theme.logoWidth, theme.logoHeight);
-    } else {
-      const logoX = CANVAS_WIDTH - LOGO_WIDTH;
-      const logoY = 0;
-      ctx.drawImage(logo, logoX, logoY, LOGO_WIDTH, LOGO_HEIGHT);
-    }
+  // draw logo top-right if available (themed: the banner was drawn with the background)
+  if (logo && !theme.themed) {
+    const logoX = CANVAS_WIDTH - LOGO_WIDTH;
+    const logoY = 0;
+    ctx.drawImage(logo, logoX, logoY, LOGO_WIDTH, LOGO_HEIGHT);
   }
 
   // draw rows
@@ -216,6 +221,19 @@ async function generateJPEG(bookmarkedSessions) {
   function drawSessionBox(ctx, x, y, width, height, box) {
     // rounded white rectangle
     roundRect(ctx, x, y, width, height, RECT_RADIUS, true, false, '#ffffff');
+    if (theme.themed) {
+      // brand accent strip along the left edge of the card
+      ctx.save();
+      roundRect(ctx, x, y, width, height, RECT_RADIUS, false, false);
+      ctx.clip();
+      const a = ctx.createLinearGradient(0, y, 0, y + height);
+      a.addColorStop(0, theme.stripe[0]);
+      a.addColorStop(0.55, theme.stripe[1]);
+      a.addColorStop(1, theme.stripe[2]);
+      ctx.fillStyle = a;
+      ctx.fillRect(x, y, 6, height);
+      ctx.restore();
+    }
 
     // prepare inner text area
     const innerX = x + RECT_PADDING_X;
