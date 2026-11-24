@@ -232,3 +232,15 @@ a.findbutton {
   border-color: var(--brand-orange);
   color: #fff;
 }
+
+/* download buttons (programme "Сохранить закладки", сетка PNG): dark lavender instead of white */
+#save-bookmarks-button,
+#save-bookmarks-button:hover,
+#save-bookmarks-button:focus,
+.export-png,
+.export-png:hover,
+.export-png:focus {
+  background-color: var(--surface);
+  border-color: var(--line-color);
+  color: var(--body-color);
+}

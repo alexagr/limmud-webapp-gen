@@ -29,6 +29,9 @@
       badge.textContent = n;
       badge.style.display = n ? '' : 'none';
     }
+    // "Сохранить закладки" row on the programme page: only when something is marked
+    var save = document.getElementById('save-bookmarks');
+    if (save) save.style.display = n ? '' : 'none';
   }
 
   // a ★ was tapped somewhere on the page - the page's own handler saves first, then we recount
