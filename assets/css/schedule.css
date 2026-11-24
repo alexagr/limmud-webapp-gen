@@ -2354,3 +2354,25 @@ body {
   top: 50%;
   transform: translateY(-50%);
 }
+
+/* presenter with several photos (photo cell "a.jpg, b.jpg"): the round pictures sit side by side */
+.speaker-image:has(.speaker-photo + .speaker-photo) {
+  display: flex;              /* same 300px height as a single photo, so the rows of presenters stay aligned */
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+}
+.speaker-image .speaker-photo + .speaker-photo,
+.speaker-image .speaker-photo:has(+ .speaker-photo) {
+  display: inline-block;
+  width: 145px;
+  height: 145px;
+  margin: 0 2px;
+}
+.session-speakers img + img {
+  margin-left: 6px;
+}
+[dir="rtl"] .session-speakers img + img {
+  margin-left: 0;
+  margin-right: 6px;
+}

@@ -344,12 +344,17 @@ function parse_sheets($client, $config)
 
         $name2 = get_cell($header, $row, $config['presenter_name2_column'], $name);
         $photo = get_cell($header, $row, $config['presenter_photo_column'], '');
-        if (empty($photo)) {
-            $photo = 'avatar.png';
-        } else {
-            if (strpos($photo, '.') === false) {
-                $photo .= '.jpg';
+        // several photos ("rina.jpg, ilia.jpg" or "rina.jpg ilia.jpg", e.g. a couple): each is shown as its
+        // own round picture next to the others; 'photo' stays the first one
+        $photo_parts = preg_split('/[\s,]+/', trim($photo), -1, PREG_SPLIT_NO_EMPTY);
+        foreach ($photo_parts as $k => $part) {
+            if (strpos($part, '.') === false) {
+                $photo_parts[$k] = $part . '.jpg';
             }
+        }
+        $photo = empty($photo_parts) ? 'avatar.png' : $photo_parts[0];
+        if (empty($photo_parts)) {
+            $photo_parts = array('avatar.png');
         }
 
         $bio = get_cell($header, $row, $config['presenter_bio_column'], '');
@@ -394,7 +399,7 @@ function parse_sheets($client, $config)
             }
         } else {
             $id = count($speakers);
-            $speakers[$id] = array('id' => $id, 'name' => $name, 'name2' => $name2, 'name_first_last' => $name_first_last, 'name2_first_last' => $name2_first_last, 'photo' => $photo, 'bio' => $bio, 'bio2' => $bio2, 'title' => $title, 'title2' => $title2, 'sessions' => array(), 'has_data' => $has_data);
+            $speakers[$id] = array('id' => $id, 'name' => $name, 'name2' => $name2, 'name_first_last' => $name_first_last, 'name2_first_last' => $name2_first_last, 'photo' => $photo, 'photo_parts' => $photo_parts, 'bio' => $bio, 'bio2' => $bio2, 'title' => $title, 'title2' => $title2, 'sessions' => array(), 'has_data' => $has_data);
             $speakers_map[$name] = $id;
         }
     }
@@ -1473,12 +1478,20 @@ function generate()
     // is downloaded again by browsers and the service worker (e.g. speakers/thumbs/x.jpg?v=1764023456)
     foreach ($speakers as $key => $speaker) {
         $dir = __DIR__ . '/' . $event['app_name'] . '/speakers/';
-        foreach (array($dir . 'thumbs/' . $speaker['photo'], $dir . $speaker['photo']) as $file) {
-            if ($speaker['photo'] != 'avatar.png' && file_exists($file)) {
-                $speakers[$key]['photo'] = $speaker['photo'] . '?v=' . filemtime($file);
-                break;
+        $parts = !empty($speaker['photo_parts']) ? $speaker['photo_parts'] : array($speaker['photo']);
+        $photos = array();
+        foreach ($parts as $part) {
+            $versioned = $part;
+            foreach (array($dir . 'thumbs/' . $part, $dir . $part) as $file) {
+                if ($part != 'avatar.png' && file_exists($file)) {
+                    $versioned = $part . '?v=' . filemtime($file);
+                    break;
+                }
             }
+            $photos[] = array('photo' => $versioned);
         }
+        $speakers[$key]['photos'] = $photos;           // templates: {{#each photos}} one round picture each
+        $speakers[$key]['photo'] = $photos[0]['photo'];
     }
 
     $event['main_language'] = 'ru';
@@ -1596,7 +1609,9 @@ function build_precache_list($event, $pages, $speakers)
 
     // presenter thumbnails actually used in the programme
     foreach ($speakers as $speaker) {
-        $parts = explode('?', $speaker['photo'], 2);
+      $photos = !empty($speaker['photos']) ? $speaker['photos'] : array(array('photo' => $speaker['photo']));
+      foreach ($photos as $p) {
+        $parts = explode('?', $p['photo'], 2);
         if (empty($parts[0]) || $parts[0] == 'avatar.png') {
             continue;
         }
@@ -1607,6 +1622,7 @@ function build_precache_list($event, $pages, $speakers)
                 $list[] = $folder . rawurlencode($parts[0]) . $query;
             }
         }
+      }
     }
 
     return array_values(array_unique($list));

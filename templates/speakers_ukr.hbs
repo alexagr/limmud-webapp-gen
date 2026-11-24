@@ -62,7 +62,7 @@
       <div class="speaker-container">
         <p id="speaker-{{id}}" class="speaker-image" data-toggle="collapse" data-target="#desc-{{id}}">
         {{#if photo}}
-        <img onError="this.onerror=null;this.src='assets/img/avatar.png';"  class="speaker-photo" alt="{{{name}}}" src="speakers/{{{photo}}}"/>
+        {{#each photos}}<img onError="this.onerror=null;this.src='assets/img/avatar.png';"  class="speaker-photo" alt="{{{../name}}}" src="speakers/{{{photo}}}"/>{{/each}}
         {{else}}
         <img class="background-image" alt="{{{name}}}" src="assets/img/avatar.png"/>
         {{/if}}
