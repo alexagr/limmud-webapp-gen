@@ -2309,3 +2309,8 @@ body {
   right: auto;
   left: -2px;
 }
+
+/* Сетка session card: no bottom row (★ + "Программа →") - the star is on the grid box itself */
+.session-modal-footer {
+  display: none;
+}
