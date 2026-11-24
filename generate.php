@@ -117,6 +117,8 @@ function get_defaults()
         'event_date2_column' => 'event-date-he',
         'event_poster_column' => 'poster',
         'event_poster_mobile_column' => 'poster-mobile',
+        'event_poster2_column' => 'poster-he',
+        'event_poster_mobile2_column' => 'poster-mobile-he',
         'event_map_column' => 'map',
         'event_map2_column' => 'map-he',
         'event_organizer_name_column' => 'organizer-name',
@@ -175,6 +177,9 @@ function parse_sheets($client, $config)
         $event['date2'] = get_cell($header, $row, $config['event_date2_column'], $event['date2']);
         $event['poster'] = get_cell($header, $row, $config['event_poster_column'], '');
         $event['poster_mobile'] = get_cell($header, $row, $config['event_poster_mobile_column'], '');
+        // optional second-language posters (fall back to the main ones)
+        $event['poster2'] = get_cell($header, $row, $config['event_poster2_column'], '') ?: $event['poster'];
+        $event['poster_mobile2'] = get_cell($header, $row, $config['event_poster_mobile2_column'], '') ?: $event['poster_mobile'];
         $event['map'] = get_cell($header, $row, $config['event_map_column'], '');
         $event['map2'] = get_cell($header, $row, $config['event_map2_column'], '');
         $event['organizer_name'] = get_cell($header, $row, $config['event_organizer_name_column'], $event['organizer_name']);
