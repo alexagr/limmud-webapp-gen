@@ -2089,3 +2089,35 @@ body.exporting .rooms {
   padding-left: 12px;   /* space between the time and the vertical line */
   padding-right: 0;
 }
+
+/* Presenters page: ★ on each session card (assets/js/presenters_favorites.js) */
+.speaker-event {
+  position: relative;
+}
+.speaker-event .event-fav {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  padding: 2px 4px;
+  border: 0;
+  background: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 1;
+}
+[dir="rtl"] .speaker-event .event-fav {
+  right: auto;
+  left: 8px;
+}
+.speaker-event.is-fav .event-fav {
+  color: rgb(255, 255, 0);
+}
+.speaker-event h4 {
+  padding-right: 22px;
+}
+[dir="rtl"] .speaker-event h4 {
+  padding-right: 0;
+  padding-left: 22px;
+}
