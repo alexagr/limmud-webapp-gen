@@ -71,13 +71,36 @@ body,
   color: #fff;
 }
 
-/* home page buttons: "Программа" in the same orange as the current menu item */
+/* home page buttons: "Регистрация" = main action (brand gradient), "Программа" = outlined in orange */
+.button-primary,
+.button-info {
+  min-width: 150px;
+  border-radius: 999px;
+  font-weight: 600;
+  transition: transform 0.15s, box-shadow 0.15s, background-color 0.15s;
+}
+.button-primary,
+.button-primary:hover,
+.button-primary:focus {
+  background: var(--brand-gradient);
+  border: 2px solid transparent;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(243, 36, 212, 0.35);
+}
 .button-info,
-.button-info:hover,
 .button-info:focus {
-  background-color: var(--brand-orange);
+  background: transparent;
+  border: 2px solid var(--brand-orange);
+  color: var(--brand-orange);
+}
+.button-info:hover {
+  background: var(--brand-orange);
   border-color: var(--brand-orange);
   color: #fff;
+}
+.button-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(243, 36, 212, 0.45);
 }
 
 /* search + favourites filter */
