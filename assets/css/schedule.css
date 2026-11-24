@@ -2320,7 +2320,9 @@ body {
 }
 
 /* Сетка session card: time / room / language lines and presenter bio a bit smaller than the description */
-.session-modal-body p.compact:has(> i.fa),
 .session-modal-body .session-speakers-list p.compact {
   font-size: 13px;
+}
+.session-modal-body p.compact:has(> i.fa) {
+  font-size: 12px;
 }
