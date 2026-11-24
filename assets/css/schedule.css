@@ -2078,3 +2078,14 @@ body.exporting .now-label {
 body.exporting .rooms {
   background-image: none !important;
 }
+
+/* Hebrew (RTL) programme: time at the outer edge of its column, away from the vertical line - mirrors LTR */
+[dir="rtl"] .eventtime h4,
+[dir="rtl"] .eventtime .now-pill {
+  text-align: right;
+}
+[dir="rtl"] .eventtime {
+  text-align: right;
+  padding-left: 12px;   /* space between the time and the vertical line */
+  padding-right: 0;
+}
