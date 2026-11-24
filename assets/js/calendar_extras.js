@@ -216,6 +216,9 @@
     overlay.classList.remove('is-open');
     document.body.classList.remove('session-modal-open');
     current = null;
+    // the tapped session link keeps focus otherwise (underlined, other colour after Esc)
+    var a = document.activeElement;
+    if (a && a.closest && a.closest('.calendar .session')) a.blur();
   }
 
   function syncFav() {
