@@ -2206,3 +2206,30 @@ body.exporting .rooms {
 .search-sticky {
   padding-top: 6px;   /* keeps the 14px gap below the day tabs */
 }
+/* sticky search row: background band drawn with ::before (ends exactly at the row's edge, so it never
+   covers the сетка room names below), soft shadow drawn with ::after (transparent fade) */
+.search-sticky,
+.search-sticky.is-stuck {
+  box-shadow: none;
+  clip-path: none;
+}
+.search-sticky::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -100vmax;
+  right: -100vmax;
+  background-color: var(--background-color);
+  z-index: -1;
+}
+.search-sticky.is-stuck::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: -100vmax;
+  right: -100vmax;
+  height: 8px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0));
+  pointer-events: none;
+}

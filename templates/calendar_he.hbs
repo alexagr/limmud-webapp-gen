@@ -54,6 +54,10 @@
           {{/each}}
         </span>
       </div>
+    </div>
+
+    <!-- search row: stays visible under the menu while scrolling -->
+    <div class="date-list container search-sticky">
       <div class="search">
         <span class="filter search-filter search-filter-schedule">
           <input class="search-filter-input grid-search" type="text" placeholder="חיפוש">
@@ -207,6 +211,7 @@
   <script src="assets/js/calendar_zoom.js" type="text/javascript"></script>
   <script src="assets/js/calendar_extras.js" type="text/javascript"></script>
   <script src="assets/js/favorites_count.js" type="text/javascript"></script>
+  <script src="assets/js/sticky_search.js" type="text/javascript"></script>
   <script type="text/javascript">
     $(document).ready(function() {
       function getCurrentDate() {

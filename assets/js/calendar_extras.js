@@ -111,7 +111,8 @@
     e.preventDefault();
     e.stopPropagation();
     var nav = document.querySelector('.navbar-fixed-top');
-    var offset = (nav ? nav.getBoundingClientRect().bottom : 0) + 120;
+    var bar = document.querySelector('.search-sticky');
+    var offset = (nav ? nav.getBoundingClientRect().bottom : 0) + (bar ? bar.offsetHeight : 0) + 120;
     window.scrollTo({top: nowTarget.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth'});
   }, true);
 

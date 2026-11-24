@@ -108,9 +108,11 @@
   });
 
   // --- room names stay visible while scrolling down a day ---
+  // the room names stick below the menu and the search row that stays visible under it
   function navbarHeight() {
     var nav = document.querySelector('.navbar-fixed-top');
-    return nav ? nav.getBoundingClientRect().bottom : 0;
+    var bar = document.querySelector('.search-sticky');
+    return Math.max(nav ? nav.getBoundingClientRect().bottom : 0, bar ? bar.getBoundingClientRect().bottom : 0);
   }
 
   function updateHeaders() {
