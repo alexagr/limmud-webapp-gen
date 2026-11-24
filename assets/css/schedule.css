@@ -2445,3 +2445,23 @@ body {
     grid-column-start: 2;
   }
 }
+
+/* Сетка (desktop): colour legend under the grid as one centred row that wraps, close to the grid
+   (was fixed 215px columns starting left of the grid, with a large gap above) */
+.track-names.track-names-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 28px;
+  margin-top: 24px;
+  padding-left: 0;
+  padding-right: 0;
+}
+[dir="rtl"] .track-names.track-names-grid {
+  margin-right: 0;
+}
+.track-names-grid .title-legend {
+  float: none;
+  width: auto;
+  margin: 0;
+}
