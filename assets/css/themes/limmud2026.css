@@ -141,54 +141,17 @@ body,
   color: var(--brand-orange);
 }
 
-/* bottom-left buttons: round buttons in the brand gradient with white icons (like the active day tab);
-   a tap gives a short glow, the open search turns solid orange */
+/* bottom-left buttons: calm lavender; click highlight and open search in brand orange */
 :root {
+  --fab-color: #8f88c4;
+  --fab-active: var(--brand-orange);
   --find-accent: var(--brand-orange);
-}
-#now-button,
-#down-button,
-#find-button-div {
-  left: 9px;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: var(--brand-gradient);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45);
-  color: #fff;
-  font-size: 16px;
-  line-height: 36px;
-  text-align: center;
-  transition: box-shadow 0.2s, transform 0.2s;
-}
-#down-button { bottom: 8px; }
-#find-button-div { bottom: 52px; }
-#now-button { bottom: 96px; }
-[dir="rtl"] #now-button,
-[dir="rtl"] #down-button,
-[dir="rtl"] #find-button-div {
-  left: auto;
-  right: 9px;
-}
-#now-button:hover, #now-button:focus,
-#down-button:hover, #down-button:focus {
-  color: #fff;
-}
-#now-button.is-flash,
-#down-button.is-flash {
-  color: #fff;
-  box-shadow: 0 0 0 4px rgba(253, 122, 49, 0.45), 0 3px 10px rgba(0, 0, 0, 0.45);
-  transform: scale(1.08);
-}
-#find-button-div.is-open {
-  background: var(--brand-orange);
 }
 a.findbutton,
 a.findbutton:hover,
 a.findbutton:visited,
 #find-button {
-  color: #fff;
-  font-size: 16px;
+  color: var(--background-color);   /* dark magnifier on the round button */
 }
 #find-field {
   background-color: var(--surface);
@@ -291,12 +254,4 @@ a.findbutton:visited,
   background-color: var(--surface);
   border-color: var(--line-color);
   color: var(--body-color);
-}
-#down-button {
-  justify-content: center;
-  align-items: center;
-}
-#down-button i,
-#now-button i {
-  line-height: 36px;
 }
