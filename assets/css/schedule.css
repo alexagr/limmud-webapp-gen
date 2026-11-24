@@ -2047,3 +2047,32 @@ body.session-modal-open {
 #find-next {
   color: var(--find-accent, #60b0ff);
 }
+
+/* Programme: "now" divider (assets/js/programme_now.js) */
+.now-divider {
+  position: relative;
+  height: 2px;
+  margin: 4px 12px 14px 0;
+  background-color: var(--now-color, #ff8700);
+  box-shadow: 0 0 6px var(--now-color, #ff8700);
+  clear: both;
+}
+.now-divider-time {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 1px 8px;
+  border-radius: 6px;
+  background-color: var(--now-color, #ff8700);
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+}
+[dir="rtl"] .now-divider {
+  margin: 4px 0 14px 12px;
+}
+[dir="rtl"] .now-divider-time {
+  left: auto;
+  right: 0;
+}

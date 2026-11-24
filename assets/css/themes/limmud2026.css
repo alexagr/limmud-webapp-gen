@@ -262,3 +262,7 @@ a.findbutton:visited,
 #now-button.is-flash {
   color: var(--brand-orange);
 }
+/* programme "now" divider in brand orange (same as the сетка line) */
+:root {
+  --now-color: var(--brand-orange);
+}
