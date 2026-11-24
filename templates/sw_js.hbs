@@ -58,8 +58,28 @@ self.addEventListener('fetch', function(event) {
     return;  // let the browser handle anything that is not a plain GET
   }
 
+  // pages: network first, so a regenerated programme shows on the next reload;
+  // the saved copy is used only offline (or if the server does not answer)
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request, {cache: 'no-cache'}).then(function(response) {
+        if (response && response.ok && response.type === 'basic') {
+          var copy = response.clone();
+          caches.open(CACHE_NAME).then(function(cache) { cache.put(request, copy); });
+        }
+        return response;
+      }).catch(function() {
+        return caches.match(request, {ignoreSearch: true}).then(function(cached) {
+          return cached || caches.match('assets/offline.html');
+        });
+      })
+    );
+    return;
+  }
+
+  // everything else (photos, css, js, fonts): saved copy first
   event.respondWith(
-    caches.match(request, {ignoreSearch: request.mode === 'navigate'}).then(function(cached) {
+    caches.match(request).then(function(cached) {
       if (cached) {
         return cached;
       }
