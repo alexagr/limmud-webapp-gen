@@ -1,6 +1,7 @@
 /*
- * Programme page: "now" divider - a thin orange line with the current Israel time, placed after the
- * last time group that has already started (festival days only). The clock button scrolls to it.
+ * Programme page: "now" marker - the time group that is running now (last one that has already started)
+ * gets an orange time label and a small pill with the current Israel time under it (festival days only).
+ * The clock button scrolls to that group.
  * For testing, add ?now=2026-12-17T19:40 to the address.
  */
 (function () {
@@ -35,11 +36,19 @@
     return mins < 5 * 60 ? mins + 24 * 60 : mins;
   }
 
-  var divider = null;
+  var current = null;   // the time group marked as "now"
+
+  function clear() {
+    if (!current) return;
+    current.classList.remove('is-now');
+    var pill = current.querySelector('.now-pill');
+    if (pill) pill.remove();
+    current = null;
+  }
 
   function place() {
     var now = israelNow();
-    if (divider) { divider.remove(); divider = null; }
+    clear();
 
     var days = document.querySelectorAll('.day-filter');
     for (var i = 0; i < days.length; i++) {
@@ -60,10 +69,13 @@
       }
       if (!last || mins - lastStart > LATEST_AFTER_LAST_START) continue;
 
-      divider = document.createElement('div');
-      divider.className = 'now-divider';
-      divider.innerHTML = '<span class="now-divider-time">' + pad(Math.floor(now.minutes / 60) % 24) + ':' + pad(now.minutes % 60) + '</span>';
-      last.parentNode.insertBefore(divider, last.nextSibling);
+      current = last;
+      current.classList.add('is-now');
+      var pill = document.createElement('div');
+      pill.className = 'now-pill';
+      pill.textContent = pad(Math.floor(now.minutes / 60) % 24) + ':' + pad(now.minutes % 60);
+      var label = current.querySelector('.eventtime');
+      if (label) label.appendChild(pill);
       return;
     }
   }
@@ -74,18 +86,18 @@
     if (e.target.closest && e.target.closest('.date-button')) setTimeout(place, 0);
   });
 
-  // clock button: during the festival scroll to the divider (otherwise keep its old behaviour)
+  // clock button: during the festival scroll to the running time group (otherwise keep its old behaviour)
   document.addEventListener('click', function (e) {
     var btn = e.target.closest && e.target.closest('#now-button');
     if (!btn) return;
     place();
-    if (!divider || !divider.offsetParent) return;
+    if (!current || !current.offsetParent) return;
     e.preventDefault();
     e.stopPropagation();
     btn.classList.add('is-flash');
     setTimeout(function () { btn.classList.remove('is-flash'); }, 2000);
     var nav = document.querySelector('.navbar-fixed-top');
-    var offset = (nav ? nav.getBoundingClientRect().bottom : 0) + 120;
-    window.scrollTo({top: divider.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth'});
+    var offset = (nav ? nav.getBoundingClientRect().bottom : 0) + 10;
+    window.scrollTo({top: current.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth'});
   }, true);
 })();
