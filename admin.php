@@ -89,7 +89,8 @@
       <div class="row">
       <button name="generate" class="btn btn-primary btn-action" onClick="generate();">Generate</button>&nbsp;&nbsp;&nbsp;
       <button name="copy-assets" class="btn btn-primary btn-action" onClick="copyAssets();">Copy Assets</button>&nbsp;&nbsp;&nbsp;
-      <button name="show-webapp" class="btn btn-primary btn-action" onClick="openInNewTab('<?php echo $config['app_name'] ?>');">Open Web App</button>
+      <button name="show-webapp" class="btn btn-primary btn-action" onClick="openInNewTab('<?php echo $config['app_name'] ?>');">Open Web App</button>&nbsp;&nbsp;&nbsp;
+      <button name="show-stats" class="btn btn-primary btn-action" onClick="openInNewTab('stats.php');">Bookmark stats</button>
       </div>
       </div>
       

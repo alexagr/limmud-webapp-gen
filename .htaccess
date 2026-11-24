@@ -11,3 +11,11 @@ AuthName "Authentication Required"
 AuthUserFile /home/limmudf1/public_html/webapp/.htpasswd
 Require valid-user
 </Files>
+
+# anonymous bookmark statistics from the web app: must be reachable without the admin password
+# (it only accepts data; the stats themselves are shown by stats.php, which stays protected)
+<Files "stats_report.php">
+Satisfy Any
+Order allow,deny
+Allow from all
+</Files>
