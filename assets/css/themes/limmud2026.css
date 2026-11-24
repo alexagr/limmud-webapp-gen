@@ -231,9 +231,9 @@ a.findbutton:visited,
   color: var(--body-color);
 }
 .session-modal-fav.is-active {
-  background-color: var(--surface);
-  border-color: rgb(255, 255, 0);
-  color: rgb(255, 255, 0);    /* same yellow as the ★ in the grid and on the programme page */
+  background-color: var(--brand-orange);
+  border-color: var(--brand-orange);
+  color: #fff;
 }
 .session-modal-link {
   color: var(--brand-orange);
