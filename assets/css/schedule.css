@@ -2279,3 +2279,13 @@ body {
 #find-field::placeholder {
   font-size: 14px;   /* bottom-left search: same smaller placeholder as the top search */
 }
+
+/* Сетка: time labels sit at the exact start of each session (generate.php createTimeLine 'labels') */
+.times .time-label {
+  position: absolute;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  line-height: 1.2;
+  white-space: nowrap;
+}

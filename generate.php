@@ -1089,9 +1089,7 @@ function createTimeLine($startTime, $endTime, $sessionTimes)
             $time = '';
         }
         $time = ($startHour < 10 ? '0' : '') . $startHour . ':' . ($i == 0 ? '00' : strval($i));
-        if (!in_array($time, $sessionTimes)) {
-            $time = '';
-        }
+        $time = '';   // the times themselves are drawn as 'labels' below
 
         $time = str_replace('24:', '00:', $time);
         $time = str_replace('25:', '01:', $time);
@@ -1104,7 +1102,18 @@ function createTimeLine($startTime, $endTime, $sessionTimes)
         }
     }
 
-    return array('timeline' => $timeLine, 'height' => $height, 'timeToPixel' => $timeToPixel);
+    // a label at the exact start of every session (also 18:10, 19:20 - not only on the 15-minute rows)
+    $labels = array();
+    $sorted = $sessionTimes;
+    sort($sorted);
+    foreach ($sorted as $t) {
+        $labels[] = array(
+            'time' => str_replace(array('24:', '25:'), array('00:', '01:'), $t),
+            'top' => convertTimeToPixel($startTime, $t),
+        );
+    }
+
+    return array('timeline' => $timeLine, 'labels' => $labels, 'height' => $height, 'timeToPixel' => $timeToPixel);
 }
 
 function checkWidth($columns)
@@ -1256,6 +1265,7 @@ function foldByRooms($sessions, $speakers, $locations, $tracks, $config, $lang) 
 
         $timeline = createTimeLine($dates[$date]['start_time'], $dates[$date]['end_time'], $dates[$date]['session_times']);
         $dates[$date]['timeline'] = $timeline['timeline'];
+        $dates[$date]['time_labels'] = $timeline['labels'];
         $dates[$date]['height'] = $timeline['height'];
         $dates[$date]['timeToPixel'] = $timeline['timeToPixel'];
         $dates[$date]['timeToPixelOffset'] = $timeline['timeToPixel'] / 2 + 1;

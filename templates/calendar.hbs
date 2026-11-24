@@ -96,6 +96,9 @@
                     {{time}}
                   </div>
                   {{/each}}
+                  {{#each time_labels}}
+                  <div class="time time-label" style="top: calc({{{top}}}px * var(--zy, 1))">{{time}}</div>
+                  {{/each}}
                 </div>
                 <div class="rooms" style="height: calc({{{height}}}px * var(--zy, 1));background-image: url('assets/img/timeline{{{timeToPixel}}}.png');background-repeat: repeat;">
                   {{#each rooms}}
