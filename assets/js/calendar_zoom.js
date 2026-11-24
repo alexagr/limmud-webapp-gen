@@ -1,14 +1,14 @@
 /*
  * Сетка (calendar) helpers:
- *  - zoom (60%..120%): pinch with two fingers on the grid, Ctrl + mouse wheel, or the -/+ buttons.
+ *  - zoom (50%..120%): pinch with two fingers on the grid, Ctrl + mouse wheel, or the -/+ buttons.
  *    Scales the CSS variables --zx (column width) and --zy (time axis) on .calendar-view;
  *    every position in the grid is calc(<px> * var(--zx|--zy)). The level is remembered per device.
  *  - room names stay visible: the header row of each day slides down under the navbar
  *    while that day's grid is scrolled past.
  */
 (function () {
-  var MIN = 0.6, MAX = 1.2, KEY = 'calendar-zoom';
-  var LEVELS = [0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2];   // -/+ buttons step through these
+  var MIN = 0.5, MAX = 1.2, KEY = 'calendar-zoom';
+  var LEVELS = [0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2];   // -/+ buttons step through these
   var view = document.querySelector('.calendar-view');
   if (!view) return;
 

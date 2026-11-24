@@ -2237,3 +2237,17 @@ body.exporting .rooms {
 .calendar-view .times .time {
   font-size: min(14px, max(9px, calc(14px * var(--zy, 1))));
 }
+/* time labels: never smaller than 12px, never larger than 14px, whatever the zoom */
+.calendar-view .times .time {
+  font-size: min(14px, max(12px, calc(14px * var(--zy, 1))));
+}
+/* room names: between 11px and 14px whatever the zoom (readable at 50%, no overflow at 120%) */
+.calendar-view .room-header {
+  font-size: min(14px, max(11px, calc(14px * var(--zy, 1))));
+  overflow: hidden;
+}
+.calendar-view .room-header span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
