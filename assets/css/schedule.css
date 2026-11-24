@@ -2327,7 +2327,30 @@ body {
   font-size: 12px;
 }
 
-/* Сетка: very short sessions (e.g. 10 min "Зажигание свечей") get at least one readable line */
-.calendar-view .session {
-  min-height: 24px;
+/* Сетка: very short sessions (e.g. 10 min "Зажигание свечей", marked .is-short by calendar_zoom.js):
+   keep the real size, no padding, the title on one line (with "..." if it does not fit), nothing else */
+.calendar-view .session.is-short {
+  padding: 0 22px 0 6px;
+  display: flex;
+  align-items: center;
+}
+[dir="rtl"] .calendar-view .session.is-short {
+  padding: 0 6px 0 22px;
+}
+.calendar-view .session.is-short .session-name {
+  height: auto;
+  width: 100%;
+  padding: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.1;
+}
+.calendar-view .session.is-short .session-details,
+.calendar-view .session.is-short .language-ribbon-calendar {
+  display: none;
+}
+.calendar-view .session.is-short .grid-fav {
+  top: 50%;
+  transform: translateY(-50%);
 }

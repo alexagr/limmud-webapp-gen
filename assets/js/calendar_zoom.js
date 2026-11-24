@@ -57,6 +57,9 @@
       title.style.fontSize = '';
       title.style.lineHeight = '';
       if (!box.offsetParent) continue;                       // hidden day: fitted when it is shown
+      // too short for the normal layout (e.g. 10 minutes): one-line compact style, see schedule.css .is-short
+      box.classList.toggle('is-short', box.offsetHeight < 34);
+      if (box.classList.contains('is-short')) continue;
       var avail = box.clientHeight - 10;                     // minus the box padding
       if (textBottom(name) <= avail) continue;
       var base = parseFloat(getComputedStyle(title).fontSize);
