@@ -1407,7 +1407,7 @@ a.findbutton:visited
   position: fixed;
   bottom: 46px;
   left: 60px;
-  height: 40px;
+  height: 30px;
   width: 260px;
   padding-left: 25px;
   padding-right: 40px;
@@ -2295,15 +2295,15 @@ body {
   outline: none;
 }
 
-/* Сетка ★: bigger invisible tap area (about 40x40 in the box corner) so a near-miss still toggles the star
+/* Сетка ★: bigger invisible tap area (about 30x30 in the box corner) so a near-miss still toggles the star
    instead of opening the session card; the star itself stays the same size */
 .session .grid-fav::before {
   content: '';
   position: absolute;
   top: -2px;
   right: -2px;
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
 }
 [dir="rtl"] .session .grid-fav::before {
   right: auto;
