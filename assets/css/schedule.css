@@ -2314,3 +2314,7 @@ body {
 .session-modal-footer {
   display: none;
 }
+/* ...and no closing line at the very bottom of the card */
+.session-modal-body .session-speakers-list > hr:last-child {
+  display: none;
+}
