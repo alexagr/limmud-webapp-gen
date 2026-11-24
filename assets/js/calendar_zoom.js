@@ -39,7 +39,8 @@
   }
 
   // --- session name smaller when the box is too short for all its text ---
-  // steps down 5% at a time to 70% of the normal size (never below 9px); boxes that fit stay as they are
+  // steps down 5% at a time, but never below the presenter-name size; line spacing shrinks with it.
+  // Boxes that fit stay as they are.
   // where the text inside .session-name ends (the block itself is always as tall as the box)
   function textBottom(name) {
     var last = name.lastElementChild;
@@ -54,17 +55,23 @@
       var title = name && name.querySelector('a.find-target');
       if (!title) continue;
       title.style.fontSize = '';
+      title.style.lineHeight = '';
       if (!box.offsetParent) continue;                       // hidden day: fitted when it is shown
       var avail = box.clientHeight - 10;                     // minus the box padding
       if (textBottom(name) <= avail) continue;
       var base = parseFloat(getComputedStyle(title).fontSize);
-      for (var k = 0.95; k >= 0.7 - 0.001; k -= 0.05) {
-        var px = Math.max(9, base * k);
+      var details = name.querySelector('.session-details');
+      var min = details ? parseFloat(getComputedStyle(details).fontSize) : 9;   // presenter-name size
+      if (!(min < base)) continue;
+      title.style.lineHeight = '1.2';                        // spacing follows the smaller font
+      for (var px = base * 0.95; ; px -= base * 0.05) {
+        px = Math.max(min, px);
         title.style.fontSize = px + 'px';
-        if (textBottom(name) <= avail || px === 9) break;
+        if (textBottom(name) <= avail || px === min) break;
       }
     }
   }
+
 
   // zoom around a point on screen (clientX/clientY), keeping the content under it in place
   function zoomAt(newZoom, clientX, clientY, rooms) {
