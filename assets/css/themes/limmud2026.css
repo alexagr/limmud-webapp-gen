@@ -141,11 +141,14 @@ body,
   color: var(--brand-orange);
 }
 
-/* bottom-left buttons: calm lavender; click highlight and open search in brand orange */
+/* bottom-left buttons: calm lavender; click highlight in brand magenta, open search in the brand gradient */
 :root {
   --fab-color: #8f88c4;
-  --fab-active: var(--brand-orange);
-  --find-accent: var(--brand-orange);
+  --fab-active: var(--brand-pink);
+  --find-accent: var(--brand-pink);
+}
+#find-button-div.is-open {
+  background: var(--brand-gradient);   /* open search: brand gradient */
 }
 a.findbutton,
 a.findbutton:hover,
