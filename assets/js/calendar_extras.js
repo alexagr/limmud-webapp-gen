@@ -204,6 +204,7 @@
     '  <div class="session-modal-body"></div>' +
     '  <div class="session-modal-footer">' +
     '    <button type="button" class="btn btn-default session-modal-fav"><i class="fa fa-star" aria-hidden="true"></i></button>' +
+    '    <a class="session-modal-link"></a>' +
     '  </div>' +
     '</div>';
   document.body.appendChild(overlay);
@@ -231,6 +232,10 @@
 
     overlay.querySelector('.session-modal-title').textContent = link.textContent.trim();
     overlay.querySelector('.session-modal-body').innerHTML = '<p class="session-modal-loading">…</p>';
+    var a = overlay.querySelector('.session-modal-link');
+    a.href = href;
+    var progLabel = document.getElementById('schedulelink');
+    a.innerHTML = (progLabel ? progLabel.textContent.trim() : '') + ' &rarr;';
     syncFav();
     overlay.classList.add('is-open');
     document.body.classList.add('session-modal-open');
