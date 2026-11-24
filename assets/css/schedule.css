@@ -2182,3 +2182,27 @@ body.exporting .rooms {
     display: none;
   }
 }
+
+/* Programme: the search / "Мой Лимуд" row stays visible under the menu (assets/js/sticky_search.js);
+   the title and day tabs scroll away */
+.search-sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: var(--nav-h, 50px);
+  z-index: 900;                       /* above sessions, below the menu */
+  padding-bottom: 8px;
+  background-color: var(--background-color);
+  /* full-width background band, also on desktop where the row itself is narrower */
+  box-shadow: 0 0 0 100vmax var(--background-color);
+  clip-path: inset(0 -100vmax);
+}
+.search-sticky.is-stuck {
+  clip-path: inset(0 -100vmax -12px);
+  box-shadow: 0 0 0 100vmax var(--background-color), 0 10px 10px -8px rgba(0, 0, 0, 0.5);
+}
+.search-sticky .search {
+  margin-top: 0;
+}
+.search-sticky {
+  padding-top: 6px;   /* keeps the 14px gap below the day tabs */
+}

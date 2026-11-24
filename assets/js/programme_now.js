@@ -96,8 +96,11 @@
     e.stopPropagation();
     btn.classList.add('is-flash');
     setTimeout(function () { btn.classList.remove('is-flash'); }, 2000);
+    // land just below the menu and the search row that stays visible under it
     var nav = document.querySelector('.navbar-fixed-top');
-    var offset = (nav ? nav.getBoundingClientRect().bottom : 0) + 10;
+    var bar = document.querySelector('.search-sticky');
+    var navH = nav ? nav.getBoundingClientRect().bottom : 0;
+    var offset = navH + (bar ? bar.offsetHeight : 0) + 10;
     window.scrollTo({top: current.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth'});
   }, true);
 })();
