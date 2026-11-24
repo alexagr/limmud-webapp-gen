@@ -2361,17 +2361,30 @@ body {
 
 /* presenter with several photos (photo cell "a.jpg, b.jpg"): the round pictures sit side by side */
 .speaker-image:has(.speaker-photo + .speaker-photo) {
-  display: flex;              /* same 300px height as a single photo, so the rows of presenters stay aligned */
-  justify-content: center;
-  align-items: center;
+  /* presenters page, two photos (e.g. a couple): two larger circles placed diagonally, slightly overlapping,
+     inside the same 300px square as a single photo, so the rows of presenters stay aligned */
+  position: relative;
+  width: 300px;
   height: 300px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .speaker-image .speaker-photo + .speaker-photo,
 .speaker-image .speaker-photo:has(+ .speaker-photo) {
-  display: inline-block;
-  width: 145px;
-  height: 145px;
-  margin: 0 2px;
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  margin: 0;
+}
+.speaker-image .speaker-photo:has(+ .speaker-photo) {
+  left: 0;
+  top: 0;
+  z-index: 1;                 /* the first photo lies on top of the second */
+  box-shadow: 0 0 0 5px var(--background-color, #fff);   /* cut-out ring where it overlaps the second */
+}
+.speaker-image .speaker-photo + .speaker-photo {
+  right: 0;
+  bottom: 0;
 }
 .session-speakers img + img {
   margin-left: 6px;
