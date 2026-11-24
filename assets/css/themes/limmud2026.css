@@ -24,7 +24,7 @@
   --muted: #b9b2e6;
   --grid-half: rgba(185, 178, 230, 0.10);   /* very faint half-hour line */
   --grid-hour: rgba(185, 178, 230, 0.30);   /* clear hour line */
-  --column-line: rgba(185, 178, 230, 0.30);  /* thin line between room columns */
+  --column-line: rgba(185, 178, 230, 0.15);  /* thin line between room columns */
 }
 
 body,
