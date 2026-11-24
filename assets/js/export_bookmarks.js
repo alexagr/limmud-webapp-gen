@@ -32,12 +32,36 @@ const MAX_LINES_PRESENTERS = 3; // max lines for presenters
 // Rounded rect radius
 const RECT_RADIUS = 12;
 
+// Theme of the app (e.g. limmud2026.css defines --brand-gradient): dark background, brand stripe and
+// the navbar logo. Without such a theme the original look (blue + bookmarks_logo.png) is kept.
+function exportTheme() {
+  const css = getComputedStyle(document.documentElement);
+  const v = (name) => css.getPropertyValue(name).trim();
+  if (!v('--brand-gradient')) {
+    return { themed: false, background: BACKGROUND_COLOR, logoSrc: 'assets/img/bookmarks_logo.png',
+             logoWidth: LOGO_WIDTH, logoHeight: LOGO_HEIGHT };
+  }
+  const navLogo = document.querySelector('img.logo');
+  return {
+    themed: true,
+    background: v('--background-color') || '#1b1446',
+    stripe: ['#654ADC', v('--brand-pink') || '#F324D4', v('--brand-orange') || '#FD7A31'],
+    logoSrc: navLogo ? navLogo.getAttribute('src') : 'assets/img/logo.png',
+    logoHeight: 56,
+    logoWidth: null    // from the image proportions
+  };
+}
+
 async function generateJPEG(bookmarkedSessions) {
+  const theme = exportTheme();
   // Load logo image
-  const logo = await loadImage('assets/img/bookmarks_logo.png').catch((err) => {
+  const logo = await loadImage(theme.logoSrc).catch((err) => {
     console.warn('Failed to load logo image:', err);
     return null;
   });
+  if (logo && !theme.logoWidth) {
+    theme.logoWidth = Math.round(logo.naturalWidth * theme.logoHeight / logo.naturalHeight);
+  }
 
   // create a temporary context to measure text (off-screen canvas)
   const measureCanvas = document.createElement('canvas');
@@ -47,7 +71,9 @@ async function generateJPEG(bookmarkedSessions) {
   // compute header height area
   mctx.font = HEADER_FONT;
   const headerHeight = 48; // approximate (font uses 32px plus spacing)
-  const headerTopArea = Math.max(headerHeight, (logo ? LOGO_HEIGHT : 0)); // no extra gap
+  const headerTopArea = theme.themed
+    ? 30 + headerHeight + 16                                    // header text (moved down 30px) + gap
+    : Math.max(headerHeight, (logo ? LOGO_HEIGHT : 0)); // no extra gap
 
   // available width for a row (between left padding and right padding)
   const availableRowWidth = CANVAS_WIDTH - 2 * PADDING;
@@ -125,8 +151,17 @@ async function generateJPEG(bookmarkedSessions) {
   const ctx = canvas.getContext('2d');
 
   // draw background
-  ctx.fillStyle = BACKGROUND_COLOR;
+  ctx.fillStyle = theme.background;
   ctx.fillRect(0, 0, CANVAS_WIDTH, canvasHeight);
+  if (theme.themed) {
+    // thin brand-gradient stripe along the top
+    const g = ctx.createLinearGradient(0, 0, CANVAS_WIDTH, 0);
+    g.addColorStop(0, theme.stripe[0]);
+    g.addColorStop(0.55, theme.stripe[1]);
+    g.addColorStop(1, theme.stripe[2]);
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, CANVAS_WIDTH, 8);
+  }
 
   // draw header text at top-left
   ctx.font = HEADER_FONT;
@@ -138,9 +173,16 @@ async function generateJPEG(bookmarkedSessions) {
 
   // draw logo top-right if available
   if (logo) {
-    const logoX = CANVAS_WIDTH - LOGO_WIDTH;
-    const logoY = 0;
-    ctx.drawImage(logo, logoX, logoY, LOGO_WIDTH, LOGO_HEIGHT);
+    if (theme.themed) {
+      // navbar logo, vertically centred on the header text
+      const logoX = CANVAS_WIDTH - PADDING - theme.logoWidth;
+      const logoY = headerY + 16 - theme.logoHeight / 2;
+      ctx.drawImage(logo, logoX, logoY, theme.logoWidth, theme.logoHeight);
+    } else {
+      const logoX = CANVAS_WIDTH - LOGO_WIDTH;
+      const logoY = 0;
+      ctx.drawImage(logo, logoX, logoY, LOGO_WIDTH, LOGO_HEIGHT);
+    }
   }
 
   // draw rows
