@@ -258,3 +258,7 @@ a.findbutton:visited,
   border-color: var(--line-color);
   color: var(--body-color);
 }
+/* the clock jumps to "now" - flash in orange like the "now" line and current menu item */
+#now-button.is-flash {
+  color: var(--brand-orange);
+}
