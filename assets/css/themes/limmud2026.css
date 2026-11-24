@@ -267,7 +267,7 @@ a.findbutton:visited,
   --now-color: var(--brand-orange);
 }
 
-/* home page tips: icons in brand magenta */
+/* home page tips: icon chips in the brand gradient */
 :root {
-  --tip-icon: var(--brand-pink);
+  --tip-chip: linear-gradient(90deg, #654ADC 0%, #F324D4 55%, #FD7A31 100%);
 }

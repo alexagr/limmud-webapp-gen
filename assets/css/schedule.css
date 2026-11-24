@@ -2146,12 +2146,26 @@ body.exporting .rooms {
   line-height: 1.45;
 }
 .home-tips li > i {
-  flex: 0 0 22px;
-  margin-top: 3px;
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  margin-top: -2px;
+  border-radius: 9px;
+  background: var(--tip-chip, #ff8700);
+  background-size: 700% 100%;
+  color: #fff;
+  font-size: 14px;
+  line-height: 30px;
   text-align: center;
-  font-size: 17px;
-  color: var(--tip-icon, #ff8700);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
+/* each tip takes its own part of the gradient: purple at the top, pink/orange further down */
+.home-tips li:nth-child(1) > i { background-position: 0% 0; }
+.home-tips li:nth-child(2) > i { background-position: 20% 0; }
+.home-tips li:nth-child(3) > i { background-position: 40% 0; }
+.home-tips li:nth-child(4) > i { background-position: 60% 0; }
+.home-tips li:nth-child(5) > i { background-position: 80% 0; }
+.home-tips li:nth-child(6) > i { background-position: 100% 0; }
 @media (max-width: 600px) {
   .home-tips li.mobile {
     display: flex;
