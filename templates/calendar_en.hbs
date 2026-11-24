@@ -237,7 +237,7 @@
       });
 
       $(".export-png").click(function() {
-        $('#saveModal').modal('show');
+        $('#saveModal').modal('show'); document.body.classList.add('exporting');
         let maxWidth = 0;
         let initialWidth = [];
         let count = 0;
@@ -257,11 +257,11 @@
 
         $timeline = $('.calendar').parent()[0];
         // html2canvas creates some weird offset for RTL text block - try to compensate for it
-        html2canvas($timeline,{width: maxWidth, windowWidth: maxWidth, x: -widthOfChild * 2 - 100}).then(function(canvas) {
+        html2canvas($timeline,{backgroundColor: getComputedStyle(document.body).backgroundColor, scale: Math.min(window.devicePixelRatio || 1, 1.5), width: maxWidth, windowWidth: maxWidth, x: -widthOfChild * 2 - 100}).then(function(canvas) {
           canvas.id = "generated-canvas";
           canvas.toBlob(function(blob) {
             $('#saveModal').modal('hide');
-            saveAs(blob, 'limmud-calendar-en.png');
+            saveAs(blob, 'limmud-calendar-en.png'); document.body.classList.remove('exporting');
           });
         });
 

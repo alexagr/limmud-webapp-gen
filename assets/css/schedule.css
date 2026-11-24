@@ -2064,3 +2064,13 @@ body.session-modal-open {
   font-size: 12px;
   font-weight: bold;
 }
+
+/* PNG download of the Сетка: clean picture (no ★ buttons, "now" line or grid-line gradients) */
+body.exporting .session .grid-fav,
+body.exporting .now-line,
+body.exporting .now-label {
+  display: none !important;
+}
+body.exporting .rooms {
+  background-image: none !important;
+}
