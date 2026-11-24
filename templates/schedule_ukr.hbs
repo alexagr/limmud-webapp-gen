@@ -162,7 +162,7 @@
                             {{#each speakers_list}}
                               {{#if has_data}}
                                 {{#if photo}}
-                                {{#each photos}}<img onError="this.onerror=null;this.src='assets/img/avatar.png';" class="card-img-top speaker-image-tiny" src="speakers/thumbs/{{{photo}}}"/>{{/each}}
+                                {{#each photos}}<img onError="this.onerror=null;this.src='assets/img/avatar.png';" class="card-img-top speaker-image-tiny" src="speakers/thumbs/{{{photo}}}"/> {{/each}}
                                 {{/if}}
                               {{/if}}
                             {{/each}}
@@ -198,7 +198,7 @@
                           {{#if name}}
                         {{#if has_data}}<a href="speakers.html#{{id}}">{{else}}<div>{{/if}}
                           {{#if photo}}
-                            <p class="session-speakers">{{#each photos}}<img onError="this.onerror=null;this.src='assets/img/avatar.png';" class="card-img-top speaker-image-small" src="speakers/thumbs/{{{photo}}}"/>{{/each}}</p>
+                            <p class="session-speakers">{{#each photos}}<img onError="this.onerror=null;this.src='assets/img/avatar.png';" class="card-img-top speaker-image-small" src="speakers/thumbs/{{{photo}}}"/> {{/each}}</p>
                           {{else}}
                             <p class="session-speakers"><img class="card-img-top speaker-image-small" src="assets/img/avatar.png"/></p>
                           {{/if}}
