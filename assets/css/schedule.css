@@ -2251,3 +2251,23 @@ body.exporting .rooms {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+/* Bootstrap's .container clearfix gives ::before/::after display:table, which collapses the
+   absolutely-positioned background band to 0 width - force normal blocks */
+.search-sticky::before,
+.search-sticky.is-stuck::after {
+  display: block;
+}
+/* the background band must not make the page wider than the screen (that broke scrolling on phones):
+   exactly screen-wide, and anything poking out sideways is clipped (overflow-x: clip keeps sticky working) */
+.search-sticky::before {
+  left: calc(50% - 50vw);
+  right: calc(50% - 50vw);
+}
+.search-sticky.is-stuck::after {
+  left: calc(50% - 50vw);
+  right: calc(50% - 50vw);
+}
+html,
+body {
+  overflow-x: clip;
+}
