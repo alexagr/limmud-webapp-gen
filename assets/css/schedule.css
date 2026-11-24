@@ -722,7 +722,7 @@ a {
   top: 50%;
   -webkit-transform: translateY(-50%);
   -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
+  margin-top: 4px;   /* level with the first line of the session title */
 }
 
 .speaker-name {
@@ -763,7 +763,7 @@ a {
   top: 50%;
   -webkit-transform: translateY(-50%);
   -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
+  margin-top: 4px;   /* level with the first line of the session title */
 }
 
 .col-rtl {
@@ -1828,7 +1828,7 @@ a, button, .btn {
   position: absolute;
   left: 0;
   right: 2px;
-  transform: translateY(-50%);
+  margin-top: 4px;   /* level with the first line of the session title */
   padding: 1px 0;
   border-radius: 6px;
   background-color: var(--now-color, #ff8700);
@@ -2285,7 +2285,7 @@ body {
   position: absolute;
   left: 0;
   right: 0;
-  transform: translateY(-50%);
+  margin-top: 4px;   /* level with the first line of the session title */
   line-height: 1.2;
   white-space: nowrap;
 }
