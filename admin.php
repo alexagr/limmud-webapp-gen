@@ -25,6 +25,8 @@
   .success {background-color: #12CC1A;border:#0FA015 1px solid;padding: 5px 10px;color: #FFFFFF;border-radius:4px;}
   .info {background-color: #127ACC;border:#0F75A0 1px solid;padding: 5px 10px;color: #FFFFFF;border-radius:4px;}
   .btn-action {background-color:#2FC332;border:0;padding:10px 40px;color:#FFF;border:#F0F0F0 1px solid; border-radius:4px;}
+  .action-row {display:flex; flex-wrap:wrap; gap:10px; margin:0;}
+  .action-row .btn-action {margin:0; padding:10px 24px;}
   </style>
 
   <div class ="container">
@@ -86,10 +88,10 @@
       <h2>Generate</h2>
       <div class="config-form">
       <div id="generate-status"></div>
-      <div class="row">
-      <button name="generate" class="btn btn-primary btn-action" onClick="generate();">Generate</button>&nbsp;&nbsp;&nbsp;
-      <button name="copy-assets" class="btn btn-primary btn-action" onClick="copyAssets();">Copy Assets</button>&nbsp;&nbsp;&nbsp;
-      <button name="show-webapp" class="btn btn-primary btn-action" onClick="openInNewTab('<?php echo $config['app_name'] ?>');">Open Web App</button>&nbsp;&nbsp;&nbsp;
+      <div class="row action-row">
+      <button name="generate" class="btn btn-primary btn-action" onClick="generate();">Generate</button>
+      <button name="copy-assets" class="btn btn-primary btn-action" onClick="copyAssets();">Copy Assets</button>
+      <button name="show-webapp" class="btn btn-primary btn-action" onClick="openInNewTab('<?php echo $config['app_name'] ?>');">Open Web App</button>
       <button name="show-stats" class="btn btn-primary btn-action" onClick="openInNewTab('stats.php');">Bookmark stats</button>
       </div>
       </div>
