@@ -2276,3 +2276,6 @@ body {
 .search-filter-input::placeholder {
   font-size: 14px;
 }
+#find-field::placeholder {
+  font-size: 14px;   /* bottom-left search: same smaller placeholder as the top search */
+}
