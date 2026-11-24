@@ -2233,3 +2233,7 @@ body.exporting .rooms {
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0));
   pointer-events: none;
 }
+/* time column is 48px wide: time labels may shrink with the zoom but never grow (they would overlap the cards) */
+.calendar-view .times .time {
+  font-size: min(14px, max(9px, calc(14px * var(--zy, 1))));
+}
