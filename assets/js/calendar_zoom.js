@@ -35,6 +35,35 @@
     var label = document.querySelector('.zoom-level');
     if (label) label.textContent = Math.round(zoom * 100) + '%';
     updateHeaders();
+    fitTitles();
+  }
+
+  // --- session name smaller when the box is too short for all its text ---
+  // steps down 5% at a time to 70% of the normal size (never below 9px); boxes that fit stay as they are
+  // where the text inside .session-name ends (the block itself is always as tall as the box)
+  function textBottom(name) {
+    var last = name.lastElementChild;
+    return last ? last.offsetTop + last.offsetHeight : 0;
+  }
+
+  function fitTitles() {
+    var sessions = document.querySelectorAll('.calendar-view .session');
+    for (var i = 0; i < sessions.length; i++) {
+      var box = sessions[i];
+      var name = box.querySelector('.session-name');
+      var title = name && name.querySelector('a.find-target');
+      if (!title) continue;
+      title.style.fontSize = '';
+      if (!box.offsetParent) continue;                       // hidden day: fitted when it is shown
+      var avail = box.clientHeight - 10;                     // minus the box padding
+      if (textBottom(name) <= avail) continue;
+      var base = parseFloat(getComputedStyle(title).fontSize);
+      for (var k = 0.95; k >= 0.7 - 0.001; k -= 0.05) {
+        var px = Math.max(9, base * k);
+        title.style.fontSize = px + 'px';
+        if (textBottom(name) <= avail || px === 9) break;
+      }
+    }
   }
 
   // zoom around a point on screen (clientX/clientY), keeping the content under it in place
@@ -144,7 +173,7 @@
   window.addEventListener('scroll', onScroll, {passive: true});
   window.addEventListener('resize', onScroll);
   document.addEventListener('click', function (e) {
-    if (e.target.closest && e.target.closest('.date-button')) setTimeout(updateHeaders, 0);
+    if (e.target.closest && e.target.closest('.date-button')) setTimeout(function () { updateHeaders(); fitTitles(); }, 0);
   });
 
   // the PNG export should show the grid without shifted headers
@@ -157,4 +186,7 @@
   }, true);
 
   apply(zoom);
+  window.addEventListener('load', fitTitles);   // again once the web font is in (text width changes)
+  var resizeTimer;
+  window.addEventListener('resize', function () { clearTimeout(resizeTimer); resizeTimer = setTimeout(fitTitles, 200); });
 })();

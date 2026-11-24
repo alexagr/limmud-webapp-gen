@@ -2294,3 +2294,18 @@ body {
 .calendar-view .session a.find-target:focus {
   outline: none;
 }
+
+/* Сетка ★: bigger invisible tap area (about 40x40 in the box corner) so a near-miss still toggles the star
+   instead of opening the session card; the star itself stays the same size */
+.session .grid-fav::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 40px;
+  height: 40px;
+}
+[dir="rtl"] .session .grid-fav::before {
+  right: auto;
+  left: -2px;
+}
