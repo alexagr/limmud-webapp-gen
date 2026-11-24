@@ -266,3 +266,8 @@ a.findbutton:visited,
 :root {
   --now-color: var(--brand-orange);
 }
+
+/* home page tips: icons in brand magenta */
+:root {
+  --tip-icon: var(--brand-pink);
+}
