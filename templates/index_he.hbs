@@ -59,13 +59,14 @@
           <li><i class="fa fa-star" aria-hidden="true"></i><span><a href="schedule_he.html"><b>הלימוד שלי</b></a> — סמנו בכוכב מפגשים שמעניינים אתכם וצפו רק בהם.</span></li>
           <li><i class="fa fa-th" aria-hidden="true"></i><span><a href="calendar_he.html"><b>לו"ז</b></a> — לוח זמנים לפי אולמות. אפשר להגדיל באצבעות ולשמור כתמונה.</span></li>
           <li><i class="fa fa-clock" aria-hidden="true"></i><span><b>עכשיו</b> — כפתור השעון בפינה התחתונה יראה מה מתקיים ממש עכשיו.</span></li>
-          <li class="mobile"><i class="fa fa-mobile-alt" aria-hidden="true"></i><span><b>למסך הבית</b> — אנדרואיד: תפריט <i class="fas fa-ellipsis-v"></i> ← "התקנת אפליקציה"; אייפון: "שיתוף" ← "הוספה למסך הבית".</span></li>
+          <li class="mobile"><i class="fa fa-mobile-alt" aria-hidden="true"></i><span><b>למסך הבית</b> — אנדרואיד: תפריט <i class="fas fa-ellipsis-v"></i> ← "התקנת אפליקציה" (בגרסאות חדשות — "הוספה למסך הבית" ← "התקנה"); אייפון: "שיתוף" (או ••• ← "שיתוף") ← "הוספה למסך הבית".</span></li>
         </ul>
       </div>
     </div>
   </div>
 
   {{> footer_he}}
+  <script src="assets/js/install_prompt.js" data-lang="he" data-icon="{{event.icon}}"></script>
 
   <script>
     $(document).ready(function() {

@@ -2549,3 +2549,70 @@ body {
 .duration-badge i {
   font-size: .9em;
 }
+
+/* START: "install the app" banner at the bottom (assets/js/install_prompt.js) */
+.install-banner {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 8px 10px 12px;
+  border-radius: 14px;
+  background: var(--background-color, #1b1446);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, .25);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, .45);
+  transform: translateY(150%);
+  transition: transform .3s ease;
+  font-size: 14px;
+  line-height: 1.35;
+  text-align: start;
+}
+.install-banner.is-visible {
+  transform: none;
+}
+.install-banner .install-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  flex: 0 0 auto;
+}
+.install-banner .install-body {
+  flex: 1;
+  min-width: 0;
+}
+.install-banner .install-body b {
+  display: block;
+  font-size: 15px;
+  margin-bottom: 2px;
+}
+.install-banner .install-share {
+  width: 1.15em;
+  height: 1.15em;
+  vertical-align: -0.2em;
+}
+.install-banner .install-go {
+  display: block;   /* below the text, at the end of the line (right; left in Hebrew) */
+  margin-top: 8px;
+  margin-inline-start: auto;
+  border: 0;
+  border-radius: 20px;
+  padding: 8px 14px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--brand-gradient, #654ADC);
+}
+.install-banner .install-close {
+  flex: 0 0 auto;
+  align-self: flex-start;
+  border: 0;
+  background: none;
+  color: rgba(255, 255, 255, .7);
+  font-size: 24px;
+  line-height: 1;
+  padding: 0 4px;
+}

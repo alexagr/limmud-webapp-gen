@@ -74,8 +74,8 @@
           <p>Програмою конференції буде зручніше користуватися, якщо створити для неї іконку на робочому столі.</p>
           <p>Для цього:</p>
           <ul>
-            <li>якщо ви користуєтеся Android (Chrome), натисніть на кнопку <b>&laquo;Меню&raquo;</b> (Menu) <i class="fas fa-ellipsis-v"></i> у правому верхньому куті та виберіть <b>&laquo;Встановити додаток&raquo;</b> (Install app)</li>
-            <li>якщо ви користуєтеся iPhone (Safari), натисніть на кнопку <b>&laquo;Відправити&raquo;</b> (Send) внизу посередині та виберіть <b>&laquo;Додати на головний екран&raquo;</b> (Add to Home Screen)</li>
+            <li>якщо ви користуєтеся Android (Chrome), натисніть на кнопку <b>&laquo;Меню&raquo;</b> (Menu) <i class="fas fa-ellipsis-v"></i> у правому верхньому куті та виберіть <b>&laquo;Встановити додаток&raquo;</b> (Install app) або, у нових версіях, <b>&laquo;Додати на головний екран&raquo;</b> &rarr; <b>&laquo;Встановити&raquo;</b></li>
+            <li>якщо ви користуєтеся iPhone (Safari), натисніть на кнопку <b>&laquo;Поділитися&raquo;</b> (Share) (або <b>•••</b> &rarr; <b>&laquo;Поділитися&raquo;</b>) та виберіть <b>&laquo;Додати на головний екран&raquo;</b> (Add to Home Screen)</li>
           </ul>
           <br>
         </div>
@@ -106,6 +106,7 @@
     </div>
 
   {{> footer_ukr}}
+  <script src="assets/js/install_prompt.js" data-lang="ukr" data-icon="{{event.icon}}"></script>
   <script>
     $(document).ready(function() {
       $('[data-toggle="tooltip"]').tooltip();

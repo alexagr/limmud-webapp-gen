@@ -59,13 +59,14 @@
             <li><i class="fa fa-star" aria-hidden="true"></i><span><a href="schedule.html"><b>Мой Лимуд</b></a> — отмечайте звёздочкой интересные сессии и смотрите только их.</span></li>
             <li><i class="fa fa-th" aria-hidden="true"></i><span><a href="calendar.html"><b>Сетка</b></a> — расписание по залам. Можно увеличить пальцами и сохранить картинкой.</span></li>
             <li><i class="fa fa-clock" aria-hidden="true"></i><span><b>Сейчас</b> — кнопка с часами внизу слева покажет, что идёт прямо сейчас.</span></li>
-            <li class="mobile"><i class="fa fa-mobile-alt" aria-hidden="true"></i><span><b>На экран телефона</b> — Android: меню <i class="fas fa-ellipsis-v"></i> → «Установить приложение»; iPhone: «Поделиться» → «На экран Домой».</span></li>
+            <li class="mobile"><i class="fa fa-mobile-alt" aria-hidden="true"></i><span><b>На экран телефона</b> — Android: меню <i class="fas fa-ellipsis-v"></i> → «Установить приложение» (в новых версиях — «Добавить на гл. экран» → «Установить»); iPhone: «Поделиться» (или ••• → «Поделиться») → «На экран "Домой"».</span></li>
           </ul>
         </div>
       </div>
     </div>
 
   {{> footer}}
+  <script src="assets/js/install_prompt.js" data-lang="ru" data-icon="{{event.icon}}"></script>
   <script>
     $(document).ready(function() {
       $('[data-toggle="tooltip"]').tooltip();
