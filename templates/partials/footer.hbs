@@ -82,6 +82,10 @@
           _trackInstalling(reg.installing);
         });
         setInterval(function() { reg.update() }, 60 * 60 * 1000);
+        // reopening an installed app usually just resumes it (no page load) - check for a new version then too
+        document.addEventListener('visibilitychange', function() {
+          if (document.visibilityState === 'visible') reg.update();
+        });
       }, function(err) {
         console.log('serviceWorker registration failed: ', err);
       });

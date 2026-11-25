@@ -2513,3 +2513,25 @@ body {
   left: inherit;
   right: 9px;
 }
+
+/* desktop: more than 4 presenter photos fold into 2 rows (5-6 -> 3 columns, 7-8 -> 4, 9-10 -> 5);
+   with an odd number the top-left cell stays empty, like on the phone */
+@media screen and (min-width: 768px) {
+  .speaker-short-photo-many:has(img:nth-child(5)) {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    justify-content: center;
+    align-content: center;
+    gap: 8px;   /* same gap across and down: 4px visible between the 2px white rings */
+    padding: 2px .5rem 2px 2px;   /* room for the rings */
+    flex: 0 0 auto;
+  }
+  .speaker-short-photo-many:has(img:nth-child(5)) img {
+    margin: 0;
+  }
+  .speaker-short-photo-many:has(img:nth-child(7)) { grid-template-columns: repeat(4, auto); }
+  .speaker-short-photo-many:has(img:nth-child(9)) { grid-template-columns: repeat(5, auto); }
+  .speaker-short-photo-many:has(img:nth-child(5)) img:first-child:nth-last-child(odd) {
+    grid-column-start: 2;
+  }
+}

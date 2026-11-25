@@ -68,6 +68,8 @@ function get_defaults()
         'schedule_presenter4_column' => 'presenter4',
         'schedule_presenter5_column' => 'presenter5',
         'schedule_presenter6_column' => 'presenter6',
+        'schedule_presenter7_column' => 'presenter7',
+        'schedule_presenter8_column' => 'presenter8',
         'schedule_alt_presenter_summary_column' => 'alt-presenter-summary',
         'schedule_alt_presenter_summary2_column' => 'alt-presenter-summary-he',
         'presenter_sheet' => 'Presenters',
