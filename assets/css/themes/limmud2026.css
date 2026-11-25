@@ -332,3 +332,10 @@ body .swal2-styled.swal2-confirm {
 body .swal2-styled.swal2-confirm:focus {
   box-shadow: 0 0 0 3px rgba(243, 36, 212, 0.4);
 }
+
+/* "שבת" ribbon (Shabbat sessions, replaces the menorah icon): same corner as "עבר", yellow */
+.language-ribbon.shabbat-ribbon,
+.language-ribbon-calendar.shabbat-ribbon {
+  background-color: #FFD23F;
+  color: #1b1446;
+}

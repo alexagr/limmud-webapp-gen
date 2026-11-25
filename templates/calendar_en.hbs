@@ -119,10 +119,14 @@
                     <div>
                       {{#each sessions}}
                       <div id="session-{{session_id}}" class="session find-container" style="top: calc({{{top}}}px * var(--zy, 1)); height: calc({{{height}}}px * var(--zy, 1));background-color:{{{color}}};">
+                        {{#if shabbat}}
+                        <div class="language-ribbon-calendar shabbat-ribbon"><span>שבת</span></div>
+                        {{else}}
                         {{#if ../../../event.second_language_ribbon}}
                           {{#if language_ribbon}}
-                        <div class="language-ribbon-calendar">{{language_ribbon}}</div>
+                        <div class="language-ribbon-calendar"><span>{{language_ribbon}}</span></div>
                           {{/if}}
+                        {{/if}}
                         {{/if}}
                         <div class="session-name">
                           <a href="schedule_en.html#{{session_id}}" class="find-target">
@@ -150,9 +154,6 @@
                             {{#if language_translate}}
                             <i class="fas fa-headphones-alt"></i>
                             {{/if}}
-                        {{/if}}
-                        {{#if shabbat}}
-                            &nbsp; <i class="fa fa-menorah" aria-hidden="true"></i>
                         {{/if}}
                             </div>
                           </div>

@@ -2465,3 +2465,22 @@ body {
   width: auto;
   margin: 0;
 }
+
+/* "שבת" ribbon (Shabbat sessions, replaces the menorah icon): same corner as the language ribbon, yellow */
+.shabbat-ribbon {
+  background-color: #FFD23F;
+  color: #000;
+  font-weight: 700;
+}
+/* corner ribbons ("שבת", "עבר"): text slightly higher inside the ribbon (diagonally up on screen) */
+.language-ribbon span,
+.language-ribbon-calendar span {
+  position: relative;
+  top: -1px;
+}
+.language-ribbon-calendar span {
+  top: -2px;   /* Сетка: one more pixel up */
+}
+.language-ribbon-calendar.shabbat-ribbon span {
+  left: 1px;   /* Сетка: "ת" (left end) away from the card edge */
+}

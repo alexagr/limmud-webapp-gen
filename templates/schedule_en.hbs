@@ -126,10 +126,14 @@
                       <a id="bookmark-{{session_id}}" class="bookmark">
                         <i class="fa fa-star" aria-hidden="true"></i>
                       </a>
+                      {{#if shabbat}}
+                      <div class="language-ribbon shabbat-ribbon"><span>שבת</span></div>
+                      {{else}}
                       {{#if ../../../event.second_language_ribbon}}
                         {{#if language_ribbon}}
-                      <div class="language-ribbon">{{language_ribbon}}</div>
+                      <div class="language-ribbon"><span>{{language_ribbon}}</span></div>
                         {{/if}}
+                      {{/if}}
                       {{/if}}
                       {{#if ../../../event.speaker_photos}}
                       <div id="desc2-{{session_id}}" class="speaker-short-collapse collapse in">
@@ -158,9 +162,6 @@
                             {{#if language_translate}}
                             &nbsp; <i class="fas fa-headphones-alt"></i>
                             {{/if}}
-                          {{/if}}
-                          {{#if shabbat}}
-                          &nbsp;|&nbsp; <i class="fa fa-menorah" aria-hidden="true"></i>
                           {{/if}}
                           </h6>
                           {{#if ../../../event.speaker_photos}}
