@@ -1302,6 +1302,7 @@ a {
 [dir="rtl"] .search-filter-input {
   padding-left: inherit;
   padding-right: 36px;
+  background-position: right 10px center;   /* magnifier on the right in Hebrew */
 }
 
 .search-filter label .fa {
@@ -2402,9 +2403,10 @@ body {
   line-height: 26px;   /* 30px minus the 2px borders: text centred */
   -webkit-appearance: none;
   appearance: none;
+  bottom: 51px;   /* centred on the round search button (bottom 50px, 32px high) */
 }
 #find-next {
-  bottom: 46px;
+  bottom: 51px;
   height: 30px;
   line-height: 30px;
   padding: 0 4px;
@@ -2615,4 +2617,47 @@ body {
   font-size: 24px;
   line-height: 1;
   padding: 0 4px;
+}
+
+/* × inside the search boxes (assets/js/search_clear.js) */
+.search-clear-holder {
+  position: relative;
+}
+.search-clear-holder .search-filter-input {
+  padding-right: 36px;
+}
+[dir="rtl"] .search-clear-holder .search-filter-input {
+  padding-left: 36px;
+}
+.search-clear {
+  display: none;
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #bbb;
+  color: #fff;
+  cursor: pointer;
+}
+.search-clear svg {
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+.search-clear.is-visible {
+  display: block;
+}
+
+/* top search: matching text highlighted (assets/js/search_highlight.js) */
+mark.search-hit {
+  background: #ffe066;
+  color: #1b1446;
+  border-radius: 0;
+  padding: 0;
 }
