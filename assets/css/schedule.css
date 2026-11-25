@@ -2484,3 +2484,32 @@ body {
 .language-ribbon-calendar.shabbat-ribbon span {
   left: 1px;   /* Сетка: "ת" (left end) away from the card edge */
 }
+
+/* Сетка: floating "back to 100%" zoom button (assets/js/calendar_zoom.js), above the "now" button;
+   shown only while the zoom is not 100% */
+#zoom-fit-button {
+  display: none;
+  position: fixed;
+  left: 9px;
+  bottom: 145px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--fab-color, #999);
+  color: var(--background-color, #fff);
+  font-size: 15px;
+  line-height: 32px;
+  text-align: center;
+  text-decoration: none;
+  z-index: 1010;
+}
+#zoom-fit-button.is-visible {
+  display: block;
+}
+#zoom-fit-button:active {
+  background: var(--fab-active, #1090f0);
+}
+[dir="rtl"] #zoom-fit-button {
+  left: inherit;
+  right: 9px;
+}

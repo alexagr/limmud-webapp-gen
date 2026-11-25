@@ -27,8 +27,24 @@
     return MIN;
   }
 
+  // floating round button (bottom-left column, above "now"): back to 100%; only visible while zoomed
+  var fitButton = document.createElement('a');
+  fitButton.href = '#';
+  fitButton.id = 'zoom-fit-button';
+  fitButton.title = '100%';
+  fitButton.setAttribute('aria-label', '100%');
+  fitButton.innerHTML = '<i class="fa fa-compress" aria-hidden="true"></i>';
+  document.body.appendChild(fitButton);
+  fitButton.addEventListener('click', function (e) {
+    e.preventDefault();
+    var x = window.innerWidth / 2, y = window.innerHeight / 2;   // keep what is in the middle of the screen
+    zoomAt(1, x, y, roomsAt(document.elementFromPoint(x, y)));
+    fitButton.blur();
+  });
+
   function apply(z) {
     zoom = clamp(z);
+    fitButton.classList.toggle('is-visible', Math.abs(zoom - 1) > 0.001);
     view.style.setProperty('--zx', zoom);
     view.style.setProperty('--zy', zoom);
     try { localStorage.setItem(KEY, String(zoom)); } catch (e) {}
