@@ -2535,3 +2535,17 @@ body {
     grid-column-start: 2;
   }
 }
+
+/* programme: duration badge on sessions longer than 1 hour */
+.duration-badge {
+  display: inline-block;
+  white-space: nowrap;
+  padding: 0 .5em;
+  border-radius: 1em;
+  background: rgba(255, 255, 255, .22);
+  font-weight: 600;
+  line-height: 1.5;
+}
+.duration-badge i {
+  font-size: .9em;
+}

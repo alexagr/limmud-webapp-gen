@@ -989,6 +989,18 @@ function foldByTime($sessions, $speakers, $tracks, $config, $lang) {
             $manySpeakersList = 'yes';
         }
 
+        // long sessions (1:30 or more, with presenters - not meals etc.): duration badge on the programme card,
+        // in half hours: 1:30-1:49 -> 1,5 ч, 1:50-2:19 -> 2 ч, 2:20-2:49 -> 2,5 ч, 2:50-3:19 -> 3 ч ...
+        $minutes = (int)round((strtotime($session['end_time']) - strtotime($session['start_time'])) / 60);
+        $duration = array('ru' => '', 'ukr' => '', 'en' => '', 'he' => '');
+        if ($minutes >= 90 && (!empty($speakersList) || !empty($session['alt_presenter_summary']))) {
+            $halves = intdiv($minutes + 10, 30);   // half hours, 10 minutes early: 1:50 already counts as 2 ч
+            $hh = intdiv($halves, 2);
+            $half = $halves % 2;
+            $duration = array('ru' => $hh . ($half ? ',5' : '') . ' ч', 'ukr' => $hh . ($half ? ',5' : '') . ' год',
+                              'en' => $hh . ($half ? '.5' : '') . ' h', 'he' => $hh . ($half ? '.5' : '') . ' ש׳');
+        }
+
         $dates[$date]['times'][$sortKey]['sessions'][$session['location']['id']] = array(
             'start' => date('H:i', strtotime($session['start_time'])),
             'end' => date('H:i', strtotime($session['end_time'])),
@@ -1003,6 +1015,10 @@ function foldByTime($sessions, $speakers, $tracks, $config, $lang) {
             'is_cancelled' => ($session['location']['name'] == 'Отмена'),
             'speakers_list' => $speakersList,
             'many_speakers_list' => $manySpeakersList,
+            'duration_ru' => $duration['ru'],
+            'duration_ukr' => $duration['ukr'],
+            'duration_en' => $duration['en'],
+            'duration_he' => $duration['he'],
             'description' => $session['long_abstract'],
             'description2' => $session['long_abstract2'],
             'shabbat' => $session['shabbat'],
