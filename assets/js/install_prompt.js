@@ -38,9 +38,19 @@
   var isPhone = isIOS || /Android|Mobi/.test(ua);
   if (!isPhone) return;
 
-  var banner = null;
+  var banner = null, backdrop = null;
+  function close() {
+    try { localStorage.setItem(KEY, String(Date.now())); } catch (e) {}
+    hide();
+  }
   function show(withButton, onInstall) {
     if (banner) return;
+    // the page behind is dimmed and blurred, so the big Регистрация / Программа buttons don't compete with the banner;
+    // a tap on the dimmed page closes the banner (same as ×)
+    backdrop = document.createElement('div');
+    backdrop.className = 'install-backdrop';
+    backdrop.addEventListener('click', close);
+    document.body.appendChild(backdrop);
     banner = document.createElement('div');
     banner.className = 'install-banner';
     banner.setAttribute('role', 'dialog');
@@ -49,28 +59,29 @@
       '<div class="install-body"><b>' + T.title + '</b><span>' + (withButton ? T.text : T.ios) + '</span>' +
       (withButton ? '<button type="button" class="install-go">' + T.button + '</button>' : '') + '</div>' +
       '<button type="button" class="install-close" aria-label="' + T.close + '">&times;</button>';
-    banner.querySelector('.install-close').addEventListener('click', function () {
-      try { localStorage.setItem(KEY, String(Date.now())); } catch (e) {}
-      hide();
-    });
+    banner.querySelector('.install-close').addEventListener('click', close);
     if (withButton) banner.querySelector('.install-go').addEventListener('click', onInstall);
     var img = banner.querySelector('.install-icon');
     if (img) img.onerror = function () { img.remove(); };
     document.body.appendChild(banner);
-    requestAnimationFrame(function () { banner.classList.add('is-visible'); });
+    requestAnimationFrame(function () {
+      banner.classList.add('is-visible');
+      backdrop.classList.add('is-visible');
+    });
   }
   function hide() {
     if (!banner) return;
     banner.classList.remove('is-visible');
-    var b = banner;
-    banner = null;
-    setTimeout(function () { b.remove(); }, 300);
+    backdrop.classList.remove('is-visible');
+    var b = banner, bd = backdrop;
+    banner = backdrop = null;
+    setTimeout(function () { b.remove(); bd.remove(); }, 300);
   }
 
   if (isIOS) {
     // only Safari (and iOS 16.4+ Chrome/Edge, which also have "Add to Home Screen" in the share menu)
     if (/FxiOS|OPiOS|YaBrowser/.test(ua)) return;
-    setTimeout(function () { show(false); }, 1500);
+    show(false);   // right away, before the user taps anything else
     return;
   }
 

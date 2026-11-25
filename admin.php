@@ -92,7 +92,7 @@
       <button name="generate" class="btn btn-primary btn-action" onClick="generate();">Generate</button>
       <button name="copy-assets" class="btn btn-primary btn-action" onClick="copyAssets();">Copy Assets</button>
       <button name="show-webapp" class="btn btn-primary btn-action" onClick="openInNewTab('<?php echo $config['app_name'] ?>');">Open Web App</button>
-      <button name="show-stats" class="btn btn-primary btn-action" onClick="openInNewTab('stats.php');">Bookmark stats</button>
+      <button name="show-stats" class="btn btn-primary btn-action" onClick="openInNewTab('stats.php');">Usage stats</button>
       </div>
       </div>
       
@@ -186,6 +186,10 @@
     
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
+    <script>
+      // this browser belongs to the team: the app's usage stats ignore it from now on (assets/js/stats_report.js)
+      try { localStorage.setItem('stats-team', '1'); } catch (e) {}
+    </script>
     
     <script>
         function updateConfig() {

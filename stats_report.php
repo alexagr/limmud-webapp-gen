@@ -16,6 +16,10 @@ $in = json_decode($raw, true);
 $app = isset($in['app']) ? $in['app'] : '';
 $device = isset($in['device']) ? $in['device'] : '';
 $sessions = isset($in['sessions']) && is_array($in['sessions']) ? $in['sessions'] : null;
+$remove = !empty($in['remove']);   // team device (opened admin.php): forget it
+if ($remove) {
+    $sessions = array();
+}
 
 // only known apps, sane ids, at most 300 sessions per device
 if (!preg_match('/^limmud\d{4}[a-z0-9_-]*$/', $app) || !is_dir(__DIR__ . '/' . $app)
@@ -30,6 +34,22 @@ foreach ($sessions as $s) {
     }
 }
 $ids = array_values(array_unique($ids));
+
+// rough device profile: only known values are kept
+$allowed = array(
+    'os' => array('android', 'iphone', 'ipad', 'windows', 'mac', 'linux', 'other'),
+    'br' => array('chrome', 'safari', 'samsung', 'firefox', 'edge', 'yandex', 'opera', 'other'),
+    'mode' => array('app', 'browser'),
+    'lang' => array('ru', 'he', 'en', 'ukr'),
+);
+$info = array();
+if (isset($in['info']) && is_array($in['info'])) {
+    foreach ($allowed as $k => $values) {
+        if (isset($in['info'][$k]) && in_array($in['info'][$k], $values, true)) {
+            $info[$k] = $in['info'][$k];
+        }
+    }
+}
 sort($ids);
 
 $file = __DIR__ . '/data/stats_' . $app . '.json';
@@ -58,10 +78,21 @@ if ($raw !== '' && $raw !== false) {
         $data = $bak;
     }
 }
-if (!isset($data[$device]) && count($data) >= 20000) {   // guard against flooding with fake devices
+if (!$remove && !isset($data[$device]) && count($data) >= 20000) {   // guard against flooding with fake devices
     fail_unlock($lock, 429);
 }
-$data[$device] = array('s' => $ids, 't' => time());
+if ($remove) {
+    unset($data[$device]);
+} else {
+$prevInfo = isset($data[$device]['i']) ? $data[$device]['i'] : null;   // an old app version sends no profile: keep the known one
+$first = isset($data[$device]['f']) ? $data[$device]['f'] : (isset($data[$device]['t']) ? $data[$device]['t'] : time());
+$data[$device] = array('s' => $ids, 't' => time(), 'f' => $first);
+if ($info) {
+    $data[$device]['i'] = $info;
+} elseif ($prevInfo) {
+    $data[$device]['i'] = $prevInfo;
+}
+}
 // atomic write: temp file + rename, so the file is always either the old or the new version
 $tmp = $file . '.tmp';
 $json = json_encode($data);

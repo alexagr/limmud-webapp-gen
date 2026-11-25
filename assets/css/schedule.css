@@ -2661,3 +2661,17 @@ mark.search-hit {
   border-radius: 0;
   padding: 0;
 }
+/* the page behind the install banner: dimmed and blurred */
+.install-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1049;
+  background: rgba(10, 6, 30, .55);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity .25s ease;
+}
+.install-backdrop.is-visible {
+  opacity: 1;
+}
