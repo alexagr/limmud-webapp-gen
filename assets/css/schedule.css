@@ -2675,3 +2675,28 @@ mark.search-hit {
 .install-backdrop.is-visible {
   opacity: 1;
 }
+
+/* ★ bookmarks, all screens: not selected = outline ☆, selected = solid yellow ★ with a thin dark edge,
+   so the two states differ in shape too (readable on any card colour, in sunlight, without colour vision).
+   Programme marks a selected star with an inline yellow colour, the others with a class. */
+.bookmark i.fa-star,
+.session .grid-fav i.fa-star,
+.speaker-event .event-fav i.fa-star,
+.session-modal-fav i.fa-star {
+  font-weight: 400;   /* Font Awesome 5 regular = outline star */
+}
+.bookmark[style*="255, 255, 0"] i.fa-star,
+.session.is-fav .grid-fav i.fa-star,
+.speaker-event.is-fav .event-fav i.fa-star,
+.session-modal-fav.is-active i.fa-star {
+  font-weight: 900;   /* solid */
+  filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 1px rgba(0, 0, 0, 0.45));
+}
+.session .grid-fav,
+.speaker-event .event-fav {
+  color: rgba(255, 255, 255, 0.85);   /* the outline is thin: keep it clearly visible */
+}
+.session.is-fav .grid-fav,
+.speaker-event.is-fav .event-fav {
+  color: rgb(255, 255, 0);
+}
