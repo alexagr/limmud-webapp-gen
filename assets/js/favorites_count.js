@@ -36,7 +36,7 @@
 
   // a ★ was tapped somewhere on the page - the page's own handler saves first, then we recount
   document.addEventListener('click', function (e) {
-    if (e.target.closest && e.target.closest('.bookmark, .grid-fav, .session-modal-fav')) setTimeout(update, 0);
+    if (e.target.closest && e.target.closest('.bookmark, .grid-fav')) setTimeout(update, 0);
   }, true);  // capture: also works if the page's own handler stops the click
   window.addEventListener('storage', function (e) { if (e.key === KEY) update(); });
   window.addEventListener('pageshow', update);

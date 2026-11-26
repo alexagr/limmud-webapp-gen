@@ -203,10 +203,6 @@
     '  <button type="button" class="session-modal-close" aria-label="×">&times;</button>' +
     '  <h4 class="session-modal-title"></h4>' +
     '  <div class="session-modal-body"></div>' +
-    '  <div class="session-modal-footer">' +
-    '    <button type="button" class="btn btn-default session-modal-fav"><i class="fa fa-star" aria-hidden="true"></i></button>' +
-    '    <a class="session-modal-link"></a>' +
-    '  </div>' +
     '</div>';
   document.body.appendChild(overlay);
 
@@ -221,11 +217,6 @@
     if (a && a.closest && a.closest('.calendar .session')) a.blur();
   }
 
-  function syncFav() {
-    if (!current) return;
-    overlay.querySelector('.session-modal-fav').classList.toggle('is-active', current.classList.contains('is-fav'));
-  }
-
   function open(session) {
     var link = session.querySelector('.session-name a');
     if (!link) return;
@@ -236,11 +227,6 @@
 
     overlay.querySelector('.session-modal-title').textContent = link.textContent.trim();
     overlay.querySelector('.session-modal-body').innerHTML = '<p class="session-modal-loading">…</p>';
-    var a = overlay.querySelector('.session-modal-link');
-    a.href = href;
-    var progLabel = document.getElementById('schedulelink');
-    a.innerHTML = (progLabel ? progLabel.textContent.trim() : '') + ' &rarr;';
-    syncFav();
     overlay.classList.add('is-open');
     document.body.classList.add('session-modal-open');
 
@@ -266,12 +252,7 @@
   });
 
   overlay.addEventListener('click', function (e) {
-    if (e.target === overlay || e.target.closest('.session-modal-close')) { close(); return; }
-    if (e.target.closest('.session-modal-fav') && current) {
-      var star = current.querySelector('.grid-fav');
-      if (star) star.click();           // same toggle as the ★ on the grid (saves + updates the grid)
-      syncFav();
-    }
+    if (e.target === overlay || e.target.closest('.session-modal-close')) close();
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
 })();

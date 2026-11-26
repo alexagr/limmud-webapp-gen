@@ -62,8 +62,9 @@
 
   var sending = false;
   // team device (this browser opened admin.php): not counted - remove it from the stats once, then stay silent
+  var EXCLUDE_TEAM = false;   // temporarily off: devices that opened admin.php are counted like everyone else
   function team() {
-    if (get('stats-team') !== '1') return false;
+    if (!EXCLUDE_TEAM || get('stats-team') !== '1') return false;
     if (get('stats-team-removed:' + KEY) === '1' || !get(ID_KEY) || sending) return true;
     sending = true;
     fetch('../stats_report.php', {

@@ -172,7 +172,7 @@ function h($s) { return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
       </div>
     </div>
   </div>
-  <div class="muted note">Platform / app / browser / language known for <?php echo $profiled ?> of <?php echo count($devices) ?> devices (older devices send it on their next visit). &ldquo;Installed app&rdquo; = used the installed app at least once.</div>
+  <div class="muted note">&ldquo;Installed app&rdquo; = used the installed app at least once.</div>
   <?php $max = max(1, $counts ? max($counts) : 1); ?>
   <table id="stats">
     <thead><tr>

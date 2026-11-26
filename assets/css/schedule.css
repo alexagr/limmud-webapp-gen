@@ -1941,15 +1941,6 @@ body.session-modal-open {
 .session-modal-body .session-speakers {
   margin: 0;
 }
-.session-modal-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 10px;
-}
-.session-modal-fav.is-active {
-  color: rgb(255, 255, 0);
-}
 .session-modal-loading {
   opacity: 0.6;
 }
@@ -2311,11 +2302,7 @@ body {
   left: -2px;
 }
 
-/* Сетка session card: no bottom row (★ + "Программа →") - the star is on the grid box itself */
-.session-modal-footer {
-  display: none;
-}
-/* ...and no closing line at the very bottom of the card */
+/* Сетка session card: no closing line at the very bottom of the card */
 .session-modal-body .session-speakers-list > hr:last-child {
   display: none;
 }
@@ -2681,14 +2668,12 @@ mark.search-hit {
    Programme marks a selected star with an inline yellow colour, the others with a class. */
 .bookmark i.fa-star,
 .session .grid-fav i.fa-star,
-.speaker-event .event-fav i.fa-star,
-.session-modal-fav i.fa-star {
+.speaker-event .event-fav i.fa-star {
   font-weight: 400;   /* Font Awesome 5 regular = outline star */
 }
 .bookmark[style*="255, 255, 0"] i.fa-star,
 .session.is-fav .grid-fav i.fa-star,
-.speaker-event.is-fav .event-fav i.fa-star,
-.session-modal-fav.is-active i.fa-star {
+.speaker-event.is-fav .event-fav i.fa-star {
   font-weight: 900;   /* solid */
   filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 1px rgba(0, 0, 0, 0.45));
 }
