@@ -19,3 +19,10 @@ Satisfy Any
 Order allow,deny
 Allow from all
 </Files>
+
+# registration in advance from the web app (assets/js/registration.js): public; the HelpDesk page registrations.php stays protected
+<Files "registration.php">
+Satisfy Any
+Order allow,deny
+Allow from all
+</Files>
