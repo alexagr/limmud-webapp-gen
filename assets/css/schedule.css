@@ -2819,6 +2819,14 @@ body.reg-dialog-open {
   border-radius: 8px;
   background: rgba(255, 179, 64, 0.15);
 }
+.reg-form-names {
+  display: flex;
+  gap: 10px;
+}
+.reg-form-names label {
+  flex: 1 1 0;
+  min-width: 0;
+}
 .reg-form label {
   display: block;
   margin: 0 0 10px;

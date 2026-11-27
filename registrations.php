@@ -10,13 +10,25 @@ $app = isset($_GET['app']) ? $_GET['app'] : (isset($config['app_name']) ? $confi
 if (!reg_valid_app($app)) {
     exit('Unknown app');
 }
+$config['_app'] = $app;
 $sessions = reg_sessions($app);
 uasort($sessions, function ($a, $b) { return $a['start'] - $b['start'] ?: strcmp($a['title'], $b['title']); });
 $self = 'registrations.php?app=' . urlencode($app);
 function h($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
+// CSV cells: a value starting with = + - @ would run as a formula in Excel
+function csv_safe($row)
+{
+    return array_map(function ($v) { $v = (string)$v; return preg_match('/\A[=+\-@\t\r]/', $v) ? "'" . $v : $v; }, $row);
+}
 
 // ---- actions (POST, then back to the page) ----
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '');
+    $site = isset($_SERVER['HTTP_SEC_FETCH_SITE']) ? $_SERVER['HTTP_SEC_FETCH_SITE'] : '';
+    if (parse_url($origin, PHP_URL_HOST) !== $_SERVER['HTTP_HOST'] || ($site !== '' && $site !== 'same-origin')) {
+        http_response_code(403);
+        exit('Forbidden: this action can only be sent from the Registrations page');
+    }
     $do = isset($_POST['do']) ? $_POST['do'] : '';
     $sid = isset($_POST['session']) ? (int)$_POST['session'] : 0;
     $notify = !empty($_POST['notify']);
@@ -29,17 +41,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit('ERROR: cannot read the registrations file');
     }
     if ($do === 'add') {
-        $name = isset($_POST['name']) ? $_POST['name'] : '';
+        $first = isset($_POST['first']) ? trim($_POST['first']) : '';
+        $last = isset($_POST['last']) ? trim($_POST['last']) : '';
+        $name = reg_full_name($first, $last);
         $phone = isset($_POST['phone']) ? $_POST['phone'] : '';
         $email = isset($_POST['email']) ? trim($_POST['email']) : '';
         $status = isset($_POST['status']) && in_array($_POST['status'], array('confirmed', 'waiting')) ? $_POST['status'] : '';
         $override = !empty($_POST['override']);
-        $bad = reg_validate_fields($name, $phone, $email === '' ? 'nobody@example.com' : $email);   // e-mail optional here
+        $bad = reg_validate_names($first, $last) ?: reg_validate_fields($name, $phone, $email === '' ? 'nobody@example.com' : $email);   // e-mail optional here
         if ($bad) {
-            $msg = 'err:' . array('name' => 'Проверьте имя', 'phone' => 'Проверьте телефон', 'email' => 'Проверьте e-mail')[$bad];
+            $msg = 'err:' . array('first' => 'Укажите имя', 'last' => 'Укажите фамилию', 'name' => 'Проверьте имя',
+                                  'phone' => 'Проверьте телефон', 'email' => 'Проверьте e-mail')[$bad];
         } else {
             $lang = isset($_POST['lang']) && in_array($_POST['lang'], array('ru', 'ukr', 'en', 'he')) ? $_POST['lang'] : 'ru';
-            $reg = reg_add($data, $sessions, $sid, array('name' => $name, 'phone' => $phone, 'email' => $email,
+            foreach (reg_fill($data, $sessions, $sid) as $p) {   // free seats go to the waiting list first
+                $mails[] = array($p, 'promoted');
+            }
+            $reg = reg_add($data, $sessions, $sid, array('name' => $name, 'first' => $first, 'last' => $last, 'phone' => $phone, 'email' => $email,
                                                        'lang' => $lang, 'by' => 'helpdesk'), $status, $override);
             if (isset($reg['id'])) {
                 $msg = 'ok:' . $reg['name'] . ' - ' . ($reg['status'] === 'confirmed' ? 'записан(а)' : 'в листе ожидания');
@@ -52,6 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'overlap' => 'пересекается с другой записью: «' . $reg[1] . '»',
                     'category' => 'превышен лимит категории «' . explode('|', $reg[1])[0] . '» (' . (explode('|', $reg[1] . '|')[1]) . ')',
                     'full' => 'мест нет, и лист ожидания заполнен',
+                    'contact' => 'на этот e-mail или телефон уже ' . $reg[1] . ' записей',
                     'session' => 'нет такой сессии');
                 $msg = 'err:Не записан(а): ' . (isset($why[$reg[0]]) ? $why[$reg[0]] : $reg[0])
                      . ($reg[0] !== 'already' && $reg[0] !== 'session' ? '. Можно отметить «игнорировать ограничения».' : '');
@@ -59,7 +78,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } elseif ($do === 'cancel' || $do === 'confirm') {
         $id = isset($_POST['id']) ? (string)(int)$_POST['id'] : '';
-        if (isset($data['regs'][$id]) && reg_active($data['regs'][$id])) {
+        if (isset($data['regs'][$id]) && reg_active($data['regs'][$id])
+            && ($do === 'cancel' || $data['regs'][$id]['status'] === 'waiting')) {
             $sid = $data['regs'][$id]['session'];
             if ($do === 'cancel') {
                 foreach (reg_cancel($data, $sessions, $id, 'helpdesk') as $p) {
@@ -81,6 +101,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     }
+    if ($do === 'cancel_many') {
+        $n = 0;
+        foreach (isset($_POST['ids']) && is_array($_POST['ids']) ? $_POST['ids'] : array() as $id) {
+            $id = (string)(int)$id;
+            if (isset($data['regs'][$id]) && reg_active($data['regs'][$id])) {
+                foreach (reg_cancel($data, $sessions, $id, 'helpdesk') as $p) {
+                    $mails[] = array($p, 'promoted');
+                }
+                $n++;
+            }
+        }
+        $msg = 'ok:Отменено записей: ' . $n;
+    }
     if ($msg === '' || strpos($msg, 'ok:') === 0) {
         if (!reg_save($app, $data)) {
             $msg = 'err:Ошибка записи файла';
@@ -90,7 +123,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     foreach ($mails as $m) {
         reg_mail($config, $data, $sessions, $m[0], $m[1]);
     }
-    header('Location: ' . $self . ($sid ? '&session=' . $sid : '') . '&msg=' . urlencode($msg) . ($sid ? '#s' : ''));
+    $back = $do === 'cancel_many' && isset($_POST['q']) ? '&q=' . urlencode($_POST['q']) : '';
+    header('Location: ' . $self . ($sid ? '&session=' . $sid : '') . $back . '&msg=' . urlencode($msg) . ($sid ? '#s' : ''));
     exit;
 }
 
@@ -101,6 +135,41 @@ if ($data === null) {
 $sel = isset($_GET['session']) ? (int)$_GET['session'] : 0;
 $q = isset($_GET['q']) ? trim($_GET['q']) : '';
 
+// full copy for safekeeping: everything as JSON (can be put back as data/<app>/registrations.json) or as one CSV;
+// ?download=log - the same rebuilt from the change log (if the main file and its copies were ever lost)
+if (isset($_GET['download'])) {
+    $what = $_GET['download'];
+    $stamp = date('Ymd-Hi');
+    if ($what === 'json' || $what === 'log') {
+        $out = $what === 'log' ? reg_from_log($app) : $data;
+        header('Content-Type: application/json; charset=utf-8');
+        header('Content-Disposition: attachment; filename="registrations_' . $app . ($what === 'log' ? '-from-log' : '') . '-' . $stamp . '.json"');
+        echo json_encode($out, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        exit;
+    }
+    header('Content-Type: text/csv; charset=utf-8');
+    header('Content-Disposition: attachment; filename="registrations_' . $app . '-' . $stamp . '.csv"');
+    echo "\xEF\xBB\xBF";
+    $f = fopen('php://output', 'w');
+    fputcsv($f, array('id', 'Сессия', 'Начало', 'Статус', 'Имя', 'Телефон', 'E-mail', 'Записан', 'Кто', 'Отменён', 'Язык'));
+    foreach ($data['regs'] as $r) {
+        $s = isset($sessions[$r['session']]) ? $sessions[$r['session']] : null;
+        fputcsv($f, csv_safe(array($r['id'], $s ? $s['title'] : (isset($r['session_title']) ? $r['session_title'] : $r['session']),
+                          $s ? date('d.m H:i', $s['start']) : '', $r['status'], $r['name'], $r['phone'], $r['email'],
+                          date('d.m H:i', $r['created']), $r['by'], !empty($r['cancelled']) ? date('d.m H:i', $r['cancelled']) : '',
+                          $r['lang'])));
+    }
+    exit;
+}
+
+// registrations whose session changed in the sheet (other title or time under the same id)
+$changed = array();
+foreach ($data['regs'] as $r) {
+    if (reg_active($r) && reg_session_changed($r, $sessions) !== '') {
+        $changed[] = $r;
+    }
+}
+
 // CSV of one session (list for the door)
 if (isset($_GET['csv']) && isset($sessions[$sel])) {
     header('Content-Type: text/csv; charset=utf-8');
@@ -109,8 +178,8 @@ if (isset($_GET['csv']) && isset($sessions[$sel])) {
     $f = fopen('php://output', 'w');
     fputcsv($f, array('#', 'Статус', 'Имя', 'Телефон', 'E-mail', 'Когда', 'Кто'));
     foreach (session_regs($data, $sel) as $r) {
-        fputcsv($f, array($r['status'] === 'waiting' ? 'W' . reg_waiting_pos($data, $r) : '', $r['status'] === 'confirmed' ? 'записан' : 'ожидание',
-                          $r['name'], $r['phone'], $r['email'], date('d.m H:i', $r['created']), $r['by']));
+        fputcsv($f, csv_safe(array($r['status'] === 'waiting' ? 'W' . reg_waiting_pos($data, $r) : '', $r['status'] === 'confirmed' ? 'записан' : 'ожидание',
+                          $r['name'], $r['phone'], $r['email'], date('d.m H:i', $r['created']), $r['by'])));
     }
     exit;
 }
@@ -209,6 +278,14 @@ if (isset($_GET['msg']) && $_GET['msg'] !== '') {
     usort($found, function ($a, $b) use ($sessions) { return $sessions[$a['session']]['start'] - $sessions[$b['session']]['start']; });
 ?>
 <h2>Найдено: <?php echo count($found) ?> <a class="muted" href="<?php echo h($self) ?>">очистить</a></h2>
+<?php $activeFound = array_filter($found, 'reg_active'); if ($activeFound): ?>
+<form method="post" style="margin:0 0 8px">
+  <input type="hidden" name="do" value="cancel_many"><input type="hidden" name="q" value="<?php echo h($q) ?>">
+  <?php foreach ($activeFound as $r): ?><input type="hidden" name="ids[]" value="<?php echo (int)$r['id'] ?>"><?php endforeach; ?>
+  <button class="danger" type="button" onclick="sure(this, 'Отменить все найденные (<?php echo count($activeFound) ?>)')">Отменить все найденные (<?php echo count($activeFound) ?>)</button>
+  <span class="muted">без писем; освободившиеся места получат люди из листа ожидания</span>
+</form>
+<?php endif; ?>
 <table>
   <tr><th>Сессия</th><th>Имя</th><th class="hide-sm">Телефон</th><th>Статус</th></tr>
   <?php foreach ($found as $r): $s = $sessions[$r['session']]; ?>
@@ -221,6 +298,18 @@ if (isset($_GET['msg']) && $_GET['msg'] !== '') {
   <?php endforeach; ?>
 </table>
 <?php endif; ?>
+
+<?php if ($changed): ?>
+<div class="msg err"><b>Внимание:</b> <?php echo count($changed) ?> активных записей сделаны на сессию, которая с тех пор изменилась
+  в таблице (другое название или время). Проверьте их:
+  <ul><?php foreach ($changed as $r): ?>
+    <li><?php echo h($r['name']) ?> — записан(а) на <?php echo h(reg_session_changed($r, $sessions)) ?>,
+      сейчас это <?php echo isset($sessions[$r['session']]) ? '«' . h($sessions[$r['session']]['title']) . '», ' . h(when($sessions[$r['session']]['start'])) : 'сессия без записи' ?></li>
+  <?php endforeach; ?></ul></div>
+<?php endif; ?>
+<p class="muted">Скачать всё: <a href="<?php echo h($self) ?>&download=csv">CSV</a> ·
+  <a href="<?php echo h($self) ?>&download=json">JSON</a> (полная копия) ·
+  <a href="<?php echo h($self) ?>&download=log">восстановить из журнала</a></p>
 
 <h2>Сессии с записью</h2>
 <?php if (!$sessions): ?>
@@ -269,7 +358,8 @@ if (isset($_GET['msg']) && $_GET['msg'] !== '') {
   <input type="hidden" name="do" value="add">
   <input type="hidden" name="session" value="<?php echo $sel ?>">
   <div class="row">
-    <input type="text" name="name" placeholder="Имя и фамилия" required>
+    <input type="text" name="first" placeholder="Имя" required>
+    <input type="text" name="last" placeholder="Фамилия" required>
     <input type="tel" name="phone" placeholder="Телефон" required>
     <input type="email" name="email" placeholder="E-mail (не обязательно)">
   </div>
@@ -296,6 +386,7 @@ if (isset($_GET['msg']) && $_GET['msg'] !== '') {
       <?php if (!empty($r['override'])): ?><span class="tag">вне правил</span><?php endif; ?>
       <?php if (!empty($r['promoted'])): ?><span class="tag">из ожидания</span><?php endif; ?>
       <?php if (isset($dups[$r['id']])): ?><span class="tag">повтор?</span><?php endif; ?>
+      <?php if (reg_active($r) && ($was = reg_session_changed($r, $sessions)) !== ''): ?><span class="tag" style="color:#b3261e">сессия изменилась: <?php echo h($was) ?></span><?php endif; ?>
       <?php if (!$active): ?><div class="muted">отменено <?php echo !empty($r['cancelled']) ? h(date('d.m H:i', $r['cancelled'])) : '' ?> (<?php echo h(isset($r['cancelled_by']) ? $r['cancelled_by'] : '') ?>)</div><?php endif; ?>
     </td>
     <td><a href="tel:<?php echo h(preg_replace('/[^\d+]/', '', $r['phone'])) ?>"><?php echo h($r['phone']) ?></a></td>
@@ -317,11 +408,11 @@ if (isset($_GET['msg']) && $_GET['msg'] !== '') {
 </div>
 <script>
   // two taps to cancel (no browser dialog): the first one asks, the second one cancels
-  function sure(b) {
+  function sure(b, label) {
     if (b.classList.contains('sure')) { b.form.submit(); return; }
     b.classList.add('sure');
     b.textContent = 'Точно отменить?';
-    setTimeout(function () { b.classList.remove('sure'); b.textContent = 'Отменить'; }, 4000);
+    setTimeout(function () { b.classList.remove('sure'); b.textContent = label || 'Отменить'; }, 4000);
   }
 </script>
 </body>

@@ -1,7 +1,7 @@
 <?php
 // Receives anonymous bookmark reports from the web app (assets/js/stats_report.js).
 // Public on purpose (see .htaccess): it only accepts data, never shows any.
-// Keeps the latest list of starred sessions per anonymous device id in data/stats_<app>.json.
+// Keeps the latest list of starred sessions per anonymous device id in data/<app>/stats.json.
 
 header('Content-Type: application/json');
 header('Cache-Control: no-store');
@@ -52,7 +52,8 @@ if (isset($in['info']) && is_array($in['info'])) {
 }
 sort($ids);
 
-$file = __DIR__ . '/data/stats_' . $app . '.json';
+@mkdir(__DIR__ . '/data/' . $app, 0755);   // everything of one event in data/<app>/
+$file = __DIR__ . '/data/' . $app . '/stats.json';
 $lock = fopen($file . '.lock', 'c');   // separate lock file: the data file itself is replaced by rename
 if (!$lock) {
     http_response_code(500);

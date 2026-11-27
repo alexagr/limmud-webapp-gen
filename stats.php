@@ -1,6 +1,6 @@
 <?php
 // Admin view of anonymous usage statistics (bookmarks, devices, last seen) (password-protected like every other *.php here).
-// Counts, per session, how many devices currently have it starred (data/stats_<app>.json,
+// Counts, per session, how many devices currently have it starred (data/<app>/stats.json,
 // written by stats_report.php). Session titles/times/rooms come from <app>/json/sessions.json.
 
 // new devices are grouped by day in Israel time (the server clock is UTC)
@@ -9,7 +9,7 @@ $config = json_decode(file_get_contents('data/config.json'), true);
 $app = $config['app_name'];
 
 $devices = array();
-$statsFile = 'data/stats_' . $app . '.json';
+$statsFile = 'data/' . $app . '/stats.json';
 if (file_exists($statsFile)) {
     $devices = json_decode(file_get_contents($statsFile), true);
     if (!is_array($devices)) {

@@ -754,8 +754,8 @@ function parse_sheets($client, $config)
         # update end_time if session overlaps to the next day
         $start_time = $date . 'T' . $start . ':00' . $config['server_timezone'];
         if (intval(explode(':', $end)[0]) < 3) {
-            $yymmdd = explode('-', $date);
-            $end_time = $yymmdd[0] . '-' . $yymmdd[1] . '-' . strval(intval($yymmdd[2]) + 1) . 'T' . $end . ':00' . $config['server_timezone'];
+            // the next calendar day (also across a month / year end: 31.12 -> 01.01)
+            $end_time = date('Y-m-d', strtotime($date . ' +1 day')) . 'T' . $end . ':00' . $config['server_timezone'];
         } else {
             $end_time = $date . 'T' . $end . ':00' . $config['server_timezone'];
         }
