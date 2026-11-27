@@ -60,6 +60,30 @@
           <input type="text" id="app-name" value="<?php echo $config['app_name'] ?>"><br>
         </div> 
       </div>
+      <div class="row">
+        <div class="col-md-3">
+          <label for="timezone">Time zone:</label>
+        </div>
+        <div class="col-md-9">
+          <input type="text" id="timezone" size="50" placeholder="Asia/Jerusalem" value="<?php echo htmlspecialchars(isset($config['timezone']) ? $config['timezone'] : '') ?>"><br>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <label for="mail-from">Registration e-mails from:</label>
+        </div>
+        <div class="col-md-9">
+          <input type="text" id="mail-from" size="50" placeholder="noreply@limmudfsu.org.il" value="<?php echo htmlspecialchars(isset($config['mail_from']) ? $config['mail_from'] : '') ?>"><br>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <label for="mail-reply-to">Reply-to:</label>
+        </div>
+        <div class="col-md-9">
+          <input type="text" id="mail-reply-to" size="50" placeholder="" value="<?php echo htmlspecialchars(isset($config['mail_reply_to']) ? $config['mail_reply_to'] : '') ?>"><br>
+        </div>
+      </div>
       <!--
       <div class="row">
         <div class="col-md-3">
@@ -92,7 +116,10 @@
       <button name="generate" class="btn btn-primary btn-action" onClick="generate();">Generate</button>
       <button name="copy-assets" class="btn btn-primary btn-action" onClick="copyAssets();">Copy Assets</button>
       <button name="show-webapp" class="btn btn-primary btn-action" onClick="openInNewTab('<?php echo $config['app_name'] ?>');">Open Web App</button>
+      </div>
+      <div class="row action-row">
       <button name="show-stats" class="btn btn-primary btn-action" onClick="openInNewTab('stats.php');">Usage stats</button>
+      <button name="show-registrations" class="btn btn-primary btn-action" onClick="openInNewTab('registrations.php');">Registrations</button>
       </div>
       </div>
       
@@ -196,7 +223,8 @@
           $("#config-status").html('');
           jQuery.ajax({
             url: 'save_settings.php',
-            data: 'sheet_id='+$("#sheet-id").val()+'&app_name='+$("#app-name").val(),
+            data: {sheet_id: $("#sheet-id").val(), app_name: $("#app-name").val(), timezone: $("#timezone").val(),
+                   mail_from: $("#mail-from").val(), mail_reply_to: $("#mail-reply-to").val()},
             type: 'POST',
 		        success: function(data){
               if (data.includes('ERROR')) {

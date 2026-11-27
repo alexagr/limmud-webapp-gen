@@ -71,6 +71,10 @@ function get_defaults()
         'schedule_presenter7_column' => 'presenter7',
         'schedule_presenter8_column' => 'presenter8',
         'schedule_alt_presenter_summary_column' => 'alt-presenter-summary',
+        'schedule_reg_seats_column' => 'reg-seats',
+        'schedule_reg_start_column' => 'reg-start',
+        'schedule_reg_category_column' => 'reg-category',
+        'schedule_reg_limit_column' => 'reg-limit',
         'schedule_alt_presenter_summary2_column' => 'alt-presenter-summary-he',
         'presenter_sheet' => 'Presenters',
         'presenter_name_column' => 'name-russian',
@@ -494,6 +498,7 @@ function parse_sheets($client, $config)
 
     # parse schedule
     $sessions = array();
+    $reg_category_limits = array();
     $current_date = '';
     $next_end = '';
     $header = $service->spreadsheets_values->get($sheet_id, $config['schedule_sheet'] . '!A1:1')->getValues()[0];
@@ -669,6 +674,39 @@ function parse_sheets($client, $config)
         }
 
         $alt_presenter_summary = get_cell($header, $row, $config['schedule_alt_presenter_summary_column'], '');
+
+        // registration in advance (limited seats): reg-start is local event time, e.g. "2026-12-17 9:00"
+        $reg = null;
+        $reg_live = 0;   // limited seats without registration (no reg-start): "first come, first served"
+        $reg_seats = (int)trim(get_cell($header, $row, $config['schedule_reg_seats_column'], ''));
+        if ($reg_seats > 0) {
+            $reg_start_raw = trim(get_cell($header, $row, $config['schedule_reg_start_column'], ''));
+            $reg_start = '';
+            if ($reg_start_raw !== '') {
+                try {
+                    $dt = new DateTime($reg_start_raw, new DateTimeZone(date_default_timezone_get()));
+                    $reg_start = $dt->format('c');
+                } catch (Exception $e) {
+                    echo "WARNING: cannot read reg-start '" . $reg_start_raw . "' of session '" . $name . "'\n";
+                }
+            }
+            $reg_category = trim(get_cell($header, $row, $config['schedule_reg_category_column'], ''));
+            $reg_limit = (int)trim(get_cell($header, $row, $config['schedule_reg_limit_column'], ''));
+            if ($reg_category !== '') {
+                if (isset($reg_category_limits[$reg_category]) && $reg_category_limits[$reg_category] != $reg_limit) {
+                    echo "WARNING: reg-limit of category '" . $reg_category . "' differs between sessions ("
+                        . $reg_category_limits[$reg_category] . " / " . $reg_limit . "), the smaller one is used\n";
+                    $reg_limit = min($reg_limit, $reg_category_limits[$reg_category]);
+                }
+                $reg_category_limits[$reg_category] = $reg_limit;
+            }
+            if ($reg_start === '') {
+                $reg_live = $reg_seats;
+            } else {
+                $reg = array('seats' => $reg_seats, 'waitlist' => (int)ceil($reg_seats * 0.3), 'start' => $reg_start,
+                             'category' => $reg_category, 'limit' => $reg_limit);
+            }
+        }
         $alt_presenter_summary2 = get_cell($header, $row, $config['schedule_alt_presenter_summary2_column'], '');
 
         if (array_key_exists($name, $session_data)) {
@@ -739,7 +777,7 @@ function parse_sheets($client, $config)
             'track' => array('id' => $track_id, 'name' => $track, 'name2' => $track2), 'speakers' => array(),
             'long_abstract' => $description, 'long_abstract2' => $description2,
             'language' => $language, 'language2' => $language2, 'language_short' => $language_short, 'language_ribbon' => $language_ribbon,
-            'shabbat' => $shabbat, 'language_translate' => $language_translate,
+            'shabbat' => $shabbat, 'language_translate' => $language_translate, 'reg' => $reg, 'reg_live' => $reg_live,
             'alt_presenter_summary' => $alt_presenter_summary, 'alt_presenter_summary2' => $alt_presenter_summary2
         );
         foreach($people as $key => $speaker) {
@@ -750,6 +788,13 @@ function parse_sheets($client, $config)
 
         if (!empty($next_end)) {
             $end = $next_end;
+        }
+    }
+
+    // the same limit for every session of a category (the smallest one given)
+    foreach ($sessions as $sid => $sess) {
+        if (!empty($sess['reg']['category'])) {
+            $sessions[$sid]['reg']['limit'] = $reg_category_limits[$sess['reg']['category']];
         }
     }
 
@@ -991,6 +1036,33 @@ function foldByTime($sessions, $speakers, $tracks, $config, $lang) {
 
         // long sessions (1:30 or more, with presenters - not meals etc.): duration badge on the programme card,
         // in half hours: 1:30-1:49 -> 1,5 ч, 1:50-2:19 -> 2 ч, 2:20-2:49 -> 2,5 ч, 2:50-3:19 -> 3 ч ...
+        // limited seats, registration in advance: "(20 мест, по предварительной записи)"
+        $reg_label = array('ru' => '', 'ukr' => '', 'en' => '', 'he' => '');
+        if (!empty($session['reg'])) {
+            $n = $session['reg']['seats'];
+            $m10 = $n % 10; $m100 = $n % 100;
+            $few = ($m10 >= 2 && $m10 <= 4 && ($m100 < 12 || $m100 > 14));
+            $one = ($m10 == 1 && $m100 != 11);
+            $reg_label = array(
+                'ru' => $n . ' ' . ($one ? 'место' : ($few ? 'места' : 'мест')) . ', по предварительной записи',
+                'ukr' => $n . ' ' . ($one ? 'місце' : ($few ? 'місця' : 'місць')) . ', за попереднім записом',
+                'en' => $n . ' ' . ($n == 1 ? 'seat' : 'seats') . ', registration required',
+                'he' => $n . ' מקומות, בהרשמה מראש');
+        }
+        // limited seats, no registration: "(20 человек, в порядке живой очереди)"
+        $live_label = array('ru' => '', 'ukr' => '', 'en' => '', 'he' => '');
+        if (!empty($session['reg_live'])) {
+            $n = $session['reg_live'];
+            $m10 = $n % 10; $m100 = $n % 100;
+            $few = ($m10 >= 2 && $m10 <= 4 && ($m100 < 12 || $m100 > 14));
+            $one = ($m10 == 1 && $m100 != 11);
+            $live_label = array(
+                'ru' => $n . ' ' . ($one ? 'человек' : ($few ? 'человека' : 'человек')) . ', в порядке живой очереди',
+                'ukr' => $n . ' ' . ($one ? 'особа' : ($few ? 'особи' : 'осіб')) . ', у порядку живої черги',
+                'en' => $n . ' ' . ($n == 1 ? 'person' : 'people') . ', first come, first served',
+                'he' => $n . ' משתתפים, לפי סדר ההגעה');
+        }
+
         $minutes = (int)round((strtotime($session['end_time']) - strtotime($session['start_time'])) / 60);
         $duration = array('ru' => '', 'ukr' => '', 'en' => '', 'he' => '');
         if ($minutes >= 90 && (!empty($speakersList) || !empty($session['alt_presenter_summary']))) {
@@ -1016,6 +1088,12 @@ function foldByTime($sessions, $speakers, $tracks, $config, $lang) {
             'speakers_list' => $speakersList,
             'many_speakers_list' => $manySpeakersList,
             'duration_ru' => $duration['ru'],
+            // meals (track "еда") have no presenters: the card shows the time range in their place, e.g. 9:00 - 11:30
+            'meal_time' => ($session['track']['name'] == 'еда' && empty($speakersList) && empty($session['alt_presenter_summary']))
+                ? date('G:i', strtotime($session['start_time'])) . ' - ' . date('G:i', strtotime($session['end_time'])) : '',
+            'reg_seats' => $reg_label['ru'] !== '',
+            'reg_live_ru' => $live_label['ru'], 'reg_live_ukr' => $live_label['ukr'], 'reg_live_en' => $live_label['en'], 'reg_live_he' => $live_label['he'],
+            'reg_ru' => $reg_label['ru'], 'reg_ukr' => $reg_label['ukr'], 'reg_en' => $reg_label['en'], 'reg_he' => $reg_label['he'],
             'duration_ukr' => $duration['ukr'],
             'duration_en' => $duration['en'],
             'duration_he' => $duration['he'],
@@ -1485,6 +1563,10 @@ function generate()
 
     $config = json_decode(file_get_contents('data/config.json'), true);
     $config = array_merge($config, get_defaults());
+    // global configuration (admin.php): event time zone - session times and registration start times are local
+    if (!empty($config['timezone'])) {
+        $config['event_timezone'] = $config['timezone'];
+    }
 
     if (!empty($config['event_timezone'])) {
         date_default_timezone_set($config['event_timezone']);

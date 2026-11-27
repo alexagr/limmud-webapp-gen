@@ -136,7 +136,9 @@
                         <div class="row speaker-short-info">
                       {{/if}}
                           <h5 class="find-target">
-                          {{#if alt_presenter_summary2}}
+                          {{#if meal_time}}
+                            <span dir="ltr">{{meal_time}}</span>
+                          {{else if alt_presenter_summary2}}
                             {{alt_presenter_summary2}}
                           {{else}}
                           {{#each speakers_list}}
@@ -147,6 +149,7 @@
                           <h6>
                           {{start}}
                           {{#if duration_he}}&nbsp;|&nbsp; <span class="duration-badge"><i class="far fa-clock"></i> {{duration_he}}</span>{{/if}}
+                          {{#if reg_seats}}&nbsp;|&nbsp; <span class="reg-badge" title="{{reg_he}}"><i class="fa fa-user-check" aria-hidden="true"></i></span>{{/if}}
                           {{#if location2}}
                           &nbsp;|&nbsp; <span style="white-space: nowrap">{{location2}}</span>
                           {{/if}}
@@ -186,6 +189,12 @@
                       {{/if}}
                       {{#if shabbat}}
                       <p class="compact"><i class="fa fa-menorah" aria-hidden="true"></i>&nbsp;שומר שבת</p>
+                      {{/if}}
+                      {{#if reg_live_he}}
+                      <p class="compact reg-info"><i class="fa fa-users" aria-hidden="true"></i>&nbsp;({{reg_live_he}})</p>
+                      {{/if}}
+                      {{#if reg_seats}}
+                      <div class="reg-block" data-session="{{session_id}}"><p class="compact reg-info"><i class="fa fa-user-check" aria-hidden="true"></i>&nbsp;({{reg_he}})</p><div class="reg-actions"></div></div>
                       {{/if}}
                       <hr class="clear-both">
                       {{#if description2}}
