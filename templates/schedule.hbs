@@ -382,7 +382,7 @@
         });
 
         $('[id="no-results"]').remove();   // every copy (the page has several date lists)
-        $('.track-names').show();
+        $('.track-names').css('display', '');   // back to the stylesheet (hidden on phones)
         if ($('.track-inline:visible').length == 0) {
           const message = (filterVal) ? 'Ничего не найдено' : 'Нет закладок';
           $('.date-list').last().after('<p class="no-bookmarks" id="no-results">'+message+'</p>');

@@ -363,7 +363,7 @@
         });
 
         $('[id="no-results"]').remove();   // every copy (the page has several date lists)
-        $('.track-names').show();
+        $('.track-names').css('display', '');   // back to the stylesheet (hidden on phones)
         if ($('.track-inline:visible').length == 0) {
           const message = (filterVal) ? 'Нічого не знайдено' : 'Закладок немає';
           $('.date-list').last().after("<p style = 'padding-left: 15px; margin-top: 15px; font-weight: bold; color: red; text-align: center;' id='no-results'>"+message+"</p>");
