@@ -29,14 +29,15 @@
       badge.textContent = n;
       badge.style.display = n ? '' : 'none';
     }
-    // "Сохранить закладки" row on the programme page: only when something is marked
+    // "Сохранить «Мой Лимуд»" row on the programme page: only in the «Мой Лимуд» view, and only when something is marked
     var save = document.getElementById('save-bookmarks');
-    if (save) save.style.display = n ? '' : 'none';
+    var mine = document.getElementById('starred');
+    if (save) save.style.display = (n && mine && mine.classList.contains('is-active')) ? '' : 'none';
   }
 
   // a ★ was tapped somewhere on the page - the page's own handler saves first, then we recount
   document.addEventListener('click', function (e) {
-    if (e.target.closest && e.target.closest('.bookmark, .grid-fav')) setTimeout(update, 0);
+    if (e.target.closest && e.target.closest('.bookmark, .grid-fav, #starred')) setTimeout(update, 0);
   }, true);  // capture: also works if the page's own handler stops the click
   window.addEventListener('storage', function (e) { if (e.key === KEY) update(); });
   window.addEventListener('pageshow', update);
