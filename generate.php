@@ -1088,9 +1088,7 @@ function foldByTime($sessions, $speakers, $tracks, $config, $lang) {
             'speakers_list' => $speakersList,
             'many_speakers_list' => $manySpeakersList,
             'duration_ru' => $duration['ru'],
-            // meals (track "еда") have no presenters: the card shows the time range in their place, e.g. 9:00 - 11:30
-            'meal_time' => ($session['track']['name'] == 'еда' && empty($speakersList) && empty($session['alt_presenter_summary']))
-                ? date('G:i', strtotime($session['start_time'])) . ' - ' . date('G:i', strtotime($session['end_time'])) : '',
+            'is_meal' => ($session['track']['name'] == 'еда'),   // meals: start - end time on the card ("9:00 - 11:30")
             'reg_seats' => $reg_label['ru'] !== '',
             'reg_live_ru' => $live_label['ru'], 'reg_live_ukr' => $live_label['ukr'], 'reg_live_en' => $live_label['en'], 'reg_live_he' => $live_label['he'],
             'reg_ru' => $reg_label['ru'], 'reg_ukr' => $reg_label['ukr'], 'reg_en' => $reg_label['en'], 'reg_he' => $reg_label['he'],

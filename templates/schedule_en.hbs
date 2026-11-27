@@ -144,9 +144,7 @@
                         <div class="row speaker-short-info">
                       {{/if}}
                           <h5 class="find-target">
-                          {{#if meal_time}}
-                            <span dir="ltr">{{meal_time}}</span>
-                          {{else if alt_presenter_summary}}
+                          {{#if alt_presenter_summary}}
                             {{alt_presenter_summary}}
                           {{else}}
                           {{#each speakers_list}}
@@ -155,7 +153,7 @@
                           {{/if}}
                           </h5>
                           <h6>
-                          {{start}}
+                          {{#if is_meal}}<span dir="ltr">{{start}} - {{end}}</span>{{else}}{{start}}{{/if}}
                           {{#if duration_en}}&nbsp;|&nbsp; <span class="duration-badge"><i class="far fa-clock"></i> {{duration_en}}</span>{{/if}}
                           {{#if reg_seats}}&nbsp;|&nbsp; <span class="reg-badge" title="{{reg_en}}"><i class="fa fa-user-check" aria-hidden="true"></i></span>{{/if}}
                           {{#if location2}}
