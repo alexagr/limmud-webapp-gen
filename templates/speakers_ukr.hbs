@@ -151,7 +151,7 @@
 
         $('[id="no-results"]').remove();   // every copy (the page has several date lists)
         if ($('.speaker-inline:visible').length == 0) {
-          const message = (filterVal) ? 'Нічого не знайдено' : 'Закладок немає';
+          const message = (filterVal) ? 'Нічого не знайдено' : 'Тут поки порожньо. Натисніть <i class="fa fa-star" style="font-weight:400"></i> біля назви сесії, щоб позначити її.';
           ($('.search-row:visible').first().length ? $('.search-row:visible').first() : $('.search-row').first()).after('<p class="no-bookmarks" id="no-results">'+message+'</p>');
         }
       }

@@ -159,7 +159,7 @@
 
         $('[id="no-results"]').remove();   // every copy (the page has several date lists)
         if ($('.speaker-inline:visible').length == 0) {
-          const message = (filterVal) ? 'לא נמצאו תוצאות לחיפוש' : 'אין סימניות';
+          const message = (filterVal) ? 'No matches' : 'Nothing here yet. Tap <i class="fa fa-star" style="font-weight:400"></i> next to a session’s name to mark it.';
           ($('.search-row:visible').first().length ? $('.search-row:visible').first() : $('.search-row').first()).after('<p class="no-bookmarks" id="no-results">'+message+'</p>');
         }
       }

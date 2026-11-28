@@ -366,7 +366,7 @@
         $('[id="no-results"]').remove();   // every copy (the page has several date lists)
         $('.track-names').css('display', '');   // back to the stylesheet (hidden on phones)
         if ($('.track-inline:visible').length == 0) {
-          const message = (filterVal) ? 'לא נמצאו תוצאות לחיפוש' : 'אין סימניות';
+          const message = (filterVal) ? 'לא נמצאו תוצאות לחיפוש' : 'עדיין לא נבחרו מפגשים. לחצו על <i class="fa fa-star" style="font-weight:400"></i> ליד שם המפגש כדי לסמן אותו.';
           $('.date-list').last().after('<p class="no-bookmarks" id="no-results">'+message+'</p>');
           $('.track-names').hide();
         }

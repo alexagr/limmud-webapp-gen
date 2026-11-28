@@ -1,5 +1,5 @@
 /*
- * "Report a problem" (every page): an item in the ☰ menu and a link in the footer open a short form -
+ * "Report a problem" (every page): an item in the ☰ menu (phones only) opens a short form -
  * type, what happened, optional e-mail (for a reply) and phone. Sent to feedback_report.php together with
  * the page / open session, the anonymous device profile and the app version. Without internet the report
  * waits on the phone and is sent when the connection is back.
@@ -194,15 +194,6 @@
       m.innerHTML = '<a id="feedbacklink" href="#"><i class="fa fa-comment-dots" aria-hidden="true"></i>&nbsp;' + esc(T.link) + '</a>';
       reload.parentNode.insertBefore(m, reload.nextSibling);
       m.querySelector('a').addEventListener('click', open);
-    }
-    // footer link
-    var foot = document.querySelector('.footer-container footer .container');
-    if (foot && !document.querySelector('.feedback-footer')) {
-      var p = document.createElement('div');
-      p.className = 'feedback-footer';
-      p.innerHTML = '<a href="#"><i class="fa fa-comment-dots" aria-hidden="true"></i> ' + esc(T.link) + '</a>';
-      foot.appendChild(p);
-      p.querySelector('a').addEventListener('click', open);
     }
     flush();
   }

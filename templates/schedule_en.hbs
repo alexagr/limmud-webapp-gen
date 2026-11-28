@@ -374,7 +374,7 @@
         $('[id="no-results"]').remove();   // every copy (the page has several date lists)
         $('.track-names').css('display', '');   // back to the stylesheet (hidden on phones)
         if ($('.track-inline:visible').length == 0) {
-          const message = (filterVal) ? 'No matches' : 'No bookmarks';
+          const message = (filterVal) ? 'No matches' : 'Nothing here yet. Tap <i class="fa fa-star" style="font-weight:400"></i> next to a session’s name to mark it.';
           $('.date-list').last().after('<p class="no-bookmarks" id="no-results">'+message+'</p>');
           $('.track-names').hide();
         }
