@@ -1,6 +1,6 @@
 /*
  * × button inside the search boxes (Программа, Сетка, Презентеры): shown while there is text,
- * one tap empties the box and shows everything again (the page's own filter runs as if the user typed).
+ * one tap empties the box, closes the phone keyboard and shows everything again (the page's own filter runs as if the user typed).
  */
 (function () {
   function setup(input) {
@@ -33,15 +33,14 @@
     input.addEventListener('input', update);
     input.addEventListener('keyup', update);
     input.addEventListener('change', update);
-    btn.addEventListener('mousedown', function (e) { e.preventDefault(); });   // keep the keyboard open
-    btn.addEventListener('click', function () {
+        btn.addEventListener('click', function () {
       var anchor = topCard();
       input.value = '';
       ['input', 'keyup', 'change'].forEach(function (t) {
         input.dispatchEvent(new Event(t, {bubbles: true}));
       });
       update();
-      input.focus({preventScroll: true});
+      input.blur();   // done searching: close the phone keyboard
       // the cards that come back push the one you were reading down: scroll so it stays where it was
       if (anchor) {
         var keep = function () {

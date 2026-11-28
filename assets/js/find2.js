@@ -4,6 +4,19 @@ $(function() {
 
     $('#find-button-div').show();
 
+    // phone keyboard: fixed elements at the bottom stay under it (iOS keeps the layout viewport full height),
+    // so lift the whole stack (now / search / field / "next" / top) by the height the keyboard takes
+    var vv = window.visualViewport;
+    function lift() {
+        var kb = vv ? Math.max(0, window.innerHeight - vv.height - vv.offsetTop) : 0;
+        if (kb < 80) kb = 0;   // ignore toolbar wobble, only a real keyboard
+        $('#now-button, #find-button-div, #find-field, #find-next, #down-button').css('transform', kb ? 'translateY(' + (-kb) + 'px)' : '');
+    }
+    if (vv) {
+        vv.addEventListener('resize', lift);
+        vv.addEventListener('scroll', lift);
+    }
+
     function find() {
         let val = $('#find-field').val();
         currentMatch = null;
@@ -84,11 +97,23 @@ $(function() {
     }
 
     function show_current_match() {
-        if (currentMatch) {
-            $([document.documentElement, document.body]).animate({
-              scrollTop: $(currentMatch).offset().top - 60
-              }, 500);
-        }
+        if (!currentMatch) return;
+        // scroll to the highlighted text itself (not the top of the session), into the part of the screen
+        // that is really visible: below the fixed menu / sticky search row, above the phone keyboard
+        var target = $(currentMatch).find('mark')[0] || currentMatch;
+        // horizontally scrolled containers (Сетка): bring the match into view sideways first
+        try { target.scrollIntoView({block: 'nearest', inline: 'center'}); } catch (e) {}
+        var cover = 0;
+        $('.navbar, .search-sticky').each(function () {
+            var cs = getComputedStyle(this);
+            if (cs.position === 'fixed' || cs.position === 'sticky') {
+                cover = Math.max(cover, (parseFloat(cs.top) || 0) + this.offsetHeight);
+            }
+        });
+        var vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+        var top = target.getBoundingClientRect().top + window.pageYOffset;
+        var y = Math.max(0, top - cover - Math.max(20, (vh - cover) * 0.3));
+        $([document.documentElement, document.body]).stop().animate({scrollTop: y}, 400);
     }
 
     $('#find-field').keyup(function(e) {
