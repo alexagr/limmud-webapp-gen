@@ -21,6 +21,17 @@ $not_after = $clear ? '' : iso_time(isset($_POST['not_after']) ? $_POST['not_aft
 if ($not_before === false || $not_after === false) {
     exit('ERROR: cannot read the date/time');
 }
+// Update needs a message (removing it is "Clear message")
+if (!$clear && $msg === '' && $msg_he === '') {
+    exit('ERROR: the message is empty (to remove the current message use "Clear message")');
+}
+// a message always has an end: without "Not after" it would pop up on new devices for the rest of the event
+if (!$clear && ($msg !== '' || $msg_he !== '') && $not_after === '') {
+    exit('ERROR: "Not after" is required');
+}
+if (!$clear && $not_after !== '' && strtotime($not_after) <= time()) {
+    exit('ERROR: "Not after" is already in the past');
+}
 if ($not_before !== '' && $not_after !== '' && strtotime($not_after) <= strtotime($not_before)) {
     exit('ERROR: "Not after" must be later than "Not before"');
 }

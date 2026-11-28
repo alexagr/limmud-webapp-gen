@@ -5,12 +5,21 @@ RewriteCond %{HTTPS} !=on
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301,NE]
 Header always set Content-Security-Policy "upgrade-insecure-requests;"
 
+# admin pages: only the admin login
 <Files *.php>
 AuthType Basic
 AuthName "Authentication Required"
 AuthUserFile /home/limmudf1/public_html/webapp/.htpasswd
-Require valid-user
+Require user limmudfsu
 </Files>
+
+# HelpDesk pages: the admin login or the "helpdesk" login (start page helpdesk.php)
+<FilesMatch "^(helpdesk|registrations|notifications|notify)\.php$">
+AuthType Basic
+AuthName "Authentication Required"
+AuthUserFile /home/limmudf1/public_html/webapp/.htpasswd
+Require user limmudfsu helpdesk
+</FilesMatch>
 
 # anonymous bookmark statistics from the web app: must be reachable without the admin password
 # (it only accepts data; the stats themselves are shown by stats.php, which stays protected)
@@ -20,7 +29,13 @@ Order allow,deny
 Allow from all
 </Files>
 
-# registration in advance from the web app (assets/js/registration.js): public; the HelpDesk page registrations.php stays protected
+# "report a problem" (feedback_report.php) and registration in advance from the web app (assets/js/registration.js): public; the HelpDesk page registrations.php stays protected
+<Files "feedback_report.php">
+Satisfy Any
+Order allow,deny
+Allow from all
+</Files>
+
 <Files "registration.php">
 Satisfy Any
 Order allow,deny

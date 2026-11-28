@@ -250,6 +250,7 @@ $now = time();
 </head>
 <body>
 <div class="wrap">
+<p class="muted" style="margin:0 0 6px"><a href="helpdesk.php">&larr; HelpDesk</a></p>
 <h1>Registrations <span class="muted"><?php echo h($app) ?> · <?php echo h(date('d.m H:i', $now)) ?> (<?php echo h($config['timezone']) ?>)</span></h1>
 <?php
 if (isset($_GET['msg']) && $_GET['msg'] !== '') {

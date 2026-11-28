@@ -45,6 +45,20 @@ foreach ($devices as $d) {
 foreach ($profile as $k => $v) {
     arsort($profile[$k]);
 }
+// installed app vs browser, per platform (e.g. iPhone: 5 app / 12 browser)
+$byPlatform = array();
+foreach ($devices as $d) {
+    if (empty($d['i'])) {
+        continue;
+    }
+    $os = isset($d['i']['os']) ? $d['i']['os'] : '?';
+    $mode = (isset($d['i']['mode']) && $d['i']['mode'] === 'app') ? 'app' : 'browser';
+    if (!isset($byPlatform[$os])) {
+        $byPlatform[$os] = array('app' => 0, 'browser' => 0);
+    }
+    $byPlatform[$os][$mode]++;
+}
+uasort($byPlatform, function ($a, $b) { return ($b['app'] + $b['browser']) - ($a['app'] + $a['browser']); });
 ksort($firstSeen);
 // active devices: last report (t) - the app reports at least every 6 hours while it is used
 $now = time();
@@ -77,6 +91,7 @@ foreach ($devices as $d) {
 $rows = array();
 foreach ($sessions as $id => $s) {
     $rows[] = array(
+        'id' => $id,
         'count' => isset($counts[$id]) ? $counts[$id] : 0,
         'start' => $s['start_time'],
         'title' => $s['title'],
@@ -86,6 +101,33 @@ foreach ($sessions as $id => $s) {
     );
 }
 usort($rows, function ($a, $b) { return $b['count'] - $a['count'] ?: strcmp($a['start'], $b['start']); });
+
+// ---- export: ?export=sessions (stars per session) / ?export=devices (one row per device, anonymous) ----
+if (isset($_GET['export'])) {
+    $csv = function ($v) { $v = (string)$v; return preg_match('/\A[=+\-@\t\r]/', $v) ? "'" . $v : $v; };
+    header('Content-Type: text/csv; charset=utf-8');
+    header('Content-Disposition: attachment; filename="usage-' . ($_GET['export'] === 'devices' ? 'devices' : 'sessions') . '-' . $app . '-' . date('Ymd-Hi') . '.csv"');
+    echo "\xEF\xBB\xBF";
+    $f = fopen('php://output', 'w');
+    if ($_GET['export'] === 'devices') {
+        fputcsv($f, array('#', 'First seen', 'Last seen', 'Platform', 'App / browser', 'Browser', 'Language', 'Stars', 'Starred session ids'));
+        $n = 0;
+        foreach ($devices as $d) {
+            $i = isset($d['i']) ? $d['i'] : array();
+            fputcsv($f, array_map($csv, array(++$n,
+                isset($d['f']) ? date('Y-m-d H:i', $d['f']) : '', isset($d['t']) ? date('Y-m-d H:i', $d['t']) : '',
+                isset($i['os']) ? $i['os'] : '', isset($i['mode']) ? $i['mode'] : '', isset($i['br']) ? $i['br'] : '',
+                isset($i['lang']) ? $i['lang'] : '', count($d['s']), implode(' ', $d['s']))));
+        }
+    } else {
+        fputcsv($f, array('Stars', 'Date', 'Time', 'Room', 'Session', 'Presenters', 'Session id'));
+        foreach ($rows as $r) {
+            $t = strtotime($r['start']);
+            fputcsv($f, array_map($csv, array($r['count'], date('Y-m-d', $t), date('H:i', $t), $r['room'], $r['title'], $r['speakers'], $r['id'])));
+        }
+    }
+    exit;
+}
 
 $days = array('Mon' => 'пн', 'Tue' => 'вт', 'Wed' => 'ср', 'Thu' => 'чт', 'Fri' => 'пт', 'Sat' => 'сб', 'Sun' => 'вс');
 function h($s) { return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
@@ -127,6 +169,13 @@ function h($s) { return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
     .cval { margin-bottom: 2px; }
     .clabel { color: #666; margin-top: 3px; border-top: 1px solid #ccc; padding-top: 2px; width: 100%; text-align: center; }
     .note { margin: 8px 0 14px; font-size: 13px; }
+    .stack { display: flex; gap: 2px; }
+    .stack .hbar { border-radius: 0; }
+    .stack .hbar:last-child { border-radius: 0 4px 4px 0; }
+    .seg-app, .sw-app { background: #1f8f22; }
+    .seg-br, .sw-br { background: #9fdca1; }
+    .legend { font-size: 12px; color: #555; margin: -4px 0 6px; }
+    .sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; }
   </style>
 </head>
 <body>
@@ -136,7 +185,8 @@ function h($s) { return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
     &nbsp;|&nbsp; with at least one ★: <b><?php echo $withStars ?></b>
     &nbsp;|&nbsp; stars in total: <b><?php echo array_sum($counts) ?></b>
     &nbsp;|&nbsp; last report: <b><?php echo $lastReport ? '<span class="local-time" data-t="' . $lastReport . '">' . gmdate('d.m.Y H:i', $lastReport) . ' UTC</span>' : '&mdash;' ?></b>
-    <div class="muted">Counts devices (not people), anonymously. Click a column title to sort.</div>
+    <div class="muted">Counts devices (not people), anonymously. Click a column title to sort.
+      &nbsp;|&nbsp; Export (CSV): <a href="?export=sessions">stars per session</a> &middot; <a href="?export=devices">devices</a></div>
   </div>
   <!-- charts: one hue (magnitude), the number and % written next to every bar; hover a bar for details -->
   <div class="tiles">
@@ -146,6 +196,26 @@ function h($s) { return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
   </div>
   <div class="charts">
     <?php foreach ($profile as $k => $vals): $top = max(1, $vals ? max($vals) : 1); ?>
+      <?php if ($k === 'mode'): ?>
+      <!-- in place of "App": installed app vs browser on phones only (computers have no installed app) -->
+      <div class="chart">
+        <h3>App vs browser (phones)</h3>
+        <div class="legend"><span class="sw sw-app"></span> installed app &nbsp; <span class="sw sw-br"></span> browser only</div>
+        <?php $phones = array_intersect_key($byPlatform, array('iphone' => 1, 'android' => 1)); ?>
+        <?php if (!$phones): ?><div class="muted">no data yet</div><?php endif; ?>
+        <?php foreach ($phones as $os => $c): $tot = max(1, $c['app'] + $c['browser']); $pct = round(100 * $c['app'] / $tot); ?>
+          <div class="hrow" title="<?php echo h($labels['os'][$os]) . ': ' . $c['app'] . ' installed app, ' . $c['browser'] . ' browser only (' . $pct . '% app)' ?>">
+            <span class="hlabel"><?php echo h($labels['os'][$os]) ?></span>
+            <span class="htrack stack">
+              <?php if ($c['app']): ?><span class="hbar seg-app" style="width:<?php echo 100 * $c['app'] / $tot ?>%"></span><?php endif; ?>
+              <?php if ($c['browser']): ?><span class="hbar seg-br" style="width:<?php echo 100 * $c['browser'] / $tot ?>%"></span><?php endif; ?>
+            </span>
+            <span class="hval"><b><?php echo $c['app'] ?></b> / <?php echo $c['browser'] ?> <span class="muted"><?php echo $pct ?>%</span></span>
+          </div>
+        <?php endforeach; ?>
+        <div class="muted" style="font-size:12px;margin-top:4px">app / browser, % app</div>
+      </div>
+      <?php continue; endif; ?>
       <div class="chart">
         <h3><?php echo $titles[$k] ?></h3>
         <?php if (!$profiled): ?><div class="muted">no data yet</div><?php endif; ?>

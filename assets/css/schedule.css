@@ -2833,7 +2833,9 @@ body.reg-dialog-open {
   font-weight: 400;
   font-size: 14px;
 }
-.reg-form input {
+.reg-form input,
+.reg-form textarea,
+.reg-form select {
   display: block;
   width: 100%;
   margin-top: 4px;
@@ -2885,4 +2887,26 @@ body.reg-dialog-open {
 .reg-dialog-mail {
   font-size: 13px;
   opacity: 0.8;
+}
+
+/* "Report a problem" (assets/js/feedback.js): form fields as in registration, link in the footer */
+.reg-form textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+.feedback-footer {
+  text-align: center;
+  font-size: 13px;
+  margin: 4px 0 10px;
+}
+.feedback-footer a {
+  color: inherit;
+  opacity: 0.8;
+}
+.feedback-menu {
+  margin-top: 12px;
+  font-size: 14px;
+}
+.feedback-menu a {
+  color: inherit;
 }

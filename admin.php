@@ -120,6 +120,8 @@
       <div class="row action-row">
       <button name="show-stats" class="btn btn-primary btn-action" onClick="openInNewTab('stats.php');">Usage stats</button>
       <button name="show-registrations" class="btn btn-primary btn-action" onClick="openInNewTab('registrations.php');">Registrations</button>
+      <button name="show-feedback" class="btn btn-primary btn-action" onClick="openInNewTab('feedback.php');">Feedback</button>
+      <button name="show-notification" class="btn btn-primary btn-action" onClick="openInNewTab('notifications.php');">Notification</button>
       </div>
       </div>
       
@@ -134,66 +136,6 @@
       <button name="show-photos" class="btn btn-primary btn-action" onClick="openInNewTab('show_photos.php')">Show</button>
       </div>
 
-      <h2>Notification</h2>
-      <?php
-        $notify = array('msg' => '', 'msg_he' => '', 'timestamp' => '', 'not_before' => '', 'not_after' => '');
-        $configPath = 'data/config.json';
-        if (file_exists($configPath)) {
-          $config = json_decode(file_get_contents($configPath), true);
-          $notifyPath = $config['app_name'] . '/data/notify.json';
-          if (file_exists($notifyPath)) {
-            $notify = array_merge($notify, (array)json_decode(file_get_contents($notifyPath), true));
-          }
-        }
-        // stored as ISO with offset; the form shows local Israel time for <input type="datetime-local">
-        function notify_local($v) {
-          if (empty($v)) return '';
-          $d = new DateTime($v);
-          $d->setTimezone(new DateTimeZone('Asia/Jerusalem'));
-          return $d->format('Y-m-d\TH:i');
-        }
-      ?>
-      <div class="config-form">
-      <div id="notify-status"></div>
-      <div class="row"> 
-        <div class="col-md-3">
-          <label for="sheet-id">Message:</label>
-        </div>
-        <div class="col-md-9">
-          <input type="text" id="notify-msg" size="70" value="<?php echo str_replace('"', '&quot;', $notify['msg']) ?>"><br>
-        </div>
-      </div>
-      <div class="row"> 
-        <div class="col-md-3">
-          <label for="sheet-id">Message (he):</label>
-        </div>
-        <div class="col-md-9">
-          <input type="text" dir="rtl" id="notify-msg-he" size="70" value="<?php echo str_replace('"', '&quot;', $notify['msg_he']) ?>"><br>
-        </div>
-      </div>
-      <div class="row"> 
-        <div class="col-md-3">
-          <label for="sheet-id">Not before:</label>
-        </div>
-        <div class="col-md-9">
-          <input type="datetime-local" id="notify-not-before" value="<?php echo notify_local($notify['not_before']) ?>"> <button type="button" title="Set to now" onClick="notifyNow('#notify-not-before');">Now</button> <button type="button" title="Clear (no limit)" onClick="$('#notify-not-before').val('');">&times;</button> <small>Israel time; empty = no limit</small><br>
-        </div>
-      </div>
-      <div class="row"> 
-        <div class="col-md-3">
-          <label for="sheet-id">Not after:</label>
-        </div>
-        <div class="col-md-9">
-          <input type="datetime-local" id="notify-not-after" value="<?php echo notify_local($notify['not_after']) ?>"> <button type="button" title="Set to now" onClick="notifyNow('#notify-not-after');">Now</button> <button type="button" title="Clear (no limit)" onClick="$('#notify-not-after').val('');">&times;</button> <small>Israel time; empty = no limit</small><br>
-        </div>
-      </div>
-      <br>
-      <button name="notify-update" class="btn btn-primary btn-action" onClick="updateNotify(false);">Update</button>&nbsp;&nbsp;&nbsp;
-      <button name="notify-clear" class="btn btn-primary btn-action" onClick="updateNotify(true);">Clear message</button>
-      <p><small>Shown once per device as a popup while the app is open (checked every 3 minutes and when the app is reopened).
-      Saving again (Update) shows the message again on every device.</small></p>
-      <br>
-      </div>
   </div>
 
   <footer class="classic">
@@ -323,35 +265,6 @@
         function openInNewTab(url) {
           window.open(url, '_blank').focus();
         }
-
-        // current Israel time in the format of <input type="datetime-local">
-        function notifyNow(sel) {
-          var p = {};
-          new Intl.DateTimeFormat('en-GB', {timeZone: 'Asia/Jerusalem', year: 'numeric', month: '2-digit', day: '2-digit',
-            hour: '2-digit', minute: '2-digit', hourCycle: 'h23'}).formatToParts(new Date()).forEach(function (x) { p[x.type] = x.value; });
-          $(sel).val(p.year + '-' + p.month + '-' + p.day + 'T' + p.hour + ':' + p.minute);
-        }
-
-        function updateNotify(clear) {
-          $("#notify-status").html('');
-          jQuery.ajax({
-            url: 'notify.php',
-            data: {msg: $("#notify-msg").val(), msg_he: $("#notify-msg-he").val(),
-                   not_before: $("#notify-not-before").val(), not_after: $("#notify-not-after").val(), clear: clear ? 1 : 0},
-            type: 'POST',
-		        success: function(data){
-              if (data.includes('ERROR')) {
-                $("#notify-status").html('<p class="error">' + data + '</p>');
-              } else {
-                $("#notify-status").html('<p class="success">' + data + '</p>');
-                if (clear) { $("#notify-msg, #notify-msg-he, #notify-not-before, #notify-not-after").val(''); }
-              }
-		        },
-		        error:function(){
-              $("#notify-status").html('<p class="error">ERROR: Cannot execute notify.php</p>');
-            }
-		      });
-	      }         
 
     </script>
   </footer>
