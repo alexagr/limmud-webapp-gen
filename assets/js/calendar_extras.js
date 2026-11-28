@@ -45,8 +45,7 @@
   }
 
   // ---------- "now" line ----------
-  var nowTarget = null;  // the line element currently shown (for the clock button)
-
+  
   // The session start times stay visible; the current time goes between the two start times around it,
   // without covering either, at the matching point of the gap between them (18:31 between 18:30 and 19:40
   // sits right under 18:30, 19:05 in the middle, 19:35 right above 19:40).
@@ -91,7 +90,6 @@
   function drawNowLine() {
     var now = israelNow();
     var z = zoomY();
-    nowTarget = null;
     var days = document.querySelectorAll('.calendar[data-date]');
     for (var i = 0; i < days.length; i++) {
       var day = days[i];
@@ -130,7 +128,6 @@
         label.innerHTML = '<i class="fa fa-clock" aria-hidden="true"></i>' + pad(Math.floor(now.minutes / 60) % 24) + ':' + pad(now.minutes % 60);
         label.style.top = placeLabel(times, rooms, line, label, festMinutes(pad(Math.floor(now.minutes / 60) % 24) + ':' + pad(now.minutes % 60))) + 'px';
       }
-      if (day.offsetParent) nowTarget = line;  // only if that day is shown
     }
   }
 
@@ -143,18 +140,77 @@
     if (e.target.closest && e.target.closest('.date-button')) setTimeout(drawNowLine, 0);
   });
 
-  // clock button: during the festival jump to the "now" line (otherwise keep its old behaviour)
+  // clock button (same rule and messages as the Программа, programme_now.js): scroll to the session start
+  // that is running now (the latest start whose sessions have not ended yet) or, in a break, to the next start,
+  // and say which it is. Not a festival day now: the same as if it were this time of day on the first festival day.
+  var TEXT = {
+    ru: ['Текущая сессия началась в ', 'Ближайшая сессия начинается в '],
+    uk: ['Поточна сесія почалася о ', 'Найближча сесія починається о '],
+    he: ['ההרצאה הנוכחית התחילה ב- ', 'ההרצאה הקרובה מתחילה ב- '],
+    en: ['Current session started at ', 'Next session starts at ']
+  };
+  function lang() {
+    // the Ukrainian pages say lang="ru": recognise them by their own label
+    var my = document.querySelector('.bookmark-toggle-label');
+    if (my && /Мій/.test(my.textContent)) return 'uk';
+    var l = document.documentElement.lang;
+    return TEXT[l] ? l : 'en';
+  }
+  function hhmm(m) { return pad(Math.floor(m / 60) % 24) + ':' + pad(m % 60); }
+  // {day, start (minutes), running} for the given festival day / minutes, or null if nothing fits
+  function locate(day, mins) {
+    var sessions = day.querySelectorAll('.session[data-start]');
+    var last = null, next = null, ends = {};
+    for (var i = 0; i < sessions.length; i++) {
+      var s = festMinutes(sessions[i].getAttribute('data-start'));
+      var e = festMinutes(sessions[i].getAttribute('data-end'));
+      if (s === null) continue;
+      if (e === null || e < s) e = (e === null ? s : e + 24 * 60);
+      ends[s] = Math.max(ends[s] || 0, e);
+      if (s <= mins) { if (last === null || s > last) last = s; }
+      else if (next === null || s < next) next = s;
+    }
+    if (last !== null && mins < ends[last]) return {day: day, start: last, running: true};
+    if (next !== null) return {day: day, start: next, running: false};
+    return null;
+  }
   document.addEventListener('click', function (e) {
     var btn = e.target.closest && e.target.closest('#now-button');
     if (!btn) return;
-    drawNowLine();
-    if (!nowTarget) return;
     e.preventDefault();
-    e.stopPropagation();
+    e.stopPropagation();   // instead of the old scroll_now.js behaviour
+    var now = israelNow();
+    var days = document.querySelectorAll('.calendar[data-date]');
+    var at = null;
+    for (var i = 0; i < days.length && !at; i++) {
+      var d = days[i].getAttribute('data-date');
+      if (d === now.date && now.minutes >= 5 * 60) at = locate(days[i], now.minutes);
+      else if (previousDate(now.date) === d && now.minutes < 5 * 60) at = locate(days[i], now.minutes + 24 * 60);
+    }
+    if (!at && days.length) {
+      // not a festival day (or after the day's programme): this time of day on the first festival day;
+      // at night - its first session
+      at = now.minutes >= 5 * 60 ? locate(days[0], now.minutes) : null;
+      if (!at) at = locate(days[0], 0);
+    }
+    if (!at) return;
+    if (!at.day.offsetParent) {   // another day tab is selected: show all days
+      var all = document.querySelector('.date-button.all');
+      if (all) all.click();
+    }
+    var rooms = at.day.querySelector('.rooms');
+    if (!rooms || !at.day.offsetParent) return;
+    btn.classList.add('is-flash');
+    setTimeout(function () { btn.classList.remove('is-flash'); }, 2000);
+    if (window.Snackbar) {
+      Snackbar.show({text: TEXT[lang()][at.running ? 0 : 1] + hhmm(at.start), pos: 'bottom-center', showAction: false, duration: 2000});
+    }
+    var dayStart = toMinutes(at.day.getAttribute('data-start'));
+    var top = ((at.start - dayStart) * PX_PER_15 / 15 + PX_PER_15) * zoomY();   // same formula as the sessions
     var nav = document.querySelector('.navbar-fixed-top');
     var bar = document.querySelector('.search-sticky');
-    var offset = (nav ? nav.getBoundingClientRect().bottom : 0) + (bar ? bar.offsetHeight : 0) + 120;
-    window.scrollTo({top: nowTarget.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth'});
+    var offset = (nav ? nav.getBoundingClientRect().bottom : 0) + (bar ? bar.offsetHeight : 0) + 40;
+    window.scrollTo({top: rooms.getBoundingClientRect().top + window.scrollY + top - offset, behavior: 'smooth'});
   }, true);
 
   // ---------- favourites ----------

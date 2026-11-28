@@ -110,7 +110,7 @@
                     </div>
                     <div>
                       {{#each sessions}}
-                      <div id="session-{{session_id}}" class="session find-container" style="top: calc({{{top}}}px * var(--zy, 1)); height: calc({{{height}}}px * var(--zy, 1));background-color:{{{color}}};">
+                      <div id="session-{{session_id}}" class="session find-container" data-start="{{start}}" data-end="{{end}}" style="top: calc({{{top}}}px * var(--zy, 1)); height: calc({{{height}}}px * var(--zy, 1));background-color:{{{color}}};">
                         {{#if shabbat}}
                         <div class="language-ribbon-calendar shabbat-ribbon"><span>שבת</span></div>
                         {{else}}
