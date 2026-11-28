@@ -303,6 +303,13 @@
     '</div>';
   document.body.appendChild(overlay);
 
+  // a finger sliding on the open card must never scroll the Сетка behind it: only a card with more text
+  // than fits scrolls (itself); on a short card or on the dimmed backdrop the slide does nothing
+  overlay.addEventListener('touchmove', function (e) {
+    var card = overlay.querySelector('.session-modal-card');
+    if (!card.contains(e.target) || card.scrollHeight <= card.clientHeight + 1) e.preventDefault();
+  }, {passive: false});
+
   var current = null;   // session element whose details are shown
 
   function close() {

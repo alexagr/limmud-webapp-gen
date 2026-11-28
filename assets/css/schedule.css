@@ -1902,6 +1902,7 @@ body.session-modal-open {
   max-width: 560px;
   max-height: calc(100vh - 32px);
   overflow-y: auto;
+  overscroll-behavior: contain;   /* reaching the end of a long card does not scroll the Сетка behind */
   padding: 20px 20px 14px;
   border-radius: 16px;
   background: var(--modal-bg, var(--background-color));
@@ -2514,7 +2515,7 @@ body {
   display: none;
   position: fixed;
   left: 9px;
-  bottom: 145px;
+  bottom: 98px;   /* right above the clock (the bottom-left search button that was between them is gone) */
   width: 32px;
   height: 32px;
   border-radius: 50%;
