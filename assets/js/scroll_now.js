@@ -68,13 +68,20 @@ $(function() {
     }
 
     if (elem) {
+      // the session found may already be running (it started up to 30 minutes ago): say so
+      let realMinutes = nowMinutes - 30;
+      let realTime = ('0' + Math.floor(realMinutes / 60).toString()).slice(-2) + ':' + ('0' + (realMinutes % 60).toString()).slice(-2);
+      let started = elemTime <= realTime && day && $(day).hasClass(nowDate);
+      let lang = document.documentElement.lang;
       let snackText;
-      if (document.documentElement.lang == 'he') {
-        snackText = 'הרצאה הקרובה מתחילה ב- ' + elemTime
-      } else if (document.documentElement.lang == 'ru') {
-        snackText = 'Ближайшая сессия начинается в ' + elemTime;
+      if (lang == 'he') {
+        snackText = (started ? 'ההרצאה הנוכחית התחילה ב- ' : 'ההרצאה הקרובה מתחילה ב- ') + elemTime;
+      } else if (/_ukr/.test(location.pathname)) {   // the Ukrainian pages say lang="ru"
+        snackText = (started ? 'Поточна сесія почалася о ' : 'Найближча сесія починається о ') + elemTime;
+      } else if (lang == 'ru') {
+        snackText = (started ? 'Текущая сессия началась в ' : 'Ближайшая сессия начинается в ') + elemTime;
       } else {
-        snackText = 'Next session starts at ' + elemTime;
+        snackText = (started ? 'Current session started at ' : 'Next session starts at ') + elemTime;
       }
       Snackbar.show({
         text: snackText,

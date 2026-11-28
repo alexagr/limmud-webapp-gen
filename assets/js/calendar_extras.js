@@ -47,6 +47,47 @@
   // ---------- "now" line ----------
   var nowTarget = null;  // the line element currently shown (for the clock button)
 
+  // The session start times stay visible; the current time goes between the two start times around it,
+  // without covering either, at the matching point of the gap between them (18:31 between 18:30 and 19:40
+  // sits right under 18:30, 19:05 in the middle, 19:35 right above 19:40).
+  function festMinutes(t) {   // "18:30" -> minutes; after midnight (00:xx-04:xx) belongs to the same day
+    var m = /(\d{1,2}):(\d{2})/.exec(t || '');
+    if (!m) return null;
+    var v = parseInt(m[1], 10) * 60 + parseInt(m[2], 10);
+    return v < 5 * 60 ? v + 24 * 60 : v;
+  }
+  function placeLabel(times, rooms, line, label, nowMin) {
+    var tr = times.getBoundingClientRect();
+    // the printed time inside its slot (the slot is taller than the text)
+    function textBox(el) {
+      var r = document.createRange();
+      r.selectNodeContents(el);
+      var b = r.getBoundingClientRect();
+      return b.height ? b : el.getBoundingClientRect();
+    }
+    var prev = null, next = null;
+    var kids = times.querySelectorAll('.time');
+    for (var k = 0; k < kids.length; k++) {
+      var v = festMinutes(kids[k].textContent);
+      if (v === null) continue;
+      if (v <= nowMin) prev = kids[k];
+      else if (!next) next = kids[k];
+    }
+    var h = label.offsetHeight, gap = 3;
+    var y = line.getBoundingClientRect().top - tr.top;   // the exact minute on the time scale
+    var lo = prev ? textBox(prev).bottom - tr.top + gap + h / 2 : null;   // just under the earlier time
+    var hi = next ? textBox(next).top - tr.top - gap - h / 2 : null;      // just above the later time
+    if (lo !== null && hi !== null) {
+      if (hi < lo) return (lo + hi) / 2;   // no room between them
+      var t0 = festMinutes(prev.textContent), t1 = festMinutes(next.textContent);
+      var f = t1 > t0 ? (nowMin - t0) / (t1 - t0) : 0;
+      return lo + Math.max(0, Math.min(1, f)) * (hi - lo);
+    }
+    if (lo !== null) return Math.max(lo, y);   // after the last start time
+    if (hi !== null) return Math.min(hi, y);   // before the first one
+    return line.getBoundingClientRect().top - tr.top;
+  }
+
   function drawNowLine() {
     var now = israelNow();
     var z = zoomY();
@@ -86,8 +127,8 @@
           label.className = 'now-label';
           times.appendChild(label);
         }
-        label.style.top = top + 'px';
-        label.textContent = pad(Math.floor(now.minutes / 60) % 24) + ':' + pad(now.minutes % 60);
+        label.innerHTML = '<i class="fa fa-clock" aria-hidden="true"></i>' + pad(Math.floor(now.minutes / 60) % 24) + ':' + pad(now.minutes % 60);
+        label.style.top = placeLabel(times, rooms, line, label, festMinutes(pad(Math.floor(now.minutes / 60) % 24) + ':' + pad(now.minutes % 60))) + 'px';
       }
       if (day.offsetParent) nowTarget = line;  // only if that day is shown
     }

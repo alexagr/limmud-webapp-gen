@@ -1349,7 +1349,7 @@ a {
   font-size: 32px;
   position: fixed;
   left: 9px;
-  bottom: 34px;   /* icon at 50-82px from the bottom, right above the "top" arrow - where the bottom-left search button was */
+  bottom: 42px;   /* icon 18px above the "top" arrow */
   z-index: 1010;
   text-decoration: none;
 }
@@ -1823,13 +1823,15 @@ a, button, .btn {
   background-color: var(--now-color, #ff8700);
   box-shadow: 0 0 6px var(--now-color, #ff8700);
   z-index: 2;              /* above sessions, below the room-name row */
+  visibility: hidden;      /* not drawn (it made session text hard to read) - the time on the left shows "now";
+                              kept only as the clock button's scroll target (calendar_extras.js) */
   pointer-events: none;
 }
 .now-label {
   position: absolute;
   left: 0;
   right: 2px;
-  margin-top: 4px;   /* level with the first line of the session title */
+  transform: translateY(-50%);   /* middle of the pill on the "now" line */
   padding: 1px 0;
   border-radius: 6px;
   background-color: var(--now-color, #ff8700);
@@ -2052,7 +2054,8 @@ body.session-modal-open {
 .now-pill {
   display: inline-block;
   margin-top: 2px;
-  padding: 1px 7px;
+  padding: 1px 4px;
+  white-space: nowrap;   /* clock icon and time on one line */
   border-radius: 6px;
   background-color: var(--now-color, #ff8700);
   box-shadow: 0 0 6px var(--now-color, #ff8700);
@@ -2061,11 +2064,42 @@ body.session-modal-open {
   font-weight: bold;
 }
 
+.now-pill.is-between {
+  display: table;          /* own line, above the next group's time */
+  margin: 0 0 4px;
+}
+[dir="rtl"] .now-pill.is-between {
+  margin-right: 0;
+  margin-left: auto;
+}
+
+/* clock icon in the "now" time, on the same line (Программа pill, Сетка label); phones narrower than
+   360px show the time only (on the smallest ones the icon would not fit the Программа time column) */
+.now-pill .fa-clock,
+.now-label .fa-clock {
+  font-size: .8em;
+  margin-right: 2px;
+}
+[dir="rtl"] .now-pill .fa-clock,
+[dir="rtl"] .now-label .fa-clock {
+  margin-right: 0;
+  margin-left: 2px;
+}
+@media (max-width: 359px) {
+  .now-pill .fa-clock,
+  .now-label .fa-clock {
+    display: none;
+  }
+}
+
 /* PNG download of the Сетка: clean picture (no ★ buttons, "now" line or grid-line gradients) */
 body.exporting .session .grid-fav,
 body.exporting .now-line,
 body.exporting .now-label {
   display: none !important;
+}
+body.exporting .times > * {
+  visibility: visible !important;   /* a time hidden under the "now" pill (calendar_extras.js) */
 }
 body.exporting .rooms {
   background-image: none !important;
