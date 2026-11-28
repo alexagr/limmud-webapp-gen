@@ -118,10 +118,10 @@
       <button name="show-webapp" class="btn btn-primary btn-action" onClick="openInNewTab('<?php echo $config['app_name'] ?>');">Open Web App</button>
       </div>
       <div class="row action-row">
-      <button name="show-stats" class="btn btn-primary btn-action" onClick="openInNewTab('stats.php');">Usage stats</button>
+      <button name="show-notification" class="btn btn-primary btn-action" onClick="openInNewTab('notifications.php');">Notification</button>
       <button name="show-registrations" class="btn btn-primary btn-action" onClick="openInNewTab('registrations.php');">Registrations</button>
       <button name="show-feedback" class="btn btn-primary btn-action" onClick="openInNewTab('feedback.php');">Feedback</button>
-      <button name="show-notification" class="btn btn-primary btn-action" onClick="openInNewTab('notifications.php');">Notification</button>
+      <button name="show-stats" class="btn btn-primary btn-action" onClick="openInNewTab('stats.php');">Usage stats</button>
       </div>
       </div>
       
