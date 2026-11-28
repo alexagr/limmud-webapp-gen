@@ -1349,7 +1349,7 @@ a {
   font-size: 32px;
   position: fixed;
   left: 9px;
-  bottom: 90px;
+  bottom: 34px;   /* icon at 50-82px from the bottom, right above the "top" arrow - where the bottom-left search button was */
   z-index: 1010;
   text-decoration: none;
 }
@@ -2610,17 +2610,13 @@ body {
 .search-clear-holder {
   position: relative;
 }
-.search-clear-holder .search-filter-input {
-  padding-right: 36px;
-}
-[dir="rtl"] .search-clear-holder .search-filter-input {
-  padding-left: 36px;
+.search-filter-input.has-text {
+  background-image: none;   /* the × (search_clear.js) sits where the magnifier was */
 }
 .search-clear {
   display: none;
   position: absolute;
   top: 50%;
-  right: 6px;
   transform: translateY(-50%);
   width: 24px;
   height: 24px;
@@ -2647,6 +2643,53 @@ mark.search-hit {
   color: #1b1446;
   border-radius: 0;
   padding: 0;
+}
+/* top search in find mode (Программа, Сетка): "next" at the end of the box (search_highlight.js) */
+.search-find {
+  display: none;
+  position: absolute;
+  transform: translateY(-50%);
+}
+.search-find.is-visible {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.search-find-count {
+  color: #777;
+  font-size: 13px;
+  white-space: nowrap;
+  direction: ltr;
+}
+.search-find-next {
+  display: block;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #1090f0;
+  color: #fff;
+  cursor: pointer;
+}
+.search-find-next svg {
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+.search-find-next:disabled {
+  background: #bbb;
+  cursor: default;
+}
+.search-clear-holder.has-find .search-filter-input {
+  padding-right: 84px;
+}
+[dir="rtl"] .search-clear-holder.has-find .search-filter-input {
+  padding-left: 84px;
+}
+mark.search-hit.is-current {
+  background: #ff9f1a;
 }
 /* the page behind the install banner: dimmed and blurred */
 .install-backdrop {

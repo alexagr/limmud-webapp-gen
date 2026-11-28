@@ -60,7 +60,7 @@
     <div class="date-list container search-sticky">
       <div class="search">
         <span class="filter search-filter search-filter-schedule">
-          <input class="search-filter-input grid-search" type="text" placeholder="Пошук">
+          <input class="search-filter-input grid-search" type="text" data-find="1" enterkeyhint="search" placeholder="Пошук">
         </span>
         <span class="filter show-button-filter">
           <button class="btn btn-default bookmark-toggle grid-favorites-toggle" data-favorites-key="{{event.name}}" type="button" title="Показати лише обрані сесії"><i class="fa fa-star" aria-hidden="true"></i>&nbsp;<span class="bookmark-toggle-label">Мій Лімуд</span></button>
@@ -201,13 +201,6 @@
   </a>
   <script src="assets/js/scroll_now.js" type="text/javascript"></script>
 
-  <div class="findbuttondiv" id="find-button-div">
-    <a class="findbutton" href="#" id="find-button" data-scroll-direction="0"><i class="fa fa-search" aria-hidden="true"></i></a>
-  </div>
-  <input class="findfield" id="find-field" type="search" placeholder="Пошук"/>
-  <a class="findnext" href="#" id="find-next" data-scroll-direction="0"><i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
-  <script src="assets/js/mark.min.js" type="text/javascript"></script>
-  <script src="assets/js/find2.js" type="text/javascript"></script>
 
   <script src="assets/js/async.min.js" type="text/javascript"></script>
   <script src="assets/js/FileSaver.js" type="text/javascript"></script>

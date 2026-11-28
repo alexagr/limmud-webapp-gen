@@ -18,16 +18,17 @@
 
     function update() {
       btn.classList.toggle('is-visible', input.value !== '');
+      input.classList.toggle('has-text', input.value !== '');   // the × takes the magnifier's place
       place();
     }
-    // inside the box at the end opposite the magnifier (right; left in Hebrew), measured from the box
-    // itself - the box can be narrower than its container (Презентеры)
+    // inside the box where the magnifier is (left; right in Hebrew) - the magnifier is hidden while there
+    // is text. Measured from the box itself - it can be narrower than its container (Презентеры)
     function place() {
       var h = holder.getBoundingClientRect(), r = input.getBoundingClientRect();
       var rtl = getComputedStyle(input).direction === 'rtl';
       btn.style.top = (r.top - h.top + r.height / 2) + 'px';
-      btn.style.right = rtl ? 'auto' : (h.right - r.right + 6) + 'px';
-      btn.style.left = rtl ? (r.left - h.left + 6) + 'px' : 'auto';
+      btn.style.left = rtl ? 'auto' : (r.left - h.left + 6) + 'px';
+      btn.style.right = rtl ? (h.right - r.right + 6) + 'px' : 'auto';
     }
     window.addEventListener('resize', place);
     input.addEventListener('input', update);
