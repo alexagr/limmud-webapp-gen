@@ -142,19 +142,41 @@
 
   // clock button (same rule and messages as the Программа, programme_now.js): scroll to the session start
   // that is running now (the latest start whose sessions have not ended yet) or, in a break, to the next start,
-  // and say which it is. Not a festival day now: the same as if it were this time of day on the first festival day.
-  var TEXT = {
-    ru: ['Текущая сессия началась в ', 'Ближайшая сессия начинается в '],
-    uk: ['Поточна сесія почалася о ', 'Найближча сесія починається о '],
-    he: ['ההרצאה הנוכחית התחילה ב- ', 'ההרצאה הקרובה מתחילה ב- '],
-    en: ['Current session started at ', 'Next session starts at ']
+  // and say which it is. Outside the festival: a message when it starts / when it ended.
+  // messages: running / next session (with its time), or - outside the festival - when it starts / ended
+  var MONTHS = {
+    ru: ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'],
+    uk: ['січня', 'лютого', 'березня', 'квітня', 'травня', 'червня', 'липня', 'серпня', 'вересня', 'жовтня', 'листопада', 'грудня'],
+    he: ['בינואר', 'בפברואר', 'במרץ', 'באפריל', 'במאי', 'ביוני', 'ביולי', 'באוגוסט', 'בספטמבר', 'באוקטובר', 'בנובמבר', 'בדצמבר'],
+    en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
   };
+  function nowMessage(l, kind, value) {   // kind: running / next (value = time), start / ended (value = date)
+    if (kind === 'start' || kind === 'ended') {
+      var p = /(\d{4})-(\d{2})-(\d{2})/.exec(value || '');
+      var d = p ? parseInt(p[3], 10) + ' ' + MONTHS[l][parseInt(p[2], 10) - 1] : '';
+      return {
+        ru: {start: 'Фестиваль начнётся ' + d, ended: 'Фестиваль завершился ' + d},
+        uk: {start: 'Фестиваль почнеться ' + d, ended: 'Фестиваль завершився ' + d},
+        he: {start: 'הפסטיבל יתחיל ב-' + d, ended: 'הפסטיבל הסתיים ב-' + d},
+        en: {start: 'The festival starts on ' + d, ended: 'The festival ended on ' + d}
+      }[l][kind];
+    }
+    return {
+      ru: {running: 'Текущая сессия началась в ', next: 'Ближайшая сессия начинается в '},
+      uk: {running: 'Поточна сесія почалася о ', next: 'Найближча сесія починається о '},
+      he: {running: 'ההרצאה הנוכחית התחילה ב- ', next: 'ההרצאה הקרובה מתחילה ב- '},
+      en: {running: 'Current session started at ', next: 'Next session starts at '}
+    }[l][kind] + value;
+  }
+  function snack(text) {
+    if (window.Snackbar) Snackbar.show({text: text, pos: 'bottom-center', showAction: false, duration: 3000});
+  }
   function lang() {
     // the Ukrainian pages say lang="ru": recognise them by their own label
     var my = document.querySelector('.bookmark-toggle-label');
     if (my && /Мій/.test(my.textContent)) return 'uk';
     var l = document.documentElement.lang;
-    return TEXT[l] ? l : 'en';
+    return MONTHS[l] ? l : 'en';
   }
   function hhmm(m) { return pad(Math.floor(m / 60) % 24) + ':' + pad(m % 60); }
   // {day, start (minutes), running} for the given festival day / minutes, or null if nothing fits
@@ -188,10 +210,14 @@
       else if (previousDate(now.date) === d && now.minutes < 5 * 60) at = locate(days[i], now.minutes + 24 * 60);
     }
     if (!at && days.length) {
-      // not a festival day (or after the day's programme): this time of day on the first festival day;
-      // at night - its first session
-      at = now.minutes >= 5 * 60 ? locate(days[0], now.minutes) : null;
-      if (!at) at = locate(days[0], 0);
+      // not during a festival day's programme: before the festival / after it / at night between two days
+      var today = now.minutes < 5 * 60 ? previousDate(now.date) : now.date;   // the night belongs to the day before
+      var first = days[0].getAttribute('data-date'), lastDate = days[days.length - 1].getAttribute('data-date');
+      if (today < first) { snack(nowMessage(lang(), 'start', first)); return; }
+      for (var j = 0; j < days.length && !at; j++) {
+        if (days[j].getAttribute('data-date') > today) at = locate(days[j], 0);   // the next day's first session
+      }
+      if (!at) { snack(nowMessage(lang(), 'ended', lastDate)); return; }
     }
     if (!at) return;
     if (!at.day.offsetParent) {   // another day tab is selected: show all days
@@ -202,9 +228,7 @@
     if (!rooms || !at.day.offsetParent) return;
     btn.classList.add('is-flash');
     setTimeout(function () { btn.classList.remove('is-flash'); }, 2000);
-    if (window.Snackbar) {
-      Snackbar.show({text: TEXT[lang()][at.running ? 0 : 1] + hhmm(at.start), pos: 'bottom-center', showAction: false, duration: 2000});
-    }
+    snack(nowMessage(lang(), at.running ? 'running' : 'next', hhmm(at.start)));
     var dayStart = toMinutes(at.day.getAttribute('data-start'));
     var top = ((at.start - dayStart) * PX_PER_15 / 15 + PX_PER_15) * zoomY();   // same formula as the sessions
     var nav = document.querySelector('.navbar-fixed-top');

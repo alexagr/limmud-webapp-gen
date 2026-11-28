@@ -120,19 +120,41 @@
   });
 
   // clock button: scroll to where the marker is and say whether that session is running or comes next.
-  // Not a festival day now: the same, as if it were this time of day on the first festival day (no marker).
-  var TEXT = {
-    ru: ['Текущая сессия началась в ', 'Ближайшая сессия начинается в '],
-    uk: ['Поточна сесія почалася о ', 'Найближча сесія починається о '],
-    he: ['ההרצאה הנוכחית התחילה ב- ', 'ההרצאה הקרובה מתחילה ב- '],
-    en: ['Current session started at ', 'Next session starts at ']
+  // Outside the festival: a message when it starts / when it ended.
+  // messages: running / next session (with its time), or - outside the festival - when it starts / ended
+  var MONTHS = {
+    ru: ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'],
+    uk: ['січня', 'лютого', 'березня', 'квітня', 'травня', 'червня', 'липня', 'серпня', 'вересня', 'жовтня', 'листопада', 'грудня'],
+    he: ['בינואר', 'בפברואר', 'במרץ', 'באפריל', 'במאי', 'ביוני', 'ביולי', 'באוגוסט', 'בספטמבר', 'באוקטובר', 'בנובמבר', 'בדצמבר'],
+    en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
   };
+  function nowMessage(l, kind, value) {   // kind: running / next (value = time), start / ended (value = date)
+    if (kind === 'start' || kind === 'ended') {
+      var p = /(\d{4})-(\d{2})-(\d{2})/.exec(value || '');
+      var d = p ? parseInt(p[3], 10) + ' ' + MONTHS[l][parseInt(p[2], 10) - 1] : '';
+      return {
+        ru: {start: 'Фестиваль начнётся ' + d, ended: 'Фестиваль завершился ' + d},
+        uk: {start: 'Фестиваль почнеться ' + d, ended: 'Фестиваль завершився ' + d},
+        he: {start: 'הפסטיבל יתחיל ב-' + d, ended: 'הפסטיבל הסתיים ב-' + d},
+        en: {start: 'The festival starts on ' + d, ended: 'The festival ended on ' + d}
+      }[l][kind];
+    }
+    return {
+      ru: {running: 'Текущая сессия началась в ', next: 'Ближайшая сессия начинается в '},
+      uk: {running: 'Поточна сесія почалася о ', next: 'Найближча сесія починається о '},
+      he: {running: 'ההרצאה הנוכחית התחילה ב- ', next: 'ההרצאה הקרובה מתחילה ב- '},
+      en: {running: 'Current session started at ', next: 'Next session starts at '}
+    }[l][kind] + value;
+  }
+  function snack(text) {
+    if (window.Snackbar) Snackbar.show({text: text, pos: 'bottom-center', showAction: false, duration: 3000});
+  }
   function lang() {
     // the Ukrainian pages say lang="ru" and are also called schedule.html: recognise them by their own label
     var my = document.querySelector('.bookmark-toggle-label');
     if (my && /Мій/.test(my.textContent)) return 'uk';
     var l = document.documentElement.lang;
-    return TEXT[l] ? l : 'en';
+    return MONTHS[l] ? l : 'en';
   }
   document.addEventListener('click', function (e) {
     var btn = e.target.closest && e.target.closest('#now-button');
@@ -142,14 +164,23 @@
     var now = israelNow();
     var at = locate(now);
     if (!at) {
-      var firstDay = document.querySelector('.day-filter');
-      var date = firstDay && (firstDay.className.match(/\d{4}-\d{2}-\d{2}/) || [])[0];
-      if (date) at = locate({date: date, minutes: now.minutes});
-      // night / after the first day's programme: its first session is the next one
-      if (!at && firstDay) {
-        var g0 = firstDay.querySelector('.time-filter');
-        if (g0) at = {group: g0, running: false};
+      // not during a festival day's programme: before the festival / after it / at night between two days
+      var days = document.querySelectorAll('.day-filter');
+      var dates = [];
+      for (var i = 0; i < days.length; i++) {
+        var dt = (days[i].className.match(/\d{4}-\d{2}-\d{2}/) || [])[0];
+        if (dt) dates.push({date: dt, day: days[i]});
       }
+      if (!dates.length) return;
+      var today = now.minutes < 5 * 60 ? previousDate(now.date) : now.date;   // the night belongs to the day before
+      if (today < dates[0].date) { snack(nowMessage(lang(), 'start', dates[0].date)); return; }
+      for (var j = 0; j < dates.length && !at; j++) {
+        if (dates[j].date > today) {   // the next festival day: its first session
+          var g0 = dates[j].day.querySelector('.time-filter');
+          if (g0) at = {group: g0, running: false};
+        }
+      }
+      if (!at) { snack(nowMessage(lang(), 'ended', dates[dates.length - 1].date)); return; }
     }
     if (!at) return;
     var group = at.group;
@@ -162,9 +193,7 @@
     setTimeout(function () { btn.classList.remove('is-flash'); }, 2000);
     var h4 = group.querySelector('.eventtime h4');
     var time = h4 ? h4.textContent.trim() : '';
-    if (window.Snackbar && time) {
-      Snackbar.show({text: TEXT[lang()][at.running ? 0 : 1] + time, pos: 'bottom-center', showAction: false, duration: 2000});
-    }
+    if (time) snack(nowMessage(lang(), at.running ? 'running' : 'next', time));
     // land just below the menu and the search row that stays visible under it
     var nav = document.querySelector('.navbar-fixed-top');
     var bar = document.querySelector('.search-sticky');
