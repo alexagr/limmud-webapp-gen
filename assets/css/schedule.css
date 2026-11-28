@@ -2721,6 +2721,7 @@ mark.search-hit {
 }
 [dir="rtl"] .search-clear-holder.has-find .search-filter-input {
   padding-left: 84px;
+  padding-right: 36px;   /* the × side (where the magnifier is) */
 }
 mark.search-hit.is-current {
   background: #ff9f1a;

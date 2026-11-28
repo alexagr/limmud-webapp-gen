@@ -160,11 +160,19 @@
                           </h6>
                           {{#if ../../../event.speaker_photos}}
                           </div>
+                          {{#if many_speakers_list}}
+                          <div class="speaker-short-photo-many">
+                          {{else}}
                           <div class="speaker-short-photo">
+                          {{/if}}
                             {{#each speakers_list}}
                               {{#if has_photo}}
                                 {{#if photo}}
+                                {{#if ../many_speakers_list}}
+                                {{#each photos}}<img onError="this.onerror=null;this.src='assets/img/avatar.png';" class="card-img-top speaker-image-tiny-many" src="speakers/thumbs/{{{photo}}}"/> {{/each}}
+                                {{else}}
                                 {{#each photos}}<img onError="this.onerror=null;this.src='assets/img/avatar.png';" class="card-img-top speaker-image-tiny" src="speakers/thumbs/{{{photo}}}"/> {{/each}}
+                                {{/if}}
                                 {{/if}}
                               {{/if}}
                             {{/each}}
